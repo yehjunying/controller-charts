@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./Chart.js"></script>
+
+<link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+<link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
+<body>
+
+<div ng-app="">
+
+  <div class="container">
+  <div class="row">
+
+    <div ng-show="true" class="col-md-12">
+      <canvas class="main-chart" id="controller-1-cpu-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-1-memory-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-1-ethernet-chart" width="200" height="180"></canvas>
+    </div>
+
+    <div ng-show="false" class="col-md-12">
+      <canvas class="main-chart" id="controller-2-cpu-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-2-memory-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-2-ethernet-chart" width="200" height="180"></canvas>
+    </div>
+
+    <div ng-show="false" class="col-md-12">
+      <canvas class="main-chart" id="controller-3-cpu-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-3-memory-chart" width="200" height="180"></canvas>
+      <canvas class="main-chart" id="controller-3-ethernet-chart" width="200" height="180"></canvas>
+    </div>
+
+  </div>
+  </div>
+
+</div>
+
+<script>
+  function makeChart(ctx, opt) {
+    return new Chart(ctx, opt);
+
+//    return {
+//      update: function () {
+//      }
+//    };
+  }
+
+  function makeLineChart(canvasContext) {
+//    var _chartData = {
+//        datasets: [
+//          {data: (new Array(60)).fill(0)}
+//        ]
+//      },
+//      _opt = {
+//        data: _chartData
+//      },
+    var _info = {};
+
+    var _chartData = {
+      labels: [],
+      datasets: [{
+        pointRadius: 0,
+        backgroundColor: "rgba(30, 191, 174, 0.2)",
+        borderColor: "rgba(30, 191, 174, 1)",
+        pointBorderColor: "rgba(30, 191, 174, 1)",
+        label: 'CPU',
+        data: (new Array(60)).fill(0)
+      }]
+    };
+
+    var _opt = {
+      type: 'line',
+      data: _chartData,
+      options: {
+        animation : false,
+        scales: {
+          xAxes: [{
+            display: false
+          }],
+          yAxes: [{
+          }]
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem) {
+              return tooltipItem.yLabel;
+            }
+          }
+        }
+      }
+    };
+
+    return {
+      chart: makeChart(canvasContext, _opt),
+      update: function (data) {
+        var chartData = _chartData.datasets[0].data;
+        angular.forEach(chartData, function (el, index, array) {
+          if (index !== 0) {
+            array[index - 1] = el;
+          }
+        });
+        chartData[chartData.length - 1] = data.utilization;
+        this.chart.update();
+
+        _info = data;
+      },
+      reset: function () {
+        var chartData = _chartData.datasets[0].data;
+        angular.forEach(chartData, function (el, index, array) {
+          array[index] = 0;
+        });
+      },
+      chartLast: function (n) {
+        n = n || 1;
+        var chartData = _chartData.datasets[0].data;
+
+        if (chartData.length < n) {
+          n = chartData.length;
+        }
+
+        return chartData.slice(chartData.length - n, chartData.length)
+          .reverse();
+      },
+      last: function () {
+        return _info;
+      }
+    };
+  }
+
+  function makeStackChart(canvasContext) {
+//    var _chartData = {
+//        datasets: [
+//          {data: (new Array(60)).fill(0)},
+//          {data: (new Array(60)).fill(0)}
+//        ]
+//      },
+//      _opt = {
+//        data: _chartData
+//      },
+    var _info = {};
+
+    var _chartData = {
+      labels: [],
+      datasets: [{
+        pointRadius: 0,
+        backgroundColor: "rgba(71, 209, 71, 0.3)",
+        borderColor: "rgba(71, 209, 71, 1)",
+        pointBorderColor: "rgba(71, 209, 71, 1)",
+        label: 'Send',
+        data: []
+      }, {
+        pointRadius: 0,
+        backgroundColor: "rgba(48, 165, 255, 0.2)",
+        borderColor: "rgba(48, 165, 255, 1)",
+        pointBorderColor: "rgba(48, 165, 255, 1)",
+        label: 'Receive',
+        data: []
+      }]
+    };
+
+    var _opt = {
+      type: 'line',
+      data: _chartData,
+      options: {
+        animation : false,
+        scales: {
+          xAxes: [{
+            display: false,
+            stacked: true
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        }
+      }
+    };
+
+    return {
+      chart: makeChart(canvasContext, _opt),
+      update: function (data) {
+        var chartData = _chartData.datasets[0].data;
+        angular.forEach(chartData, function (el, index, array) {
+          if (index !== 0) {
+            array[index - 1] = el;
+          }
+        });
+        chartData[chartData.length - 1] = data.transmitInKbps;
+
+        chartData = _chartData.datasets[1].data;
+        angular.forEach(chartData, function (el, index, array) {
+          if (index !== 0) {
+            array[index - 1] = el;
+          }
+        });
+        chartData[chartData.length - 1] = data.receiveInKbps;
+        this.chart.update();
+
+        _info = data;
+      },
+      reset: function () {
+        var chartData = _chartData.datasets[0].data;
+        angular.forEach(chartData, function (el, index, array) {
+          array[index] = 0;
+        });
+
+        chartData = _chartData.datasets[1].data;
+        angular.forEach(chartData, function (el, index, array) {
+          array[index] = 0;
+        });
+      },
+      chartLast: function (n) {
+        n = n || 1;
+        var chartData = _chartData.datasets[0].data,
+          ret = [];
+
+        if (chartData.length < n) {
+          n = chartData.length;
+        }
+
+        ret[0] = chartData.slice(chartData.length - n, chartData.length)
+          .reverse();
+
+        chartData = _chartData.datasets[1].data;
+        ret[1] = chartData.slice(chartData.length - n, chartData.length)
+          .reverse();
+
+        return ret;
+      },
+      last: function () {
+        return _info;
+      }
+    };
+  }
+
+  function makeController(options) {
+    options = options || {};
+
+    return {
+      name: '',
+      cpu: makeLineChart(options.cpuCanvas),
+      memory: makeLineChart(options.memoryCanvas),
+      ethernet: makeStackChart(options.ethernetCanvas),
+      update: function (data) {
+        this.name = data.name;
+        this.cpu.update(data.cpu);
+        this.memory.update(data.memory);
+        this.ethernet.update(data.ethernet);
+      },
+      reset: function () {
+        this.name = '';
+        this.cpu.reset();
+        this.memory.reset();
+        this.ethernet.reset();
+      },
+      isShow: function () {
+        return this.name !== '';
+      },
+      columns: function (ctrls) {
+        // return 12 / total-displaied-controlled
+        if (!this.isShow()) {
+          return 12;
+        }
+
+        var total = 0;
+
+        angular.forEach(ctrls, function (ctrl) {
+          if (ctrl.isShow()) {
+            total += 1;
+          }
+        });
+
+        return 12 / total;
+      }
+    };
+  }
+
+  function updateControllerCharts(controllers, resp) {
+    var r_resp = {};
+
+    angular.forEach(resp, function (value, key) {
+      // unique
+      r_resp[value.name] = value;
+    });
+
+    // drop existing data if no receiving data for specify controller
+    angular.forEach(controllers, function (value, key) {
+      if (typeof r_resp[value.name] === 'undefined') {
+        // controllers[key].name = '';
+        controllers[key].reset();
+      }
+    });
+
+    angular.forEach(r_resp, function (value, key) {
+      var index = controllers.findIndex(function (ctrl) {
+        return (ctrl.name === value.name);
+      });
+
+      if (index === -1) {
+        index = controllers.findIndex(function (ctrl) {
+          return (ctrl.name === '');
+        });
+      }
+
+      if (index === -1) {
+        // something error...
+        console.log('something error...');
+        return;
+      }
+
+      controllers[index].update(value);
+    });
+
+    // angular.forEach(controllers, function(value, key) {
+    //     if (typeof r_resp[value.name] === 'undefined') {
+    //         controllers[key].name = '';
+    //     }
+    // });
+  }
+
+  function makeControllerUtilization(name) {
+    return {
+      name: name,
+      cpu: {
+        utilization: 15,
+        frequencyInGhz: 2.20
+      },
+      memory: {
+        utilization: 51,
+        totalInGb: 4,
+        usedInGb: 1.5
+      },
+      ethernet: {
+        transmitInKbps: 50,
+        receiveInKbps: 55
+      }
+    };
+  }
+
+  var origMakeChart = makeChart;
+  makeChart = mockMakeChart;
+  function mockMakeChart(ctx, opt) {
+    return {
+      update: function () {
+      }
+    };
+  }
+
+  (function test_for_init() {
+    var controllers = [
+        makeController(), makeController(), makeController()
+      ],
+      respCtrl1 = makeControllerUtilization('ctrl1'),
+      respCtrl2 = makeControllerUtilization('ctrl2'),
+      resp = {
+        status: 200,
+        dashboardControllers: [
+          respCtrl1, respCtrl2
+        ]
+      };
+
+    updateControllerCharts(controllers, resp.dashboardControllers);
+
+    assert.equal(respCtrl1.name, controllers[0].name);
+    assert.deepEqual(respCtrl1.cpu, controllers[0].cpu.last());
+    assert.deepEqual(respCtrl1.memory, controllers[0].memory.last());
+    assert.deepEqual(respCtrl1.ethernet, controllers[0].ethernet.last());
+    assert.equal(respCtrl2.name, controllers[1].name);
+  })();
+
+  makeChart = origMakeChart;
+
+  var controllers = [
+    makeController({
+      cpuCanvas: document.getElementById("controller-1-cpu-chart"),
+      memoryCanvas: document.getElementById("controller-1-memory-chart"),
+      ethernetCanvas: document.getElementById("controller-1-ethernet-chart")
+    }),
+    makeController({
+      cpuCanvas: document.getElementById("controller-2-cpu-chart"),
+      memoryCanvas: document.getElementById("controller-2-memory-chart"),
+      ethernetCanvas: document.getElementById("controller-2-ethernet-chart")
+    }),
+    makeController({
+      cpuCanvas: document.getElementById("controller-3-cpu-chart"),
+      memoryCanvas: document.getElementById("controller-3-memory-chart"),
+      ethernetCanvas: document.getElementById("controller-3-ethernet-chart")
+    })
+  ];
+
+
+</script>
+
+</body>
+</html>
