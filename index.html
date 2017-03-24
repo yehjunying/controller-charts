@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+
+    .node {
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .link {
+      stroke: #999;
+    }
+
+  </style>
+  <title>topology layout</title>
+</head>
+<body>
+<script src="layout.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<script>
+  function makeTor(id) {
+    return {
+      "id": id,
+      "type":"switch",
+      "class":"device",
+      "role": "tor",
+      "x":218.5,
+      "y":48
+    };
+  }
+
+  function makeSpine(id, attrs) {
+    attrs = attrs || {};
+
+    return Object.assign({
+      "id": id,
+      "type":"switch",
+      "class":"device",
+      "role": "spine",
+      "x":218.5,
+      "y":48
+    }, attrs);
+  }
+
+  function makeHost(id, cpDevice) {
+    return {
+      "id": id, //"0E:2A:69:30:13:81/-1",
+      "type": "endstation",
+      "class": "host",
+      "role": "host",
+      "x":218.5,
+      "y":48,
+      "cp": {
+        "device": cpDevice, //"rest:216.58.200.211:80",
+        "port": 81
+      }
+    };
+  }
+
+  ///////////////////////
+  // data
+
+  var topo = [
+    [makeSpine('spine1'), makeSpine('spine2')],
+    [makeTor('tor1'), makeTor('tor2'), makeTor('tor3'), makeTor('tor4')],
+    [makeHost('host1', 'tor1'), makeHost('host2', 'tor1'),
+      makeHost('host3', 'tor2'),
+      makeHost('host4', 'tor3'), makeHost('host5', 'tor3'), makeHost('host6', 'tor3'), makeHost('host7', 'tor3')]
+  ];
+
+  ///////////////////////
+  // core layout
+
+  var width = 900,
+    height = 500;
+
+  layout.justifyLayout(topo, {left: 0, top: 0, width: width, height: height});
+//  layout.justifyGroupLayout(topo, {left: 0, top: 0, width: width, height: height});
+//  layout.justifyGroupWeightLayout(topo, {left: 0, top: 0, width: width, height: height});
+
+  ///////////////////////
+  // d3 css
+
+  var graph= {"nodes":[
+    {"x":0,"y":0},
+    {"x":960,"y":500},
+    {"x":0,"y":500}],
+    "links": [
+      {source:0, target:2},
+      {source:1, target:2}]
+  };
+
+  topo.reduce(function (lu, rows) {
+    rows.forEach(function (n) {
+
+      console.log('addNode: (' + n.x + ', ' + n.y + ')');
+      lu[n.id] = {raw: n, graphNodesIndex: graph.nodes.length};
+
+      graph.nodes.push({
+        id: n.id,
+        x: n.x,
+        y: n.y
+      });
+
+      if (n.role === 'host') {
+        graph.links.push({
+          source: lu[n.cp.device].graphNodesIndex,
+          target: lu[n.id].graphNodesIndex
+        });
+      } else if (n.role === 'tor') {
+        Object.keys(lu).forEach(function (id) {
+          if (lu[id].raw.role === 'spine') {
+            //console.log(lu[id]);
+            graph.links.push({
+              source: lu[id].graphNodesIndex,
+              target: lu[n.id].graphNodesIndex
+            });
+          }
+        });
+      }
+    });
+
+    return lu;
+  }, {});
+
+
+  var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  //d3.json("graph.json", function(error, graph) {
+
+  graph.links.forEach(function(d) {
+    d.source = graph.nodes[d.source];
+    d.target = graph.nodes[d.target];
+  });
+
+  var link = svg.append("g")
+    .attr("class", "link")
+    .selectAll("line")
+    .data(graph.links)
+    .enter().append("line")
+    .attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; });
+
+  var node = svg.append("g")
+    .attr("class", "node")
+    .selectAll("circle")
+    .data(graph.nodes)
+    .enter().append("circle")
+    .attr("r", 4)
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .call(d3.behavior.drag()
+      .origin(function(d) { return d; })
+      .on("drag", function(d) {
+        d.x = d3.event.x, d.y = d3.event.y;
+        d3.select(this).attr("cx", d.x).attr("cy", d.y);
+        link.filter(function(l) { return l.source === d; }).attr("x1", d.x).attr("y1", d.y);
+        link.filter(function(l) { return l.target === d; }).attr("x2", d.x).attr("y2", d.y);
+      }));
+
+  ///////////////////////
+  // post process
+
+  console.log('done');
+</script>
+
+</body>
+</html>
