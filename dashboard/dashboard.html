@@ -1,0 +1,225 @@
+<!-- Dashboard partial HTML -->
+<link rel="stylesheet" href="app/view/dashboard/bootstrap.min.css">
+<link rel="stylesheet" href="app/view/dashboard/dashboard.css">
+
+<div id="ov-dashboard">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-4 col-md-3 col-lg-3">
+                <div class="panel panel-blue panel-widget ">
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left">
+                            <span class="glyphicon glyphicon-cloud glyphicon-l" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-controller xx">
+                            <div class="large">{{overview.controller.totalCount}}</div>
+                            <div class="medium">Controller</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-3 col-lg-3">
+                <div class="panel panel-orange panel-widget">
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left">
+                            <span class="glyphicon glyphicon-random glyphicon-l" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-spine">
+                            <div class="large">{{overview.spine.totalCount}}</div>
+                            <div class="medium">Spine</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-3 col-lg-3">
+                <div class="panel panel-green panel-widget">
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left">
+                            <span class="glyphicon glyphicon-sort glyphicon-l" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-leaf">
+                            <div class="large">{{overview.leaf.totalCount}}</div>
+                            <div class="medium">Leaf</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-4 col-md-3 col-lg-3">
+                <div class="panel panel-teal panel-widget">
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left widget-left-rsl">
+                            <span class="glyphicon glyphicon-tasks glyphicon-m" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-rsl">
+                            <div class="medium">{{overview.rack.totalCount}} Rack</div>
+                        </div>
+                    </div>
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left widget-left-rsl">
+                            <span class="glyphicon glyphicon-hdd glyphicon-m" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-rsl">
+                            <div class="medium">{{overview.server.totalCount}} Server</div>
+                        </div>
+                    </div>
+                    <div class="row no-padding">
+                        <div class="col-sm-5 col-lg-5 widget-left widget-left-rsl">
+                            <span class="glyphicon glyphicon-resize-horizontal glyphicon-m" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-sm-7 col-lg-7 widget-right-rsl">
+                            <div class="medium">{{overview.link.totalCount}} <span class="badge issuedLinkCount" ng-show="overview.link.issuedCount">{{overview.link.issuedCount}}</span> Link</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!--row-->
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default controller">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <h4>{{controllers[0].name}}</h4>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <canvas class="main-chart" id="controller-cpu-line-chart" width="400" height="60"></canvas>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4>CPU</h4>
+                                    <span id="controller-cpu-value">
+                                        {{controllers[0].cpuInfo.utilization}}% {{controllers[0].cpuInfo.frequencyInGhz}} GHz
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <canvas class="main-chart" id="controller-mem-line-chart" width="400" height="60"></canvas>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4>Memory</h4>
+                                    <span id="controller-mem-value">
+                                        {{controllers[0].memInfo.usedInGb}}/{{controllers[0].memInfo.totalInGb}} GB ({{controllers[0].memInfo.utilization}}%)
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <canvas class="main-chart" id="controller-eth-line-chart" width="400" height="78"></canvas>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4>Ethernet</h4>
+                                    <span id="controller-eth-value">
+                                        S: {{controllers[0].ethInfo.transmitInKbps}} R: {{controllers[0].ethInfo.receiveInKbps}} Kbps
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="panel-footer">CONTROLLER</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default chat">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left"></span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc. Vivamus luctus convallis mauris, eu gravida tortor aliquam ultricies.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left"></span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc. Vivamus luctus convallis mauris, eu gravida tortor aliquam ultricies.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left"></span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc. Vivamus luctus convallis mauris, eu gravida tortor aliquam ultricies.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left"></span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc. Vivamus luctus convallis mauris, eu gravida tortor aliquam ultricies.
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="left clearfix">
+                                <span class="chat-img pull-left"></span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">John Doe</strong> <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ante turpis, rutrum ut ullamcorper sed, dapibus ac nunc. Vivamus luctus convallis mauris, eu gravida tortor aliquam ultricies.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">EVENT</div>
+                </div>
+            </div>
+        </div> <!--row-->
+
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body top5-panel-body">
+                        <canvas class="main-chart" id="top5-traffic-core" width="200" height="180"></canvas>
+                    </div>
+                    <div class="panel-footer"><span>Top 5 Traffic of Spine-Leaf (%)</span></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body top5-panel-body">
+                        <canvas class="main-chart" id="top5-drop-count-core" width="200" height="180"></canvas>
+                    </div>
+                    <div class="panel-footer"><span>Top 5 Drop Count of Spine-Leaf</span></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body top5-panel-body">
+                        <canvas class="main-chart" id="top5-traffic-access" width="200" height="180"></canvas>
+                    </div>
+                    <div class="panel-footer"><span>Top 5 Traffic of Leaf-Server (%)</span></div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body top5-panel-body">
+                        <canvas class="main-chart" id="top5-drop-count-access" width="200" height="180"></canvas>
+                    </div>
+                    <div class="panel-footer"><span>Top 5 Drop Count of Leaf-Server</span></div>
+                </div>
+            </div>
+        </div> <!--row-->
+    </div>
+</div>
