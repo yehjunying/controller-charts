@@ -9,55 +9,64 @@
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
 
 <style>
-.controller-text h4 {
-    font-size: 12px;
-}
-
 .controller-text span {
-    font-size: 12px;
+    font-size: 90%;
     font-weight: 700;
 }
+
+.controller-text :nth-child(1) {
+    font-weight: 400;
+}
+
 </style>
 
 <body>
 
-<div ng-app="">
+<div ng-app="myApp" ng-controller="myCtrl">
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-8">
+        <div class="row" style="min-width: 800px">
+            <div class="col-xs-8 col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-body" style="height: 300px">
+                    <div class="panel-body" style="height: 350px">
 
                         <div ng-show="true" class="col-md-6">
-                            <h4 id="controller-1-name"></h4>
+                            <h4>{{controllers[0].name}}</h4>
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-1-cpu-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-1-cpu-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>CPU</h4>
-                                    <span id="controller-1-cpu-value"></span>
+                                    <span>CPU</span>
+                                    <span>
+                                        {{controllers[0].cpu.last().utilization}}%&nbsp;
+                                        {{controllers[0].cpu.last().frequencyInGhz}}&nbsp;GHz
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-1-memory-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-1-memory-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>Memory</h4>
-                                    <span id="controller-1-memory-value"></span>
+                                    <span>Memory</span>
+                                    <span>
+                                        {{controllers[0].memory.last().usedInGb}}/{{controllers[0].memory.last().totalInGb}}&nbsp;GB&nbsp;
+                                        ({{controllers[0].memory.last().utilization}}%)
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-1-ethernet-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-1-ethernet-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>Ethernet</h4>
-                                    <span id="controller-1-ethernet-value"></span>
+                                    <span>Ethernet</span>
+                                    <span>
+                                        S: {{controllers[0].ethernet.last().transmitInKbps}} R: {{controllers[0].ethernet.last().receiveInKbps}} Kbps
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -65,30 +74,30 @@
                             <h4 id="controller-2-name">Controller2</h4>
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-2-cpu-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-2-cpu-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>CPU</h4>
+                                    <span>CPU</span>
                                     <span id="controller-2-cpu-value"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-2-memory-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-2-memory-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>Memory</h4>
+                                    <span>Memory</span>
                                     <span id="controller-2-memory-value"></span>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-9">
-                                    <canvas class="main-chart" id="controller-2-ethernet-chart" width="300" height="100"></canvas>
+                                    <canvas class="main-chart" id="controller-2-ethernet-chart" width="300" height="150"></canvas>
                                 </div>
                                 <div class="col-md-3 controller-text">
-                                    <h4>Ethernet</h4>
+                                    <span>Ethernet</span>
                                     <span id="controller-2-ethernet-value"></span>
                                 </div>
                             </div>
@@ -447,6 +456,68 @@
 
     makeChart = origMakeChart;
 
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', ['$scope', '$interval', function($scope, $interval) {
+        $scope.controllers = [
+            makeController({
+                cpuChartCanvas: 'controller-1-cpu-chart',
+                memoryChartCanvas: 'controller-1-memory-chart',
+                ethernetChartCanvas: 'controller-1-ethernet-chart'
+            }),
+//        makeController({
+//            cpuChartCanvas: document.getElementById("controller-2-cpu-chart"),
+//            memoryChartCanvas: document.getElementById("controller-2-memory-chart"),
+//            ethernetChartCanvas: document.getElementById("controller-2-ethernet-chart")
+//        }),
+//        makeController({
+//            cpuChartCanvas: document.getElementById("controller-3-cpu-chart"),
+//            memoryChartCanvas: document.getElementById("controller-3-memory-chart"),
+//            ethernetChartCanvas: document.getElementById("controller-3-ethernet-chart")
+//        })
+        ];
+
+        $interval(function () {
+            var randomInt = function (min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+
+            var rangeValue = function (min, max, value) {
+                if (value < min) {
+                    return min;
+                }
+
+                if (max < value) {
+                    return max;
+                }
+
+                return value;
+            };
+
+            var resp = [{
+                name: 'controller1',
+                cpu: {
+                    utilization: rangeValue(0, 100, $scope.controllers[0].cpu.chartLast()[0] + randomInt(10, -10)),
+                    frequencyInGhz: 2.20
+                },
+                memory: {
+                    utilization: rangeValue(0, 100, $scope.controllers[0].memory.chartLast()[0] + randomInt(3, -3)),
+                    totalInGb: 4,
+                    usedInGb: 1.5
+                },
+                ethernet: {
+                    transmitInKbps: rangeValue(0, 100, $scope.controllers[0].ethernet.chartLast()[0][0] + randomInt(10, -10)),
+                    receiveInKbps: rangeValue(0, 100, $scope.controllers[0].ethernet.chartLast()[1][0] + randomInt(10, -10))
+                }
+            }];
+
+            // FIXME: bad ...
+//            $('#controller-1-name').text(resp[0].name);
+//            $('#controller-1-cpu-value').text('' + resp[0].cpu.utilization + '%');
+
+            updateControllerCharts($scope.controllers, resp);
+        }, 50);
+    }]);
+
     var randomScalingFactor = function() { return Math.round(Math.random()*1000) };
 
     var controller1CpuChartData = {
@@ -579,64 +650,6 @@
     }];
 
     window.onload = function() {
-        var controllers = [
-            makeController({
-                cpuChartCanvas: 'controller-1-cpu-chart',
-                memoryChartCanvas: 'controller-1-memory-chart',
-                ethernetChartCanvas: 'controller-1-ethernet-chart'
-            }),
-//        makeController({
-//            cpuChartCanvas: document.getElementById("controller-2-cpu-chart"),
-//            memoryChartCanvas: document.getElementById("controller-2-memory-chart"),
-//            ethernetChartCanvas: document.getElementById("controller-2-ethernet-chart")
-//        }),
-//        makeController({
-//            cpuChartCanvas: document.getElementById("controller-3-cpu-chart"),
-//            memoryChartCanvas: document.getElementById("controller-3-memory-chart"),
-//            ethernetChartCanvas: document.getElementById("controller-3-ethernet-chart")
-//        })
-        ];
-
-        setInterval(function () {
-            var randomInt = function (min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            };
-
-            var rangeValue = function (min, max, value) {
-                if (value < min) {
-                    return min;
-                }
-
-                if (max < value) {
-                    return max;
-                }
-
-                return value;
-            };
-
-            var resp = [{
-                name: 'controller1',
-                cpu: {
-                    utilization: rangeValue(0, 100, controllers[0].cpu.chartLast()[0] + randomInt(10, -10)),
-                    frequencyInGhz: 2.20
-                },
-                memory: {
-                    utilization: rangeValue(0, 100, controllers[0].memory.chartLast()[0] + randomInt(3, -3)),
-                    totalInGb: 4,
-                    usedInGb: 1.5
-                },
-                ethernet: {
-                    transmitInKbps: rangeValue(0, 100, controllers[0].ethernet.chartLast()[0][0] + randomInt(10, -10)),
-                    receiveInKbps: rangeValue(0, 100, controllers[0].ethernet.chartLast()[1][0] + randomInt(10, -10))
-                }
-            }];
-
-            // FIXME: bad ...
-            $('#controller-1-name').text(resp[0].name);
-            $('#controller-1-cpu-value').text('' + resp[0].cpu.utilization + '%');
-
-            updateControllerCharts(controllers, resp);
-        }, 50);
 
         var ctx = document.getElementById("controller-2-cpu-chart").getContext("2d");
         controller[0].cpuChart = new Chart(ctx, controller1CpuChartOption);
