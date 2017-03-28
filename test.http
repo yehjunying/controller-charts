@@ -2,45 +2,125 @@ GET http://localhost:9200/
 
 ###
 
-POST http://localhost:9200/megacorp/employee/1 HTTP/1.1
+POST http://localhost:9200/mars/system/1 HTTP/1.1
 content-type: application/json
 
 {
-    "first_name": "John",
-    "last_name": "Smith",
-    "age": 25,
-    "about": "I am hero",
-    "interests": ["sports", "music"]
+    "timestamp": "2017-03-28T15:24:50,259",
+    "severity": 6,
+    "service": "o.e.n.Node",
+    "message": "initializing ..."
 }
 
 ###
 
-POST http://localhost:9200/megacorp/employee/2 HTTP/1.1
+POST http://localhost:9200/mars/system/2 HTTP/1.1
 content-type: application/json
 
 {
-    "first_name": "Junying",
-    "last_name": "Yeh",
-    "age": 25,
-    "about": "I am hero",
-    "interests": ["sports", "music"]
+    "timestamp": "2017-03-28T15:24:50,392",
+    "severity": 6,
+    "service": "o.e.e.NodeEnvironment",
+    "message": "using [1] data paths, mounts"
 }
 
 ###
+POST http://localhost:9200/mars/system/3 HTTP/1.1
+content-type: application/json
 
-GET http://localhost:9200/megacorp/employee/1
+{
+    "timestamp": "2017-03-28T15:24:50,392",
+    "severity": 6,
+    "service": "o.e.e.NodeEnvironment",
+    "message": "heap size [1.9gb], compressed ordinary object pointers [true]"
+}
 
 ###
-GET http://localhost:9200/megacorp/employee/_search
+POST http://localhost:9200/mars/system/4 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,594",
+    "severity": 6,
+    "service": "o.e.h.HttpServer",
+    "message": "publish_address {127.0.0.1:9200}, bound_address {127.0.0.1:9300}, {[::1]:9300}"
+}
+
+###
+POST http://localhost:9200/mars/system/5 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,595",
+    "severity": 6,
+    "service": "o.e.n.Node",
+    "message": "started"
+}
+
+###
+POST http://localhost:9200/mars/system/6 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,595",
+    "severity": 6,
+    "service": "HttpServiceFactoryImpl",
+    "message": "Binding bundle: [...] to http service"
+}
+
+###
+POST http://localhost:9200/mars/system/7 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,595",
+    "severity": 6,
+    "service": "HttpServiceFactoryImpl",
+    "message": "Unbinding bundle: [...]"
+}
+
+###
+POST http://localhost:9200/mars/system/8 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,595",
+    "severity": 4,
+    "service": "ServletTracker",
+    "message": "Registered servlet [...]"
+}
+
+###
+POST http://localhost:9200/mars/system/9 HTTP/1.1
+content-type: application/json
+
+{
+    "timestamp": "2017-03-28T15:25:00,595",
+    "severity": 3,
+    "service": "ServletTracker",
+    "message": "Server down"
+}
+
+###
+GET http://localhost:9200/mars/employee/1
+
+###
+GET http://localhost:9200/mars/_search
+
+{
+    "sort" : [
+        { "post_date" : {"order" : "asc"}}
+    ]
+}
 
 ###
 GET http://localhost:9200/_search
 
 ###
-GET http://localhost:9200/megacorp/employee/_search?q=25
+GET http://localhost:9200/mars/employee/_search?q=25
 
 ###
-GET http://localhost:9200/megacorp/employee/_search?q=music
+GET http://localhost:9200/mars/employee/_search?q=music
 
 ###
-GET http://localhost:9200/megacorp/employee/_search?q=hero
+GET http://localhost:9200/mars/employee/_search?q=hero

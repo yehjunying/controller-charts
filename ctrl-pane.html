@@ -11,200 +11,310 @@
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
 
 <style>
-.controller-text {
-    padding-left: 5px;
-    padding-right: 10px;
-}
+    #ov-dashboard .controller > .panel-body {
+        height: 360px;
+    }
 
-.controller-text span {
-    font-size: 90%;
-    font-weight: 700;
-}
+    .controller-text {
+        padding-left: 5px;
+        padding-right: 10px;
+    }
 
-.controller-text :nth-child(1) {
-    font-weight: 400;
-}
+    .controller-text span {
+        font-size: 90%;
+        font-weight: 700;
+    }
 
+    .controller-text :nth-child(1) {
+        font-weight: 400;
+    }
+
+    #ov-dashboard .chat ul {
+        list-style: none;
+        margin: -15px;
+        padding: 15px;
+    }
+
+    #ov-dashboard .chat ul li {
+        margin-bottom: 10px;
+        padding: 15px 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    #ov-dashboard .chat ul li.danger {
+        border-left: solid;
+        border-left-width: 0.5em;
+        border-left-color: #ed1c24
+    }
+
+    #ov-dashboard .chat ul li.warning {
+        border-left: solid;
+        border-left-width: 0.5em;
+        border-left-color: rgb(250, 187, 61)
+    }
+
+    /*#ov-dashboard .chat ul li.info {*/
+        /*border-left: solid;*/
+        /*border-left-width: 0.25em;*/
+        /*border-left-color: rgb(250, 187, 61)*/
+    /*}*/
+
+    #ov-dashboard .chat ul li.left .chat-body {
+        margin-left: 30px;
+    }
+
+    #ov-dashboard .chat ul li.right .chat-body {
+        margin-right: 30px;
+    }
+
+    #ov-dashboard .chat ul li .chat-body p {
+        margin: 0;
+    }
+
+    #ov-dashboard .chat ul .glyphicon {
+        margin-right: 5px;
+    }
+
+    #ov-dashboard .chat .panel-body {
+        overflow-y: scroll;
+        height: 360px;
+    }
+
+    #ov-dashboard .chat-body small {
+        margin-left: 5px;
+    }
+
+    #ov-dashboard .chat-img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 20px;
+        color: #fff;
+        line-height: 20px;
+        text-align: center;
+        background: rgba(226, 8, 12, 0.9)
+    }
 </style>
 
 <body>
 
-<div ng-app="myApp" ng-controller="myCtrl">
+<div ng-app="myApp">
 
-    <div class="container">
-        <div class="row" style="min-width: 800px">
-            <div class="col-xs-8 col-md-8">
-                <div class="panel panel-default">
-                    <div class="panel-body" style="height: 360px">
+    <div id="ov-dashboard" class="container">
+        <div ng-controller="myCtrl">
+            <div class="row" style="min-width: 800px">
+                <div class="col-xs-8 col-md-8">
+                    <div class="panel panel-default controller">
+                        <div class="panel-body">
 
-                        <div ng-show="c.charts[0].isShow()" ng-class="makeClass()">
-                            <h4>{{c.charts[0].name}}</h4>
-                            <div class="row">
+                            <div ng-show="c.charts[0].isShow()" ng-class="makeClass()">
+                                <h4>{{c.charts[0].name}}</h4>
+                                <div class="row">
 
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-a-cpu-chart" width="600" height="150"></canvas>
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-a-cpu-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>CPU</span>
-                                    <span>
+                                    <div class="col-md-3 controller-text">
+                                        <span>CPU</span>
+                                        <span>
                                         {{c.charts[0].cpu.last().utilization}}%&nbsp;
                                         {{c.charts[0].cpu.last().frequencyInGhz}}&nbsp;GHz
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-a-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Memory</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-a-memory-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Memory</span>
+                                        <span>
                                         {{c.charts[0].memory.last().usedInGb}}/{{c.charts[0].memory.last().totalInGb}}&nbsp;GB&nbsp;
                                         ({{c.charts[0].memory.last().utilization}}%)
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-a-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Ethernet</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-a-ethernet-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Ethernet</span>
+                                        <span>
                                         S: {{c.charts[0].ethernet.last().transmitInKbps}} R: {{c.charts[0].ethernet.last().receiveInKbps}} Kbps
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div ng-show="c.charts[1].isShow()" ng-class="makeClass()">
-                            <h4>{{c.charts[1].name}}</h4>
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-b-cpu-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>CPU</span>
-                                    <span>
+                            </div>
+
+                            <div ng-show="c.charts[1].isShow()" ng-class="makeClass()">
+                                <h4>{{c.charts[1].name}}</h4>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-b-cpu-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>CPU</span>
+                                        <span>
                                         {{c.charts[1].cpu.last().utilization}}%&nbsp;
                                         {{c.charts[1].cpu.last().frequencyInGhz}}&nbsp;GHz
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-b-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Memory</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-b-memory-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Memory</span>
+                                        <span>
                                         {{c.charts[1].memory.last().usedInGb}}/{{c.charts[1].memory.last().totalInGb}}&nbsp;GB&nbsp;
                                         ({{c.charts[1].memory.last().utilization}}%)
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-b-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Ethernet</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-b-ethernet-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Ethernet</span>
+                                        <span>
                                         S: {{c.charts[1].ethernet.last().transmitInKbps}} R: {{c.charts[1].ethernet.last().receiveInKbps}} Kbps
                                     </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div ng-show="c.charts[2].isShow()" ng-class="makeClass()">
-                            <h4>{{c.charts[2].name}}</h4>
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-c-cpu-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>CPU</span>
-                                    <span>
+                            </div>
+
+                            <div ng-show="c.charts[2].isShow()" ng-class="makeClass()">
+                                <h4>{{c.charts[2].name}}</h4>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-c-cpu-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>CPU</span>
+                                        <span>
                                         {{c.charts[2].cpu.last().utilization}}%&nbsp;
                                         {{c.charts[2].cpu.last().frequencyInGhz}}&nbsp;GHz
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-c-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Memory</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-c-memory-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Memory</span>
+                                        <span>
                                         {{c.charts[2].memory.last().usedInGb}}/{{c.charts[2].memory.last().totalInGb}}&nbsp;GB&nbsp;
                                         ({{c.charts[2].memory.last().utilization}}%)
                                     </span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <div style="width: 100%; height: 100px">
-                                        <canvas class="main-chart" id="controller-c-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div class="col-md-3 controller-text">
-                                    <span>Ethernet</span>
-                                    <span>
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div style="width: 100%; height: 100px">
+                                            <canvas class="main-chart" id="controller-c-ethernet-chart" width="600"
+                                                    height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 controller-text">
+                                        <span>Ethernet</span>
+                                        <span>
                                         S: {{c.charts[2].ethernet.last().transmitInKbps}} R: {{c.charts[2].ethernet.last().receiveInKbps}} Kbps
                                     </span>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
-
+                        <div class="panel-footer">CONTROLLER</div>
                     </div>
-                    <div class="panel-footer">CONTROLLER</div>
+                </div> <!-- controller-pane -->
+
+                <div class="col-xs-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern1()">{{resp.pattern.data[0] | prettyJSON}}</pre>
+                        </div>
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern2()">{{resp.pattern.data[1] | prettyJSON}}</pre>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern3()">{{resp.pattern.data[2] | prettyJSON}}</pre>
+                        </div>
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern4()">{{resp.pattern.data[3] | prettyJSON}}</pre>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern5()">{{resp.pattern.data[4] | prettyJSON}}</pre>
+                        </div>
+                        <div class="col-md-6">
+                            <pre ng-click="pick_pattern6()">{{resp.pattern.data[5] | prettyJSON}}</pre>
+                        </div>
+                    </div>
                 </div>
+            </div> <!-- row -->
+        </div> <!-- myCtrl -->
 
-            </div>
-        </div> <!-- row -->
+        <div ng-controller="chartCtrl">
+            <div class="col-xs-8 col-md-8">
+                <div class="panel panel-default chat">
+                    <div class="panel-body">
+                        <ul>
+                            <li class="left clearfix" ng-repeat="i in items" ng-class="makeClass(i)">
+                                <!--<span class="chat-img pull-left"></span>-->
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">{{i.service}} {{i.hostname}} {{i.address}}</strong>
+                                        <small class="text-muted">32 mins ago</small>
+                                    </div>
+                                    <p>
+                                        {{i.message}}
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">EVENT</div>
+                </div>
+            </div> <!-- event-pane -->
 
-        <div class="row">
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern1()">{{resp.pattern.data[0] | prettyJSON}}</pre>
-            </div>
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern2()">{{resp.pattern.data[1] | prettyJSON}}</pre>
-            </div>
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern3()">{{resp.pattern.data[2] | prettyJSON}}</pre>
-            </div>
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern4()">{{resp.pattern.data[3] | prettyJSON}}</pre>
-            </div>
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern5()">{{resp.pattern.data[4] | prettyJSON}}</pre>
-            </div>
-            <div class="col-md-2">
-                <pre ng-click="pick_pattern6()">{{resp.pattern.data[5] | prettyJSON}}</pre>
-            </div>
         </div>
 
     </div>
@@ -214,14 +324,16 @@
 <script>
 
     var app = angular.module('myApp', []);
+
     app.filter('prettyJSON', function () {
         function prettyPrintJson(json) {
             return JSON ? JSON.stringify(json, null, '  ') : 'your browser doesnt support JSON so cant pretty print';
         }
+
         return prettyPrintJson;
     });
 
-    app.controller('myCtrl', ['$scope', '$interval', function($scope, $interval) {
+    app.controller('myCtrl', ['$scope', '$interval', function ($scope, $interval) {
         $scope.c = controllerChart()
             .add({
                 cpuChartCanvas: 'controller-a-cpu-chart',
@@ -258,12 +370,12 @@
         $scope.resp = {
             pattern: {
                 data: [
-                    [ 'ctrl1' ],
-                    [ 'ctrl4' ],
-                    [ 'ctrl1', 'ctrl2', 'ctrl3'],
-                    [ 'ctrl3', 'ctrl2', 'ctrl1'],
-                    [ 'ctrl1', 'ctrl2', 'ctrl4'],
-                    [ 'ctrl1', 'ctrl4']
+                    ['ctrl1'],
+                    ['ctrl4'],
+                    ['ctrl1', 'ctrl2', 'ctrl3'],
+                    ['ctrl3', 'ctrl2', 'ctrl1'],
+                    ['ctrl1', 'ctrl2', 'ctrl4'],
+                    ['ctrl1', 'ctrl4']
                 ]
             }
         };
@@ -335,6 +447,46 @@
 
             $scope.c.update(resp);
         }, 200);
+    }]);
+
+    app.config(function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    });
+
+    app.controller('chartCtrl', ['$scope', '$http', function ($scope, $http) {
+        var url = 'http://localhost:9200/mars/system/_search';
+
+        $http({
+            method: 'GET',
+            url: url,
+//            data: JSON.stringify({
+//                sort: [{
+//                    post_data: {order: 'asc'}
+//                }]
+//            })
+        }).then(function(response) {
+
+            $scope.items = [];
+            angular.forEach(response.data.hits.hits, function (value) {
+                $scope.items.push(value._source);
+            });
+
+            //$scope.items = response.data.hits.hits;
+
+        }).catch(function(error) {
+            console.log(error);
+        });
+
+        $scope.makeClass = function (item) {
+            if (item.severity < 4) {
+                return 'danger';
+            } else if (item.severity === 4) {
+                return 'warning';
+            } else {
+                return 'info';
+            }
+        }
     }]);
 
 </script>
