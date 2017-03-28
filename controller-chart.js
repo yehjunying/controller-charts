@@ -48,9 +48,9 @@
                 options: {
                     animation : false,
                     maintainAspectRatio: false,
-                    onResize: function (inst, size) {
-                        console.log(size);
-                    },
+                    // onResize: function (inst, size) {
+                    //     console.log(size);
+                    // },
                     scales: {
                         xAxes: [{
                             display: false
