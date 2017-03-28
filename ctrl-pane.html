@@ -186,13 +186,6 @@
             </div>
         </div> <!-- row -->
 
-        <!--<div class="row">-->
-            <!--<button ng-click="zero_controller()">zero controller</button>-->
-            <!--<button ng-click="one_controller()">one controller</button>-->
-            <!--<button ng-click="two_controller()">two controller</button>-->
-            <!--<button ng-click="three_controller()">three controller</button>-->
-        <!--</div>-->
-
         <div class="row">
             <div class="col-md-2">
                 <pre ng-click="pick_pattern1()">{{resp.pattern.data[0] | prettyJSON}}</pre>
@@ -261,47 +254,6 @@
 
             return 'col-md-' + (12 / total);
         };
-
-//        $scope.chartWidth = function () {
-//            var width = [600, 300, 150];
-//
-//            var total = 0;
-//
-//            angular.forEach($scope.controllers, function (ctrl) {
-//                if (ctrl.isShow()) {
-//                    total += 1;
-//                }
-//            });
-//
-//            if (width.length < total) {
-//                total = width.length;
-//            }
-//
-//            return "width:" + width[total] + 'px';
-//        };
-//
-//        var number_of_resp_controller = 1;
-//        $scope.num_of_ctrl = 1;
-//
-//        $scope.zero_controller = function () {
-//            number_of_resp_controller = 0;
-//            $scope.num_of_ctrl = 0;
-//        };
-//
-//        $scope.one_controller = function () {
-//            number_of_resp_controller = 1;
-//            $scope.num_of_ctrl = 1;
-//        };
-//
-//        $scope.two_controller = function () {
-//            number_of_resp_controller = 2;
-//            $scope.num_of_ctrl = 2;
-//        };
-//
-//        $scope.three_controller = function () {
-//            number_of_resp_controller = 3;
-//            $scope.num_of_ctrl = 3;
-//        };
 
         $scope.resp = {
             pattern: {
@@ -380,25 +332,6 @@
                     }
                 });
             });
-
-//            for (i = 0; i < number_of_resp_controller; i ++) {
-//                resp.push({
-//                    name: 'controller' + (i + 1),
-//                    cpu: {
-//                        utilization: rangeValue(0, 100, $scope.c.charts[0].cpu.chartLast()[0] + randomInt(10, -10)),
-//                        frequencyInGhz: 2.20
-//                    },
-//                    memory: {
-//                        utilization: rangeValue(0, 100, $scope.c.charts[0].memory.chartLast()[0] + randomInt(3, -3)),
-//                        totalInGb: 4,
-//                        usedInGb: 1.5
-//                    },
-//                    ethernet: {
-//                        transmitInKbps: rangeValue(0, 100, $scope.c.charts[0].ethernet.chartLast()[0][0] + randomInt(10, -10)),
-//                        receiveInKbps: rangeValue(0, 100, $scope.c.charts[0].ethernet.chartLast()[1][0] + randomInt(10, -10))
-//                    }
-//                });
-//            }
 
             $scope.c.update(resp);
         }, 200);

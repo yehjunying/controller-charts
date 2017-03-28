@@ -1,0 +1,46 @@
+GET http://localhost:9200/
+
+###
+
+POST http://localhost:9200/megacorp/employee/1 HTTP/1.1
+content-type: application/json
+
+{
+    "first_name": "John",
+    "last_name": "Smith",
+    "age": 25,
+    "about": "I am hero",
+    "interests": ["sports", "music"]
+}
+
+###
+
+POST http://localhost:9200/megacorp/employee/2 HTTP/1.1
+content-type: application/json
+
+{
+    "first_name": "Junying",
+    "last_name": "Yeh",
+    "age": 25,
+    "about": "I am hero",
+    "interests": ["sports", "music"]
+}
+
+###
+
+GET http://localhost:9200/megacorp/employee/1
+
+###
+GET http://localhost:9200/megacorp/employee/_search
+
+###
+GET http://localhost:9200/_search
+
+###
+GET http://localhost:9200/megacorp/employee/_search?q=25
+
+###
+GET http://localhost:9200/megacorp/employee/_search?q=music
+
+###
+GET http://localhost:9200/megacorp/employee/_search?q=hero
