@@ -186,11 +186,32 @@
             </div>
         </div> <!-- row -->
 
+        <!--<div class="row">-->
+            <!--<button ng-click="zero_controller()">zero controller</button>-->
+            <!--<button ng-click="one_controller()">one controller</button>-->
+            <!--<button ng-click="two_controller()">two controller</button>-->
+            <!--<button ng-click="three_controller()">three controller</button>-->
+        <!--</div>-->
+
         <div class="row">
-            <button ng-click="zero_controller()">zero controller</button>
-            <button ng-click="one_controller()">one controller</button>
-            <button ng-click="two_controller()">two controller</button>
-            <button ng-click="three_controller()">three controller</button>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern1()">{{resp.pattern.data[0] | prettyJSON}}</pre>
+            </div>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern2()">{{resp.pattern.data[1] | prettyJSON}}</pre>
+            </div>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern3()">{{resp.pattern.data[2] | prettyJSON}}</pre>
+            </div>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern4()">{{resp.pattern.data[3] | prettyJSON}}</pre>
+            </div>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern5()">{{resp.pattern.data[4] | prettyJSON}}</pre>
+            </div>
+            <div class="col-md-2">
+                <pre ng-click="pick_pattern6()">{{resp.pattern.data[5] | prettyJSON}}</pre>
+            </div>
         </div>
 
     </div>
@@ -200,6 +221,13 @@
 <script>
 
     var app = angular.module('myApp', []);
+    app.filter('prettyJSON', function () {
+        function prettyPrintJson(json) {
+            return JSON ? JSON.stringify(json, null, '  ') : 'your browser doesnt support JSON so cant pretty print';
+        }
+        return prettyPrintJson;
+    });
+
     app.controller('myCtrl', ['$scope', '$interval', function($scope, $interval) {
         $scope.c = controllerChart()
             .add({
@@ -221,7 +249,7 @@
         $scope.makeClass = function () {
             var total = 0;
 
-            angular.forEach($scope.controllers, function (ctrl) {
+            angular.forEach($scope.c.charts, function (ctrl) {
                 if (ctrl.isShow()) {
                     total += 1;
                 }
@@ -234,23 +262,23 @@
             return 'col-md-' + (12 / total);
         };
 
-        $scope.chartWidth = function () {
-            var width = [600, 300, 150];
-
-            var total = 0;
-
-            angular.forEach($scope.controllers, function (ctrl) {
-                if (ctrl.isShow()) {
-                    total += 1;
-                }
-            });
-
-            if (width.length < total) {
-                total = width.length;
-            }
-
-            return "width:" + width[total] + 'px';
-        };
+//        $scope.chartWidth = function () {
+//            var width = [600, 300, 150];
+//
+//            var total = 0;
+//
+//            angular.forEach($scope.controllers, function (ctrl) {
+//                if (ctrl.isShow()) {
+//                    total += 1;
+//                }
+//            });
+//
+//            if (width.length < total) {
+//                total = width.length;
+//            }
+//
+//            return "width:" + width[total] + 'px';
+//        };
 
         var number_of_resp_controller = 1;
         $scope.num_of_ctrl = 1;
@@ -275,6 +303,45 @@
             $scope.num_of_ctrl = 3;
         };
 
+        $scope.resp = {
+            pattern: {
+                data: [
+                    [ 'ctrl1' ],
+                    [ 'ctrl4' ],
+                    [ 'ctrl1', 'ctrl2', 'ctrl3'],
+                    [ 'ctrl3', 'ctrl2', 'ctrl1'],
+                    [ 'ctrl1', 'ctrl2', 'ctrl4'],
+                    [ 'ctrl1', 'ctrl4']
+                ]
+            }
+        };
+
+        $scope.resp.pattern.pick = $scope.resp.pattern.data[0];
+
+        $scope.pick_pattern1 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[0];
+        };
+
+        $scope.pick_pattern2 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[1];
+        };
+
+        $scope.pick_pattern3 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[2];
+        };
+
+        $scope.pick_pattern4 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[3];
+        };
+
+        $scope.pick_pattern5 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[4];
+        };
+
+        $scope.pick_pattern6 = function () {
+            $scope.resp.pattern.pick = $scope.resp.pattern.data[5];
+        };
+
         $interval(function () {
             var randomInt = function (min, max) {
                 return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -292,11 +359,12 @@
                 return value;
             };
 
-            var resp = [], i;
+            var resp = [],
+                i;
 
-            for (i = 0; i < number_of_resp_controller; i ++) {
+            angular.forEach($scope.resp.pattern.pick, function (value, key) {
                 resp.push({
-                    name: 'controller' + (i + 1),
+                    name: value,
                     cpu: {
                         utilization: rangeValue(0, 100, $scope.c.charts[0].cpu.chartLast()[0] + randomInt(10, -10)),
                         frequencyInGhz: 2.20
@@ -311,7 +379,27 @@
                         receiveInKbps: rangeValue(0, 100, $scope.c.charts[0].ethernet.chartLast()[1][0] + randomInt(10, -10))
                     }
                 });
-            }
+            });
+
+//            for (i = 0; i < number_of_resp_controller; i ++) {
+//                resp.push({
+//                    name: 'controller' + (i + 1),
+//                    cpu: {
+//                        utilization: rangeValue(0, 100, $scope.c.charts[0].cpu.chartLast()[0] + randomInt(10, -10)),
+//                        frequencyInGhz: 2.20
+//                    },
+//                    memory: {
+//                        utilization: rangeValue(0, 100, $scope.c.charts[0].memory.chartLast()[0] + randomInt(3, -3)),
+//                        totalInGb: 4,
+//                        usedInGb: 1.5
+//                    },
+//                    ethernet: {
+//                        transmitInKbps: rangeValue(0, 100, $scope.c.charts[0].ethernet.chartLast()[0][0] + randomInt(10, -10)),
+//                        receiveInKbps: rangeValue(0, 100, $scope.c.charts[0].ethernet.chartLast()[1][0] + randomInt(10, -10))
+//                    }
+//                });
+//            }
+
             $scope.c.update(resp);
         }, 200);
     }]);
