@@ -6,6 +6,7 @@
 <script src="./node_modules/jquery/dist/jquery.js"></script>
 
 <script src="./controller-chart.js"></script>
+<script src="./elasticsearch.angular.js"></script>
 
 <link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
@@ -323,7 +324,7 @@
 
 <script>
 
-    var app = angular.module('myApp', []);
+    var app = angular.module('myApp', ['elasticsearch']);
 
     app.filter('prettyJSON', function () {
         function prettyPrintJson(json) {
@@ -454,8 +455,16 @@
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
     });
 
-    app.controller('chartCtrl', ['$scope', '$http', function ($scope, $http) {
-        var url = 'http://localhost:9200/mars/system/_search';
+    app.service('client', function (esFactory) {
+        return esFactory({
+            host: 'localhost:9200',
+            apiVersion: '2.3',
+            log: 'trace'
+        });
+    });
+
+    app.controller('chartCtrl', ['$scope', '$http', 'client', 'esFactory', function ($scope, $http, client, esFactory) {
+        var url = 'http://localhost:9200/mars/test/_search';
 
         $http({
             method: 'GET',
@@ -472,6 +481,7 @@
                 $scope.items.push(value._source);
             });
 
+            console.log($scope.items);
             //$scope.items = response.data.hits.hits;
 
         }).catch(function(error) {
@@ -486,7 +496,43 @@
             } else {
                 return 'info';
             }
-        }
+        };
+
+        client.cluster.state({
+            metric: [
+                'cluster_name',
+                'nodes',
+                'master_node',
+                'version'
+            ]
+        })
+            .then(function (resp) {
+                $scope.clusterState = resp;
+                $scope.error = null;
+            })
+            .catch(function (err) {
+                $scope.clusterState = null;
+                $scope.error = err;
+
+                // if the err is a NoConnections error, then the client was not able to
+                // connect to elasticsearch. In that case, create a more detailed error
+                // message
+                if (err instanceof esFactory.errors.NoConnections) {
+                    $scope.error = new Error('Unable to connect to elasticsearch. ' +
+                        'Make sure that it is running and listening at http://localhost:9200');
+                }
+            });
+
+        client.search({
+                size: 200,
+                sort : "time:desc"
+            },
+            function (error, resp) {
+
+                console.log(resp);
+
+            });
+
     }]);
 
 </script>
