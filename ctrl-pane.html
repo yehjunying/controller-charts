@@ -4,6 +4,7 @@
 <script src="./node_modules/chai/chai.js"></script>
 <script src="./node_modules/chart.js/dist/Chart.js"></script>
 <script src="./node_modules/jquery/dist/jquery.js"></script>
+<script src="./node_modules/lodash/lodash.min.js"></script>
 
 <script src="./controller-chart.js"></script>
 <script src="./elasticsearch.angular.js"></script>
@@ -302,7 +303,7 @@
                                 <!--<span class="chat-img pull-left"></span>-->
                                 <div class="chat-body clearfix">
                                     <div class="header">
-                                        <strong class="primary-font">{{i.service}} {{i.hostname}} {{i.address}}</strong>
+                                        <strong class="primary-font">{{i._id}} {{i.service}} {{i.hostname}} {{i.address}}</strong>
                                         <small class="text-muted">32 mins ago</small>
                                     </div>
                                     <p>
@@ -315,6 +316,18 @@
                     <div class="panel-footer">EVENT</div>
                 </div>
             </div> <!-- event-pane -->
+
+            <div class="col-xs-8 col-md-4">
+                <div class="row">
+                    <pre ng-click="refresh()">Refresh</pre>
+                </div>
+                <div class="row">
+                    <pre ng-click="autoRefresh()">Auto Refresh {{auto_refresh}}</pre>
+                </div>
+                <div class="row">
+                    <pre ng-click="getMore()">GetMore...</pre>
+                </div>
+            </div>
 
         </div>
 
@@ -463,75 +476,227 @@
         });
     });
 
-    app.controller('chartCtrl', ['$scope', '$http', 'client', 'esFactory', function ($scope, $http, client, esFactory) {
-        var url = 'http://localhost:9200/mars/test/_search';
+    app.controller('chartCtrl', ['$scope', '$interval', '$http', 'client', 'esFactory', function ($scope, $interval, $http, client, esFactory) {
+        var assert = chai
+            .assert;
 
-        $http({
-            method: 'GET',
-            url: url,
-//            data: JSON.stringify({
-//                sort: [{
-//                    post_data: {order: 'asc'}
-//                }]
-//            })
-        }).then(function(response) {
+        (function () {
+            var exist = [],
+                resp = [{
+                    _id: '1234'
+                }];
 
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [{_id: '1234'}]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1236' },
+                    { _id: '1235' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1236' },
+                { _id: '1235' },
+                { _id: '1234' }
+            ]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1233' },
+                    { _id: '1232' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1234' },
+                { _id: '1233' },
+                { _id: '1232' }
+            ]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1234' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1234' }
+            ]);
+
+        })();
+
+        console.log('xx');
+
+        function updateData(exist, resp) {
+//            if (_.head(exist)) {
+//                if (_.head(exist).id < _.last(resp).id) {
+//                    return _.concat(resp, exist);
+//                } else {
+//                    return _.concat(exist, resp);
+//                }
+//            }
+
+            if (exist === []) {
+                return _.cloneDeep(resp);
+            }
+
+            return _.reverse(
+                        _.unionBy(
+                            _.sortBy(
+                                _.concat(resp, exist), ['_id']),
+                            '_id'
+                        ));
+        }
+
+        $scope.items = [];
+        $scope.auto_refresh = 'OFF';
+        get({
+            size: 1,
+            maxSize: 2
+        }, respCb);
+
+        $scope.refresh = function () {
             $scope.items = [];
-            angular.forEach(response.data.hits.hits, function (value) {
-                $scope.items.push(value._source);
-            });
+            get({
+                size: 1,
+                maxSize: 2
+            }, respCb);
+        };
 
-            console.log($scope.items);
-            //$scope.items = response.data.hits.hits;
+        var auto_refresh_timer;
 
-        }).catch(function(error) {
-            console.log(error);
-        });
-
-        $scope.makeClass = function (item) {
-            if (item.severity < 4) {
-                return 'danger';
-            } else if (item.severity === 4) {
-                return 'warning';
+        $scope.autoRefresh = function () {
+            if ($scope.auto_refresh === 'ON') {
+                $scope.auto_refresh = 'OFF';
             } else {
-                return 'info';
+                $scope.auto_refresh = 'ON';
+            }
+
+            if ($scope.auto_refresh === 'OFF') {
+                if (auto_refresh_timer) {
+                    $interval.cancel(auto_refresh_timer);
+                    auto_refresh_timer = null;
+                }
+            } else {
+                if (!auto_refresh_timer) {
+                    auto_refresh_timer = $interval(function () {
+                        //$scope.items = []; // ??
+                        get({
+                            size: 1,
+                            maxSize: 2
+                        }, respCb);
+                    }, 2000);
+                }
             }
         };
 
-        client.cluster.state({
-            metric: [
-                'cluster_name',
-                'nodes',
-                'master_node',
-                'version'
-            ]
-        })
-            .then(function (resp) {
-                $scope.clusterState = resp;
-                $scope.error = null;
-            })
-            .catch(function (err) {
-                $scope.clusterState = null;
-                $scope.error = err;
+        $scope.getMore = function () {
+            get({
+                scrollId: $scope.lastResp._scroll_id,
+                size: 2,
+                maxSize: $scope.items.length + 2
+            }, respCb);
+        };
 
-                // if the err is a NoConnections error, then the client was not able to
-                // connect to elasticsearch. In that case, create a more detailed error
-                // message
-                if (err instanceof esFactory.errors.NoConnections) {
-                    $scope.error = new Error('Unable to connect to elasticsearch. ' +
-                        'Make sure that it is running and listening at http://localhost:9200');
+        function respCb(err, resp) {
+            var stop, maxSize;
+
+            if (typeof this.maxSize === 'number') {
+                maxSize = this.maxSize;
+            } else {
+                maxSize = $scope.items + 2;
+            }
+
+            $scope.lastResp = _.cloneDeep(resp);
+            $scope.items = updateData($scope.items, resp.hits.hits);
+
+            return {
+                fetched: $scope.items.length,
+                stop: maxSize <= $scope.items.length ? true : false
+            }
+        }
+
+        function get(o, cb) {
+            o = o || {};
+            o.size = o.size || 100;
+            cb = cb || o.respCb || function () {};
+
+            var cbRet;
+
+            if (o.scrollId) {
+                client.scroll({
+                    size: o.size,
+                    scrollId: o.scrollId,
+                    scroll: '1s'
+                }, getMoreUntilDone);
+            } else {
+                client.search({
+                        size: o.size,
+                        scroll: '1s',
+                        sort: "time:desc"
+                    }, firstResp);
+            }
+
+            function firstResp(error, resp) {
+                if (error) {
+                    cb.call(o, error, resp);
+                    return;
+                } else {
+                    cbRet = cb.call(o, undefined, resp);
+                    if (cbRet.stop) {
+                        return;
+                    }
                 }
-            });
 
-        client.search({
-                size: 200,
-                sort : "time:desc"
-            },
-            function (error, resp) {
+                if (resp.hits.total > cbRet.fetched) {
+                    client.scroll({
+                        scrollId: resp._scroll_id,
+                        scroll: '1s'
+                    }, getMoreUntilDone);
+                }
+            }
 
-                console.log(resp);
+            function getMoreUntilDone(error, resp) {
+                if (error) {
+                    client.search({
+                        size: o.size,
+                        scroll: '1s',
+                        sort: "time:desc"
+                    }, firstResp);
+                    return;
+                } else {
+                    cbRet = cb.call(o, undefined, resp);
+                    if (cbRet.stop) {
+                        return;
+                    }
+                }
 
-            });
+                if (resp.hits.total > cbRet.fetched) {
+                    client.scroll({
+                        scrollId: resp._scroll_id,
+                        scroll: '1s'
+                    }, getMoreUntilDone);
+                }
+            }
+        }
 
     }]);
 
