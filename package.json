@@ -4,19 +4,25 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha app/**/__tests__/*.js",
+    "test-watch": "mocha --watch app/**/__tests__/*.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.6.3",
+    "bootstrap": "^3.3.7",
+    "chart.js": "^2.5.0",
+    "elasticsearch": "^13.0.0-rc2",
+    "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "mathjs": "^3.8.1"
   },
   "devDependencies": {
-    "angular": "^1.6.3",
-    "bootstrap": "^3.3.7",
+    "angular-mocks": "^1.6.4",
+    "async": "^2.3.0",
     "chai": "^3.5.0",
-    "chart.js": "^2.5.0",
-    "jquery": "^3.2.1"
+    "jsdom": "^3.1.2",
+    "mocha": "^3.2.0"
   }
 }

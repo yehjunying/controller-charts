@@ -8,6 +8,7 @@
 
 <script src="./controller-chart.js"></script>
 <script src="./elasticsearch.angular.js"></script>
+<script src="./app/services/log.js"></script>
 
 <link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
@@ -545,15 +546,16 @@
 
         console.log('xx');
 
-        function updateData(exist, resp) {
-//            if (_.head(exist)) {
-//                if (_.head(exist).id < _.last(resp).id) {
-//                    return _.concat(resp, exist);
-//                } else {
-//                    return _.concat(exist, resp);
-//                }
-//            }
+        var get = Log({
+                elasticSearchClient: client,
+                lodash: _
+            }),
+            req = {
+                size: 1,
+                maxSize: 2
+            };
 
+        function updateData(exist, resp) {
             if (exist === []) {
                 return _.cloneDeep(resp);
             }
@@ -568,17 +570,16 @@
 
         $scope.items = [];
         $scope.auto_refresh = 'OFF';
-        get({
-            size: 1,
-            maxSize: 2
-        }, respCb);
+        get(req, respCb);
 
         $scope.refresh = function () {
             $scope.items = [];
-            get({
+            req = {
                 size: 1,
                 maxSize: 2
-            }, respCb);
+            };
+
+            get(req, respCb);
         };
 
         var auto_refresh_timer;
@@ -598,32 +599,25 @@
             } else {
                 if (!auto_refresh_timer) {
                     auto_refresh_timer = $interval(function () {
-                        //$scope.items = []; // ??
-                        get({
+                        req = {
                             size: 1,
                             maxSize: 2
-                        }, respCb);
+                        };
+
+                        get(req, respCb);
                     }, 2000);
                 }
             }
         };
 
         $scope.getMore = function () {
-            get({
-                scrollId: $scope.lastResp._scroll_id,
-                size: 2,
-                maxSize: $scope.items.length + 2
-            }, respCb);
+            req.maxSize = $scope.items.length + 2;
+
+            get(req, respCb);
         };
 
         function respCb(err, resp) {
             var stop, maxSize;
-
-            if (typeof this.maxSize === 'number') {
-                maxSize = this.maxSize;
-            } else {
-                maxSize = $scope.items + 2;
-            }
 
             $scope.lastResp = _.cloneDeep(resp);
             $scope.items = updateData($scope.items, resp.hits.hits);
@@ -633,71 +627,6 @@
                 stop: maxSize <= $scope.items.length ? true : false
             }
         }
-
-        function get(o, cb) {
-            o = o || {};
-            o.size = o.size || 100;
-            cb = cb || o.respCb || function () {};
-
-            var cbRet;
-
-            if (o.scrollId) {
-                client.scroll({
-                    size: o.size,
-                    scrollId: o.scrollId,
-                    scroll: '1s'
-                }, getMoreUntilDone);
-            } else {
-                client.search({
-                        size: o.size,
-                        scroll: '1s',
-                        sort: "time:desc"
-                    }, firstResp);
-            }
-
-            function firstResp(error, resp) {
-                if (error) {
-                    cb.call(o, error, resp);
-                    return;
-                } else {
-                    cbRet = cb.call(o, undefined, resp);
-                    if (cbRet.stop) {
-                        return;
-                    }
-                }
-
-                if (resp.hits.total > cbRet.fetched) {
-                    client.scroll({
-                        scrollId: resp._scroll_id,
-                        scroll: '1s'
-                    }, getMoreUntilDone);
-                }
-            }
-
-            function getMoreUntilDone(error, resp) {
-                if (error) {
-                    client.search({
-                        size: o.size,
-                        scroll: '1s',
-                        sort: "time:desc"
-                    }, firstResp);
-                    return;
-                } else {
-                    cbRet = cb.call(o, undefined, resp);
-                    if (cbRet.stop) {
-                        return;
-                    }
-                }
-
-                if (resp.hits.total > cbRet.fetched) {
-                    client.scroll({
-                        scrollId: resp._scroll_id,
-                        scroll: '1s'
-                    }, getMoreUntilDone);
-                }
-            }
-        }
-
     }]);
 
 </script>
