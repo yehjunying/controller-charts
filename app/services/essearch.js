@@ -1,14 +1,23 @@
 ;(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
-            global.Log = factory()
-}(this, (function () { 'use strict';
+            global.ESSearch = factory()
+}(this, (function () {
+    'use strict';
 
-    return function (options) {
-        options = options || {};
+    return function (client) {
+        if (typeof client !== 'object' || typeof client.search !== 'function' || typeof client.scroll !== 'function') {
+            throw new TypeError('Parameter miss or invalid, required an instance of elasticsearch client');
+        }
 
-        var client = options.elasticSearchClient,
-            _ = options.lodash;
+        function arrayLast(array) {
+            var length = array == null ? 0 : array.length;
+            return length ? array[length - 1] : undefined;
+        }
+
+        function deepCopy(original) {
+            return JSON.parse(JSON.stringify(original));
+        }
 
         function _search(o, cb) {
             o = o || {};
@@ -17,6 +26,8 @@
             o.$scope = o.$scope || {
                     climb: 0
                 };
+
+            o.$scope.last = false;
 
             var scrollId = o.scrollId || o.$scope.scrollId,
                 maxSize = o.maxSize,
@@ -66,7 +77,11 @@
                     o.$scope.climb += resp.hits.hits.length;
                     o.$scope.scrollId = resp._scroll_id;
 
-                    o.$scope.hits = _.cloneDeep(resp.hits.hits);
+                    o.$scope.hits = deepCopy(resp.hits.hits);
+
+                    if (maxSize && maxSize <= o.$scope.climb || resp.hits.total == o.$scope.climb) {
+                        o.$scope.last = true;
+                    }
 
                     cb.call(o, undefined, resp);
                 }
@@ -89,7 +104,7 @@
                             req.body.query.bool.must.push({
                                 range: {
                                     id: {
-                                        lt: _.last(o.$scope.hits)._id
+                                        lt: arrayLast(o.$scope.hits)._id
                                     }
                                 }
                             });
@@ -100,11 +115,11 @@
                                         {
                                             range: {
                                                 id: {
-                                                    lt: _.last(o.$scope.hits)._id
+                                                    lt: arrayLast(o.$scope.hits)._id
                                                 }
                                             }
                                         },
-                                        _.cloneDeep(req.body.query)
+                                        deepCopy(req.body.query)
                                     ]
                                 }
                             }
@@ -117,7 +132,7 @@
                                     {
                                         range: {
                                             id: {
-                                                lt: _.last(o.$scope.hits)._id
+                                                lt: arrayLast(o.$scope.hits)._id
                                             }
                                         }
                                     }
@@ -142,7 +157,11 @@
                     o.$scope.climb += resp.hits.hits.length;
                     o.$scope.scrollId = resp._scroll_id;
 
-                    o.$scope.hits = _.cloneDeep(resp.hits.hits);
+                    o.$scope.hits = deepCopy(resp.hits.hits); //_.cloneDeep(resp.hits.hits);
+
+                    if (maxSize && maxSize <= o.$scope.climb || resp.hits.total == o.$scope.climb) {
+                        o.$scope.last = true;
+                    }
 
                     cb.call(o, undefined, resp);
                 }
@@ -157,22 +176,19 @@
             }
         }
 
-        //return {
-        //    get: get
-        //}
         return _search;
     }
 
 })));
 
 angular.module('myServices.user', [])
-    // .service('client', function (esFactory) {
-    //     return esFactory({
-    //         host: 'localhost:9200',
-    //         apiVersion: '2.3',
-    //         log: 'trace'
-    //     });
-    // })
+// .service('client', function (esFactory) {
+//     return esFactory({
+//         host: 'localhost:9200',
+//         apiVersion: '2.3',
+//         log: 'trace'
+//     });
+// })
     .service('UserService', function () {
         return {
             getUsers: function () {

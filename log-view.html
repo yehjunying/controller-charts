@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html>
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/chai/chai.js"></script>
+<script src="./node_modules/chart.js/dist/Chart.js"></script>
+<script src="./node_modules/jquery/dist/jquery.js"></script>
+<script src="./node_modules/lodash/lodash.min.js"></script>
+
+<script src="./config.js"></script>
+<script src="./controller-chart.js"></script>
+<script src="./elasticsearch.angular.js"></script>
+<script src="app/services/essearch.js"></script>
+<script src="app/services/event-stats-bar.js"></script>
+
+<link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+<link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
+
+<style>
+    #ov-event-view .controller > .panel-body {
+        height: 360px;
+    }
+
+    #ov-event-view .row {
+        padding-bottom: 5px;
+    }
+
+    .controller-text {
+        padding-left: 5px;
+        padding-right: 10px;
+    }
+
+    .controller-text span {
+        font-size: 90%;
+        font-weight: 700;
+    }
+
+    .controller-text :nth-child(1) {
+        font-weight: 400;
+    }
+
+    #ov-event-view .chat ul {
+        list-style: none;
+        margin: -15px;
+        padding: 15px;
+    }
+
+    #ov-event-view .chat ul li {
+        margin-bottom: 10px;
+        padding: 15px 5px;
+        border-bottom: 1px solid #eee;
+    }
+
+    #ov-event-view .chat ul li.danger {
+        border-left: solid;
+        border-left-width: 0.5em;
+        border-left-color: #ed1c24;
+    }
+
+    #ov-event-view .chat ul li.warning {
+        border-left: solid;
+        border-left-width: 0.5em;
+        border-left-color: rgb(250, 187, 61);
+    }
+
+    /*#ov-dashboard .chat ul li.info {*/
+        /*border-left: solid;*/
+        /*border-left-width: 0.25em;*/
+        /*border-left-color: rgb(250, 187, 61)*/
+    /*}*/
+
+    #ov-event-view .chat ul li.left .chat-body {
+        margin-left: 30px;
+    }
+
+    #ov-event-view .chat ul li.right .chat-body {
+        margin-right: 30px;
+    }
+
+    #ov-event-view .chat ul li .chat-body p {
+        margin: 0;
+    }
+
+    #ov-event-view .chat ul .glyphicon {
+        margin-right: 5px;
+    }
+
+    #ov-event-view .chat .panel-body {
+        overflow-y: auto;
+        height: 300px;
+    }
+
+    #ov-event-view .chat-body small {
+        margin-left: 5px;
+    }
+
+    #ov-event-view .chat-img {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        font-size: 20px;
+        color: #fff;
+        line-height: 20px;
+        text-align: center;
+        background: rgba(226, 8, 12, 0.9);
+    }
+
+    .p-lr-12 {
+        padding-left: 12px;
+        padding-left: 12px;
+    }
+
+    .p-t-5 {
+        padding-top: 5px;
+    }
+
+    .p-t-10 {
+        padding-top: 10px;
+    }
+
+</style>
+
+<body>
+
+<div ng-app="myApp">
+
+    <div id="ov-event-view" class="container">
+        <div ng-controller="eventViewCtrl">
+
+            <div class="row">
+                <button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">
+                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                </button>
+            </div>
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <!--<div class="page-heading">-->
+                        <!--Query-->
+                    <!--</div>-->
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for...">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="searchFn()">
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                </button>
+
+                                <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
+                                    <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
+                                <!--</button>-->
+
+                                <button type="button" class="btn btn-default" ng-click="toggleSearchOptions()">
+                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                </button>
+
+                            </span>
+                        </div><!-- /input-group -->
+
+                        <div id="search-options" ng-show="isShowSearchOptions()">
+
+                            <div class="p-t-10"></div>
+
+                            <div class="row p-lr-12">
+                                <div class="col-xs-3 col-md-3">
+                                    <span>Event Log</span>
+                                </div>
+                                <div class="col-xs-9 col-md-9">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.type, 'All')" ng-click="searchOptions.type='All'">All</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.type, 'System')" ng-click="searchOptions.type='System'">System</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.type, 'Fabric')" ng-click="searchOptions.type='Fabric'">Fabric</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row p-lr-12">
+                                <div class="col-xs-3 col-md-3">
+                                    <span>Event Severity Levels</span>
+                                </div>
+                                <div class="col-xs-9 col-md-9">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'All')" ng-click="searchOptions.severity='All'">All</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Emerg')" ng-click="searchOptions.severity='Emerg'">Emerg</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Alert')" ng-click="searchOptions.severity='Alert'">Alert</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Crit')" ng-click="searchOptions.severity='Crit'">Crit</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Err')" ng-click="searchOptions.severity='Err'">Err</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Warning')" ng-click="searchOptions.severity='Warning'">Warning</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Notice')" ng-click="searchOptions.severity='Notice'">Notice</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Info')" ng-click="searchOptions.severity='Info'">Info</button>
+                                        <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.severity, 'Debug')" ng-click="searchOptions.severity='Debug'">Debug</button>
+                                    </div>
+                                </div>
+                            </div> <!-- row -->
+
+                            <!--<div class="row p-lr-12">-->
+                                <!--<div class="col-xs-3 col-md-3">-->
+                                    <!--<span>Event Source</span>-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-9 col-md-9">-->
+                                    <!--<div class="btn-group">-->
+                                        <!--<button type="button" class="btn btn-info">All</button>-->
+                                        <!--<button type="button" class="btn btn-default">1.2.3.4</button>-->
+                                        <!--<button type="button" class="btn btn-default">1.2.3.5</button>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+                            <div class="row p-lr-12">
+                                <div class="col-xs-3 col-md-3">
+                                    <span>Time Period</span>
+                                </div>
+                                <div class="col-xs-5 col-md-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" ng-model="searchOptions.timePeriod">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.timePeriodUnit, 'Minutes')" ng-click="searchOptions.timePeriodUnit='Minutes'">Minutes</button>
+                                            <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.timePeriodUnit, 'Hours')" ng-click="searchOptions.timePeriodUnit='Hours'">Hours</button>
+                                            <button type="button" class="btn" ng-class="makeBottonClass(searchOptions.timePeriodUnit, 'Days')" ng-click="searchOptions.timePeriodUnit='Days'">Days</button>
+
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </div>
+                            </div> <!-- row -->
+
+                            <!--<div class="row p-lr-12">-->
+                                <!--<div class="col-xs-3 col-md-3">-->
+                                    <!--Action-->
+                                <!--</div>-->
+                                <!--<div class="col-xs-9 col-md-9">-->
+                                    <!--<div class="btn-group">-->
+                                        <!--<button type="button" class="btn btn-default" ng-click="searchFn()">-->
+                                            <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search-->
+                                        <!--</button>-->
+                                        <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
+                                            <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span> Auto Refresh-->
+                                        <!--</button>-->
+                                        <!--&lt;!&ndash;<div class="checkbox">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<label><input type="checkbox" value="">Auto refresh</label>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        </div> <!-- search-options -->
+
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="row">-->
+                <!--<div class="col-xs-3 col-md-3">-->
+                    <!--<span>Event Log</span>-->
+                <!--</div>-->
+                <!--<div class="col-xs-9 col-md-9">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button type="button" class="btn btn-info">All</button>-->
+                        <!--<button type="button" class="btn btn-default">System</button>-->
+                        <!--<button type="button" class="btn btn-default">Fabric</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+            <!--<div class="row">-->
+                <!--<div class="col-xs-3 col-md-3">-->
+                    <!--<span>Event Severity Levels</span>-->
+                <!--</div>-->
+                <!--<div class="col-xs-9 col-md-9">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button type="button" class="btn btn-info">All</button>-->
+                        <!--<button type="button" class="btn btn-default">Critical</button>-->
+                        <!--<button type="button" class="btn btn-default">Error</button>-->
+                        <!--<button type="button" class="btn btn-default">Warning</button>-->
+                        <!--<button type="button" class="btn btn-default">Info</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+            <!--<div class="row">-->
+                <!--<div class="col-xs-3 col-md-3">-->
+                    <!--<span>Event Source</span>-->
+                <!--</div>-->
+                <!--<div class="col-xs-9 col-md-9">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button type="button" class="btn btn-info">All</button>-->
+                        <!--<button type="button" class="btn btn-default">1.2.3.4</button>-->
+                        <!--<button type="button" class="btn btn-default">1.2.3.5</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+            <!--<div class="row">-->
+                <!--<div class="col-xs-3 col-md-3">-->
+                    <!--<span>Time Period</span>-->
+                <!--</div>-->
+                <!--<div class="col-xs-1 col-md-1">-->
+                    <!--<input type="text" class="form-control" id="usr">-->
+                <!--</div>-->
+                <!--<div class="col-xs-8 col-md-8">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button type="button" class="btn btn-default">Minutes</button>-->
+                        <!--<button type="button" class="btn btn-info">Hours</button>-->
+                        <!--<button type="button" class="btn btn-default">Days</button>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+            <!--<div class="row">-->
+                <!--<div class="col-xs-3 col-md-3">-->
+                <!--</div>-->
+
+                <!--<div class="col-xs-9 col-md-9">-->
+                    <!--<div class="btn-group">-->
+                        <!--<button type="button" class="btn btn-default" ng-click="searchFn()">-->
+                            <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search-->
+                        <!--</button>-->
+                        <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
+                            <!--<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Auto Refresh-->
+                        <!--</button>-->
+                        <!--&lt;!&ndash;<button type="button" class="btn btn-default" ng-click="getMore()">Get More ...&ndash;&gt;-->
+                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+            <div class="row">
+                <div style="width: 100%; height: 100px">
+                    <canvas class="main-chart" id="event-stats-chart" width="600" height="150"></canvas>
+                </div>
+            </div> <!-- row -->
+
+            <div class="row">
+                <div class="col-xs-3 col-md-3">
+                </div>
+                <div class="col-xs-9 col-md-9">
+                    <span>{{searchResult.items.length}} of {{searchResult.stats.total}} results</span>
+                </div>
+            </div> <!-- row -->
+
+            <div class="row">
+                <div class="col-xs-8 col-md-8">
+                    <div class="panel panel-default chat">
+                        <div id="event-view" class="panel-body">
+                            <ul>
+                                <li class="left clearfix" ng-repeat="i in searchResult.items | filter: eventFilter(filterOptions)" ng-class="makeClass(i)">
+                                    <!--<span class="chat-img pull-left"></span>-->
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">{{$index+1}}, {{i._id}}</strong>
+                                            <small class="text-muted">{{i._source.localeDateTime}}</small>
+                                        </div>
+                                        <p>
+                                            facility: <strong class="primary-font">{{i._source.facility}}</strong>
+                                            severity: <strong class="primary-font">{{i._source.severity}}</strong>
+                                            tag: <strong class="primary-font">{{i._source.tag}}</strong>
+                                            hostname: <strong class="primary-font">{{i._source.hostname}}</strong>
+                                            address: <strong class="primary-font">{{i._source.address}}</strong>
+                                        </p>
+                                        <span>
+                                            {{i._source.message}}
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--<div class="panel-footer">EVENT</div>-->
+                    </div>
+                </div> <!-- event-pane -->
+
+                <div class="col-xs-4 col-md-4">
+                    <h4>Filter by:</h4>
+
+                    <h4>Severity</h4>
+                    <div ng-repeat="i in searchResult.stats.severities.buckets | orderBy: 'key'">
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="" ng-click="onFilterCheckbox(filterOptions.severities, i.key)">{{ severityString(i.key) }} ({{i.doc_count}})</label>
+                        </div>
+                    </div>
+
+                    <h4>Tag</h4>
+                    <div ng-repeat="i in searchResult.stats.tags.buckets">
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="" ng-click="onFilterCheckbox(filterOptions.tags, i.key)">{{i.key}} ({{i.doc_count}})</label>
+                        </div>
+                    </div>
+
+                    <!--<h4>Hostname</h4>-->
+                    <!--<div ng-repeat="i in searchResult.stats.hostnames.buckets">-->
+                        <!--<div class="checkbox">-->
+                            <!--<label><input type="checkbox" value="">{{i.key}} ({{i.doc_count}})</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <h4>IP Address</h4>
+                    <div ng-repeat="i in searchResult.stats.addresses.buckets">
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="" ng-click="onFilterCheckbox(filterOptions.address, i.key)">{{i.key}} ({{i.doc_count}})</label>
+                        </div>
+                    </div>
+
+                    <!--<div class="row">-->
+                        <!--<pre ng-click="searchFn()">Search</pre>-->
+                    <!--</div>-->
+                    <!--<div class="row">-->
+                        <!--<pre ng-click="autoRefresh()">Auto Refresh {{auto_refresh}}</pre>-->
+                    <!--</div>-->
+                    <!--<div class="row">-->
+                        <!--<pre ng-click="getMore()">GetMore...</pre>-->
+                    <!--</div>-->
+                </div>
+            </div> <!-- row -->
+
+            <div class="row">
+                <div class="col-xs-8 col-md-8">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-6">
+                            <pre>scrolled: {{scrolled}}</pre>
+                        </div>
+                        <div class="col-xs-6 col-md-6">
+                            <pre>searchResult.finished: {{searchResult.finished}}</pre>
+                        </div>
+                    </div>
+                    <pre style="height: 200px">{{searchResult.items | prettyJSON}}</pre>
+                </div>
+
+                <div class="col-xs-4 col-md-4">
+                    <pre style="height: 250px">{{searchResult.stats | prettyJSON}}</pre>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    var app = angular.module('myApp', ['elasticsearch']);
+
+    app.filter('prettyJSON', function () {
+        function prettyPrintJson(json) {
+            return JSON ? JSON.stringify(json, null, '  ') : 'your browser doesnt support JSON so cant pretty print';
+        }
+
+        return prettyPrintJson;
+    });
+
+    app.config(function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    });
+
+    app.service('client', function (esFactory) {
+        return esFactory({
+            //host: 'localhost:9200',
+            //host: '192.168.137.101:9200',
+            //host: '192.168.137.201:9200',
+            host: config.elasticsearch.url,
+            apiVersion: '2.3',
+            log: 'trace'
+        });
+    });
+
+    app.controller('eventViewCtrl', ['$scope', '$interval', '$http', 'client', 'esFactory', function ($scope, $interval, $http, client, esFactory) {
+        var assert = chai
+            .assert;
+
+        (function () {
+            var exist = [],
+                resp = [{
+                    _id: '1234'
+                }];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [{_id: '1234'}]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1236' },
+                    { _id: '1235' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1236' },
+                { _id: '1235' },
+                { _id: '1234' }
+            ]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1233' },
+                    { _id: '1232' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1234' },
+                { _id: '1233' },
+                { _id: '1232' }
+            ]);
+
+        })();
+
+        (function () {
+            var exist = [
+                    { _id: '1234' }],
+                resp = [
+                    { _id: '1234' }
+                ];
+
+            var newExist = updateData(exist, resp);
+
+            assert.deepEqual(newExist, [
+                { _id: '1234' }
+            ]);
+
+        })();
+
+        console.log('xx');
+
+        $scope.showSearchOptions = true;
+
+        $scope.toggleSearchOptions = function () {
+            $scope.showSearchOptions = !$scope.showSearchOptions;
+        };
+
+        $scope.isShowSearchOptions = function () {
+            return $scope.showSearchOptions;
+        };
+
+        $scope.searchOptions = {
+            type: 'All',
+            severity: 'All',
+            source: 'All',
+            timePeriod: 7,
+            timePeriodUnit: 'Days'
+        };
+
+        $scope.makeBottonClass = function (type, elText) {
+            if (type === elText) {
+                return 'btn-info';
+            } else {
+                return 'btn-default';
+            }
+        };
+        $scope.filterOptions = {
+            severities: [],
+            tags: [],
+            address: []
+        };
+
+        $scope.onFilterCheckbox = function (option, val) {
+            var index = _.indexOf(option, val);
+
+            if (index === -1) {
+                option.push(val);
+            } else {
+                option.splice(index, 1);
+            }
+        };
+
+        $scope.eventFilter = function (options) {
+            return function( item ) {
+
+                if (_.head(options.severities)) {
+                    if (_.indexOf(options.severities, item._source.severity) === -1) {
+                        return false;
+                    }
+                }
+
+                if (_.head(options.tags)) {
+                    if (_.indexOf(options.tags, item._source.tag) === -1) {
+                        return false;
+                    }
+                }
+
+                if (_.head(options.address)) {
+                    if (_.indexOf(options.address, item._source.address) === -1) {
+                        return false;
+                    }
+                }
+                //return item.name === options.name;
+                return true;
+            };
+        };
+
+        function genSearchReq(options) {
+            options = options || {};
+
+            function makeAggsReg() {
+                return {
+//                        avg_severity: {
+//                            avg: {
+//                                field: 'severity'
+//                            }
+//                        },
+                    severities: {
+                        terms: {
+                            field: 'severity'
+                        }
+                    },
+                    tags: {
+                        terms: {
+                            field: 'tag'
+                        }
+                    },
+                    hostnames: {
+                        terms: {
+                            field: 'hostname'
+                        }
+                    },
+                    addresses: {
+                        terms: {
+                            field: 'address'
+                        }
+                    },
+                    event_time_min: {
+                        min: {
+                            field: 'time'
+                        }
+                    },
+                    event_time_max: {
+                        max: {
+                            field: 'time'
+                        }
+                    },
+                    event_over_time: {
+                        date_histogram: {
+                            field: 'time',
+                                interval: 'day'
+                        }
+                    }
+                };
+            }
+
+            var uiConvertor = {
+                type: function (text) {
+                    if (text === 'System') {
+                        return 'test';
+                    } else if (text === 'Fabric') {
+                        return 'foo';
+                    }
+
+                    return '';
+                },
+                dateRangeUnit: function (text) {
+                    if (text === 'Minutes') {
+                        return 'm';
+                    } else if (text === 'Hours') {
+                        return 'h';
+                    } else if (text === 'Days') {
+                        return 'd';
+                    }
+
+                    return 'd';
+                }
+            };
+
+            function makeQueryReg(options) {
+                var req = {
+                    bool: {
+                        must: []
+                    }
+                };
+
+                if (options.severity !== 'All') {
+                    req.bool.must.push({
+                        term: {
+                            severity: severityStringToNumber(options.severity)
+                        }
+                    });
+                }
+
+                function convertDateRange(options) {
+                    var query = {
+                        gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit) + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit),
+                        lt: 'now' + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit)
+                    };
+
+                    return query;
+                }
+
+                req.bool.must.push({
+                    range: {
+                        time: convertDateRange(options)
+                    }
+                });
+
+                return req;
+            }
+
+            var req = {
+                size: 300,
+                maxSize: 300,
+                body: {
+                    query: makeQueryReg(options),
+                    aggs: makeAggsReg(options)
+                }
+            };
+
+            req.index = 'mars';
+
+            if (options.type !== 'All') {
+                req.type = uiConvertor.type(options.type);
+            }
+
+            return req;
+        }
+
+        var get = ESSearch(client),
+            //req = genSearchReq();
+            req;
+
+        var chart = EventStatsBar({
+            canvasContext: 'event-stats-chart'
+        });
+
+        function updateChart(stats) {
+            var data = [];
+
+            var minDate = new Date(stats.event_time_min.value_as_string),
+                maxData = new Date(stats.event_time_max.value_as_string);
+
+            var sameYear = minDate.getFullYear() === maxData.getFullYear();
+
+            angular.forEach(stats.event_over_time.buckets, function (value, key) {
+
+                var date = new Date(value.key_as_string);
+
+                if (sameYear) {
+                    data.push({
+                        label: '' + (date.getMonth() + 1) + '/' + date.getDate(), //value.key_as_string,
+                        data: value.doc_count
+                    });
+                } else {
+                    data.push({
+                        label: '' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear(), //value.key_as_string,
+                        data: value.doc_count
+                    });
+                }
+            });
+
+            chart.update(data);
+        }
+
+        function updateData(exist, resp) {
+            if (exist === []) {
+                return _.cloneDeep(resp);
+            }
+
+            return _.reverse(
+                        _.unionBy(
+                            _.sortBy(
+                                _.concat(resp, exist), ['_id']),
+                            '_id'
+                        ));
+        }
+
+        $scope.searchFn = function () {
+            $scope.searchResult = {
+                items: [],
+                stats: {},
+                finished: false
+            };
+            req = genSearchReq($scope.searchOptions);
+
+            get(req, respCb);
+        };
+
+        $scope.searchFn();
+
+        $scope.auto_refresh = 'OFF';
+        $scope.toggleAutoRefresh = (function () {
+            var auto_refresh_timer;
+            return function () {
+                if ($scope.auto_refresh === 'ON') {
+                    $scope.auto_refresh = 'OFF';
+                } else {
+                    $scope.auto_refresh = 'ON';
+                }
+
+                if ($scope.auto_refresh === 'OFF') {
+                    if (auto_refresh_timer) {
+                        $interval.cancel(auto_refresh_timer);
+                        auto_refresh_timer = null;
+                    }
+                } else {
+                    if (!auto_refresh_timer) {
+                        auto_refresh_timer = $interval(function () {
+                            req = genSearchReq();
+
+                            $scope.searchResult.finished = false;
+                            get(req, respCb);
+                        }, 2000);
+                    }
+                }
+            }
+        })();
+
+        $scope.makeAutoRefreshClass = function () {
+            return $scope.auto_refresh === 'ON' ? 'btn-info' : '';
+        };
+
+        $scope.getMore = function () {
+            if ($scope.searchResult.stats.total === $scope.searchResult.items.length) {
+                return;
+            }
+
+            req.maxSize = $scope.searchResult.items.length + 2;
+
+            $scope.searchResult.finished = false;
+            get(req, respCb);
+        };
+
+        function respCb(err, resp) {
+            if (err) {
+                $scope.searchResult.finished = true;
+                return;
+            }
+
+            $scope.searchResult.items = updateData($scope.searchResult.items, resp.hits.hits);
+
+            if (resp.aggregations) {
+                $scope.searchResult.stats = _.cloneDeep(resp.aggregations);
+                $scope.searchResult.stats.total = resp.hits.total;
+
+                updateChart($scope.searchResult.stats);
+            }
+
+            if (this.$scope.last) {
+                $scope.searchResult.finished = true;
+            }
+        }
+
+        $scope.severityString = function (lvl) {
+            var severity = {
+                0: 'Emergency',
+                1: 'Alert',
+                2: 'Critical',
+                3: 'Error',
+                4: 'Warning',
+                5: 'Notice',
+                6: 'Informational',
+                7: 'Debug'
+            };
+
+            return severity[lvl];
+        };
+
+        function severityStringToNumber(str) {
+            var severity = {
+                    'Emergency': 0,
+                    'Alert': 1,
+                    'Critical': 2,
+                    'Error': 3,
+                    'Warning': 4,
+                    'Notice': 5,
+                    'Informational': 6,
+                    'Debug': 7
+                },
+                severity2 = {
+                    'Emerg': 0,
+                    'Alert': 1,
+                    'Crit': 2,
+                    'Err': 3,
+                    'Warning': 4,
+                    'Notice': 5,
+                    'Info': 6,
+                    'Debug': 7
+                };
+
+            if (typeof severity[str] !== 'undefined') {
+                return severity[str];
+            }
+
+
+            return severity2[str];
+        }
+
+        $scope.scrolled = false;
+        $('#event-view').scroll(function () {
+            if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                //$("span").show();
+                $scope.scrolled = true;
+            } else {
+                //$("span").hide();
+                $scope.scrolled = false;
+            }
+            $scope.$digest();
+
+            if ($scope.scrolled === true) {
+                $scope.getMore();
+            }
+        });
+
+    }]);
+
+</script>
+
+</body>
+</html>

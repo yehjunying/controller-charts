@@ -11,17 +11,14 @@ var client = new elasticsearch.Client({
     log: 'trace'
 });
 
-var Log = require('./../log');
+var ESSearch = require('./../essearch');
 
-var log = Log({
-    elasticSearchClient: new elasticsearch.Client({
-        host: 'http://localhost:9200',
-        log: 'trace'
-    }),
-    lodash: _
-});
+var search = ESSearch(new elasticsearch.Client({
+    host: 'http://localhost:9200',
+    log: 'trace'
+}));
 
-describe('get log from elasticsearch', function () {
+describe('search the records from elasticsearch', function () {
     before(function (done) {
         var mapping = {
             id: {type: 'keyword'},
@@ -162,8 +159,8 @@ describe('get log from elasticsearch', function () {
                         "facility": 16,
                         "severity": 3,
                         "tag": "snmp",
-                        "time": "2017-03-29T09:11:19.286Z",
-                        "localeDateTime": "2017-03-29 17:11:19",
+                        "time": "2017-04-29T09:11:19.286Z",
+                        "localeDateTime": "2017-04-29 17:11:19",
                         "hostname": "yehjunying-pc",
                         "address": "127.0.0.1",
                         "message": "VLAN 1 link-up notification\n"
@@ -182,8 +179,8 @@ describe('get log from elasticsearch', function () {
                         "facility": 16,
                         "severity": 4,
                         "tag": "snmp",
-                        "time": "2017-03-29T09:11:19.287Z",
-                        "localeDateTime": "2017-03-29 17:11:19",
+                        "time": "2017-04-29T09:11:19.287Z",
+                        "localeDateTime": "2017-04-29 17:11:19",
                         "hostname": "yehjunying-pc",
                         "address": "127.0.0.1",
                         "message": "VLAN 1 link-up notification\n"
@@ -202,8 +199,8 @@ describe('get log from elasticsearch', function () {
                         "facility": 16,
                         "severity": 6,
                         "tag": "abc",
-                        "time": "2017-03-29T09:11:19.288Z",
-                        "localeDateTime": "2017-03-29 17:11:19",
+                        "time": "2017-04-29T09:11:19.288Z",
+                        "localeDateTime": "2017-04-29 17:11:19",
                         "hostname": "yehjunying-pc",
                         "address": "127.0.0.1",
                         "message": "VLAN 1 link-up notification\n"
@@ -222,8 +219,8 @@ describe('get log from elasticsearch', function () {
                         "facility": 16,
                         "severity": 3,
                         "tag": "snmp",
-                        "time": "2017-03-29T09:11:20.289Z",
-                        "localeDateTime": "2017-03-29 17:11:19",
+                        "time": "2017-04-29T09:11:20.289Z",
+                        "localeDateTime": "2017-04-29 17:11:19",
                         "hostname": "yehjunying-pc",
                         "address": "127.0.0.1",
                         "message": "VLAN 1 link-up notification\n"
@@ -242,8 +239,8 @@ describe('get log from elasticsearch', function () {
                         "facility": 16,
                         "severity": 6,
                         "tag": "snmp",
-                        "time": "2017-03-29T09:11:20.290Z",
-                        "localeDateTime": "2017-03-29 17:11:19",
+                        "time": "2017-10-29T09:11:20.290Z",
+                        "localeDateTime": "2017-10-29 17:11:19",
                         "hostname": "yehjunying-nb",
                         "address": "127.0.0.1",
                         "message": "VLAN 1 link-up notification\n"
@@ -266,7 +263,7 @@ describe('get log from elasticsearch', function () {
     it('should get record as syslog format', function (done) {
         var size = 2;
 
-        log({
+        search({
             size: size
         }, function (err, resp) {
             expect(err).to.be.undefined;
@@ -292,34 +289,34 @@ describe('get log from elasticsearch', function () {
         });
     });
 
-    it('should get most records by the specified size', function (done) {
-        var maxSize = 6,
-            records = [],
-            stop = null;
-
-        log({
-            size: 2,
-            maxSize: maxSize
-        }, function (err, resp) {
-            expect(err).to.be.undefined;
-            expect(resp).to.not.be.undefined;
-            // expect(resp).to.have.deep.property('hits.hits.length').to.equal(size);
-
-            records = records.concat(resp.hits.hits);
-
-            if (maxSize < records.length) {
-                if (stop) {
-                    clearTimeout(stop);
-                    stop = null;
-                    done(Error('log.get should return most ' + maxSize + ' records'));
-                }
-            } else if (maxSize === records.length) {
-                stop = setTimeout(function () {
-                    done();
-                }, 2000);
-            }
-        });
-    }).timeout(3000);
+    // it('should get most records by the specified size', function (done) {
+    //     var maxSize = 6,
+    //         records = [],
+    //         stop = null;
+    //
+    //     search({
+    //         size: 2,
+    //         maxSize: maxSize
+    //     }, function (err, resp) {
+    //         expect(err).to.be.undefined;
+    //         expect(resp).to.not.be.undefined;
+    //         // expect(resp).to.have.deep.property('hits.hits.length').to.equal(size);
+    //
+    //         records = records.concat(resp.hits.hits);
+    //
+    //         if (maxSize < records.length) {
+    //             if (stop) {
+    //                 clearTimeout(stop);
+    //                 stop = null;
+    //                 done(Error('log.get should return most ' + maxSize + ' records'));
+    //             }
+    //         } else if (maxSize === records.length) {
+    //             stop = setTimeout(function () {
+    //                 done();
+    //             }, 2000);
+    //         }
+    //     });
+    // }).timeout(3000);
 
     it('should handle scroll timeout case', function (done) {
         var tests = [
@@ -359,7 +356,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
                 expect(resp).to.have.deep.property('hits.hits.length').to.equal(req.size);
@@ -408,7 +405,7 @@ describe('get log from elasticsearch', function () {
         });
 
         function testLogGet(callback) {
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 
@@ -455,7 +452,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 
@@ -508,7 +505,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 
@@ -574,7 +571,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 
@@ -642,7 +639,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 
@@ -716,7 +713,7 @@ describe('get log from elasticsearch', function () {
         async.eachSeries(tests, function (test, callback) {
             req = Object.assign(req, test.req);
 
-            log(req, function (err, resp) {
+            search(req, function (err, resp) {
                 expect(err).to.be.undefined;
                 expect(resp).to.not.be.undefined;
 

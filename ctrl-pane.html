@@ -8,7 +8,7 @@
 
 <script src="./controller-chart.js"></script>
 <script src="./elasticsearch.angular.js"></script>
-<script src="./app/services/log.js"></script>
+<script src="app/services/essearch.js"></script>
 
 <link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
@@ -546,10 +546,7 @@
 
         console.log('xx');
 
-        var get = Log({
-                elasticSearchClient: client,
-                lodash: _
-            }),
+        var get = ESSearch(client),
             req = {
                 size: 1,
                 maxSize: 2

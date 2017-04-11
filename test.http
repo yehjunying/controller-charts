@@ -79,10 +79,35 @@ content-type: application/json
 GET http://localhost:9200/mars/test/_search
 
 ###
-GET http://localhost:9200/_search
+GET http://localhost:9200/mars/foo/_search
+content-type: application/json
+
+{
+   "aggs":{
+      "avg_severity":{"avg":{"field":"severity"}},
+      "hostnames":{"terms":{"field":"hostname"}}
+   }
+}
 
 ###
-GET http://localhost:9200/mars/employee/_search?q=25
+GET http://192.168.137.201:9200/mars/fabric/4758732360553
+
+###
+GET http://192.168.137.201:9200/mars/fabric/_search
+content-type: application/json
+
+{
+    "query": {
+        "range": {
+            "time": {
+                "lte": "0010-05-28T18:00:00.000Z"
+            }
+        }
+    }
+}
+
+###
+GET http://localhost:9200/mars/_field_stats?fields=address,hostname
 
 ###
 GET http://localhost:9200/mars/employee/_search?q=hero
