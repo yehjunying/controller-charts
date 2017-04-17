@@ -14,6 +14,7 @@
 
 <link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
+<script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <style>
     #ov-event-view .controller > .panel-body {
@@ -104,18 +105,36 @@
         background: rgba(226, 8, 12, 0.9);
     }
 
-    .p-lr-12 {
-        padding-left: 12px;
-        padding-left: 12px;
+    .p-t-1 {
+        padding-top: 1rem;
     }
 
-    .p-t-5 {
-        padding-top: 5px;
+    .p-x-1 {
+        padding-right: 1rem;
+        padding-left: 1rem;
     }
 
-    .p-t-10 {
-        padding-top: 10px;
+    .p-y-1 {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
     }
+
+    .inline-box {
+        display: inline-block;
+    }
+
+    /*.p-lr-12 {*/
+        /*padding-left: 12px;*/
+        /*padding-left: 12px;*/
+    /*}*/
+
+    /*.p-t-5 {*/
+        /*padding-top: 5px;*/
+    /*}*/
+
+    /*.p-t-10 {*/
+        /*padding-top: 10px;*/
+    /*}*/
 
 </style>
 
@@ -127,8 +146,22 @@
         <div ng-controller="eventViewCtrl">
 
             <div class="row">
+                <div class="dropdown inline-box">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        refreshed every 30s
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#">5 seconds</a></li>
+                        <li><a href="#">30 seconds</a></li>
+                        <li><a href="#">1 minutes</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+
                 <button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">
-                    <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 </button>
             </div>
 
@@ -139,7 +172,7 @@
                     <!--</div>-->
                     <div class="panel-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for...">
+                            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchOptions.terms[0]">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="searchFn()">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -158,9 +191,9 @@
 
                         <div id="search-options" ng-show="isShowSearchOptions()">
 
-                            <div class="p-t-10"></div>
+                            <div class="p-t-1"></div>
 
-                            <div class="row p-lr-12">
+                            <div class="row p-x-1">
                                 <div class="col-xs-3 col-md-3">
                                     <span>Event Log</span>
                                 </div>
@@ -173,7 +206,7 @@
                                 </div>
                             </div>
 
-                            <div class="row p-lr-12">
+                            <div class="row p-x-1">
                                 <div class="col-xs-3 col-md-3">
                                     <span>Event Severity Levels</span>
                                 </div>
@@ -205,7 +238,7 @@
                                 <!--</div>-->
                             <!--</div> &lt;!&ndash; row &ndash;&gt;-->
 
-                            <div class="row p-lr-12">
+                            <div class="row p-x-1">
                                 <div class="col-xs-3 col-md-3">
                                     <span>Time Period</span>
                                 </div>
@@ -540,13 +573,14 @@
             return $scope.showSearchOptions;
         };
 
-        $scope.searchOptions = {
+        $scope.searchOptions = Object.assign({
+            terms: [''],
             type: 'All',
             severity: 'All',
             source: 'All',
             timePeriod: 7,
             timePeriodUnit: 'Days'
-        };
+        }, config.eventview.searchDetail);
 
         $scope.makeBottonClass = function (type, elText) {
             if (type === elText) {
@@ -674,6 +708,54 @@
                         must: []
                     }
                 };
+
+//                req.bool.must.push({
+//                    term: {
+//                        message: 'failed'
+//                    }
+//                });
+
+                // OR operations
+                var terms_should = {
+                    bool: {
+                        should: []
+                    }
+                };
+
+                angular.forEach(options.terms, function (value) {
+                    var s = value.trim();
+
+                    if (!s) {
+                        return;
+                    }
+
+                    terms_should.bool.should.push({
+                        term: {
+                            message: value
+                        }
+                    });
+                });
+
+                if (terms_should.bool.should.length) {
+                    req.bool.must.push(terms_should);
+                }
+
+//                req.bool.must.push({
+//                    bool: {
+//                        should: [
+//                            {
+//                                term: {
+//                                    message: 'failed'
+//                                }
+//                            },
+//                            {
+//                                term: {
+//                                    message: 'remote'
+//                                }
+//                            }
+//                        ]
+//                    }
+//                });
 
                 if (options.severity !== 'All') {
                     req.bool.must.push({
