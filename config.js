@@ -10,15 +10,12 @@
 
     return {
         elasticsearch: {
-            url: 'http://192.168.137.201:9200',
-            // url: 'http://localhost:9200',
-            index: 'mars'
+            // url: 'http://192.168.137.201:9200',
+            url: 'http://localhost:9200',
         },
         eventview: {
             'searchDetail': {
-                // type: 'All',
-                // severity: 'All',
-                // source: 'All',
+                index: 'mars',
                 timePeriod: 100,
                 timePeriodUnit: 'Days'
             }

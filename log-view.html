@@ -148,46 +148,50 @@
             <div class="row">
                 <div class="dropdown inline-box">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        refreshed every 30s
+                        refreshed every {{refreshInterval()}}
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#">5 seconds</a></li>
-                        <li><a href="#">30 seconds</a></li>
-                        <li><a href="#">1 minutes</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                        <!--<li><a href="#" ng-click="setRefreshInterval('1s')">1 seconds</a></li>-->
+                        <li><a href="#" ng-click="setRefreshInterval('5s')">5 seconds</a></li>
+                        <li><a href="#" ng-click="setRefreshInterval('30s')">30 seconds</a></li>
+                        <li><a href="#" ng-click="setRefreshInterval('1m')">1 minutes</a></li>
                     </ul>
                 </div>
 
-                <button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">
+                <button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleRefresh()">
                     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 </button>
             </div>
 
             <div class="row">
                 <div class="panel panel-default">
-                    <!--<div class="page-heading">-->
-                        <!--Query-->
-                    <!--</div>-->
                     <div class="panel-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchOptions.terms[0]">
+                            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchOptions.q">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="searchFn()">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </button>
 
-                                <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
-                                    <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>-->
-                                <!--</button>-->
+                                <button type="button" class="btn btn-default" ng-click="addTermFn(searchOptions, searchOptions.q)">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                </button>
 
                                 <button type="button" class="btn btn-default" ng-click="toggleSearchOptions()">
-                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                 </button>
 
                             </span>
                         </div><!-- /input-group -->
+
+                        <div class="btn-group" ng-show="searchOptions.terms.length">
+                            <button class="btn btn-default btn-sm" aria-label="Left Align" type="button"
+                                    ng-repeat="i in searchOptions.terms"
+                                    ng-click="removeTermFn(searchOptions, i)">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"> {{i}}</span>
+                            </button>
+                        </div>
 
                         <div id="search-options" ng-show="isShowSearchOptions()">
 
@@ -225,19 +229,6 @@
                                 </div>
                             </div> <!-- row -->
 
-                            <!--<div class="row p-lr-12">-->
-                                <!--<div class="col-xs-3 col-md-3">-->
-                                    <!--<span>Event Source</span>-->
-                                <!--</div>-->
-                                <!--<div class="col-xs-9 col-md-9">-->
-                                    <!--<div class="btn-group">-->
-                                        <!--<button type="button" class="btn btn-info">All</button>-->
-                                        <!--<button type="button" class="btn btn-default">1.2.3.4</button>-->
-                                        <!--<button type="button" class="btn btn-default">1.2.3.5</button>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
-
                             <div class="row p-x-1">
                                 <div class="col-xs-3 col-md-3">
                                     <span>Time Period</span>
@@ -255,105 +246,11 @@
                                 </div>
                             </div> <!-- row -->
 
-                            <!--<div class="row p-lr-12">-->
-                                <!--<div class="col-xs-3 col-md-3">-->
-                                    <!--Action-->
-                                <!--</div>-->
-                                <!--<div class="col-xs-9 col-md-9">-->
-                                    <!--<div class="btn-group">-->
-                                        <!--<button type="button" class="btn btn-default" ng-click="searchFn()">-->
-                                            <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search-->
-                                        <!--</button>-->
-                                        <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
-                                            <!--<span class="glyphicon glyphicon-forward" aria-hidden="true"></span> Auto Refresh-->
-                                        <!--</button>-->
-                                        <!--&lt;!&ndash;<div class="checkbox">&ndash;&gt;-->
-                                            <!--&lt;!&ndash;<label><input type="checkbox" value="">Auto refresh</label>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
                         </div> <!-- search-options -->
 
                     </div>
                 </div>
             </div>
-
-            <!--<div class="row">-->
-                <!--<div class="col-xs-3 col-md-3">-->
-                    <!--<span>Event Log</span>-->
-                <!--</div>-->
-                <!--<div class="col-xs-9 col-md-9">-->
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-info">All</button>-->
-                        <!--<button type="button" class="btn btn-default">System</button>-->
-                        <!--<button type="button" class="btn btn-default">Fabric</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
-
-            <!--<div class="row">-->
-                <!--<div class="col-xs-3 col-md-3">-->
-                    <!--<span>Event Severity Levels</span>-->
-                <!--</div>-->
-                <!--<div class="col-xs-9 col-md-9">-->
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-info">All</button>-->
-                        <!--<button type="button" class="btn btn-default">Critical</button>-->
-                        <!--<button type="button" class="btn btn-default">Error</button>-->
-                        <!--<button type="button" class="btn btn-default">Warning</button>-->
-                        <!--<button type="button" class="btn btn-default">Info</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
-
-            <!--<div class="row">-->
-                <!--<div class="col-xs-3 col-md-3">-->
-                    <!--<span>Event Source</span>-->
-                <!--</div>-->
-                <!--<div class="col-xs-9 col-md-9">-->
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-info">All</button>-->
-                        <!--<button type="button" class="btn btn-default">1.2.3.4</button>-->
-                        <!--<button type="button" class="btn btn-default">1.2.3.5</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
-
-            <!--<div class="row">-->
-                <!--<div class="col-xs-3 col-md-3">-->
-                    <!--<span>Time Period</span>-->
-                <!--</div>-->
-                <!--<div class="col-xs-1 col-md-1">-->
-                    <!--<input type="text" class="form-control" id="usr">-->
-                <!--</div>-->
-                <!--<div class="col-xs-8 col-md-8">-->
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-default">Minutes</button>-->
-                        <!--<button type="button" class="btn btn-info">Hours</button>-->
-                        <!--<button type="button" class="btn btn-default">Days</button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
-
-            <!--<div class="row">-->
-                <!--<div class="col-xs-3 col-md-3">-->
-                <!--</div>-->
-
-                <!--<div class="col-xs-9 col-md-9">-->
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button" class="btn btn-default" ng-click="searchFn()">-->
-                            <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search-->
-                        <!--</button>-->
-                        <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleAutoRefresh()">-->
-                            <!--<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Auto Refresh-->
-                        <!--</button>-->
-                        <!--&lt;!&ndash;<button type="button" class="btn btn-default" ng-click="getMore()">Get More ...&ndash;&gt;-->
-                        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div> &lt;!&ndash; row &ndash;&gt;-->
 
             <div class="row">
                 <div style="width: 100%; height: 100px">
@@ -430,15 +327,6 @@
                         </div>
                     </div>
 
-                    <!--<div class="row">-->
-                        <!--<pre ng-click="searchFn()">Search</pre>-->
-                    <!--</div>-->
-                    <!--<div class="row">-->
-                        <!--<pre ng-click="autoRefresh()">Auto Refresh {{auto_refresh}}</pre>-->
-                    <!--</div>-->
-                    <!--<div class="row">-->
-                        <!--<pre ng-click="getMore()">GetMore...</pre>-->
-                    <!--</div>-->
                 </div>
             </div> <!-- row -->
 
@@ -459,9 +347,7 @@
                     <pre style="height: 250px">{{searchResult.stats | prettyJSON}}</pre>
                 </div>
             </div>
-
         </div>
-
     </div>
 
 </div>
@@ -485,229 +371,381 @@
 
     app.service('client', function (esFactory) {
         return esFactory({
-            //host: 'localhost:9200',
-            //host: '192.168.137.101:9200',
-            //host: '192.168.137.201:9200',
             host: config.elasticsearch.url,
             apiVersion: '2.3',
             log: 'trace'
         });
     });
 
-    app.controller('eventViewCtrl', ['$scope', '$interval', '$http', 'client', 'esFactory', function ($scope, $interval, $http, client, esFactory) {
-        var assert = chai
-            .assert;
+    (function () {
+        'use strict';
 
-        (function () {
-            var exist = [],
-                resp = [{
-                    _id: '1234'
-                }];
-
-            var newExist = updateData(exist, resp);
-
-            assert.deepEqual(newExist, [{_id: '1234'}]);
-
-        })();
-
-        (function () {
-            var exist = [
-                    { _id: '1234' }],
-                resp = [
-                    { _id: '1236' },
-                    { _id: '1235' }
-                ];
-
-            var newExist = updateData(exist, resp);
-
-            assert.deepEqual(newExist, [
-                { _id: '1236' },
-                { _id: '1235' },
-                { _id: '1234' }
-            ]);
-
-        })();
-
-        (function () {
-            var exist = [
-                    { _id: '1234' }],
-                resp = [
-                    { _id: '1233' },
-                    { _id: '1232' }
-                ];
-
-            var newExist = updateData(exist, resp);
-
-            assert.deepEqual(newExist, [
-                { _id: '1234' },
-                { _id: '1233' },
-                { _id: '1232' }
-            ]);
-
-        })();
-
-        (function () {
-            var exist = [
-                    { _id: '1234' }],
-                resp = [
-                    { _id: '1234' }
-                ];
-
-            var newExist = updateData(exist, resp);
-
-            assert.deepEqual(newExist, [
-                { _id: '1234' }
-            ]);
-
-        })();
-
-        console.log('xx');
-
-        $scope.showSearchOptions = true;
-
-        $scope.toggleSearchOptions = function () {
-            $scope.showSearchOptions = !$scope.showSearchOptions;
-        };
-
-        $scope.isShowSearchOptions = function () {
-            return $scope.showSearchOptions;
-        };
-
-        $scope.searchOptions = Object.assign({
-            terms: [''],
-            type: 'All',
-            severity: 'All',
-            source: 'All',
-            timePeriod: 7,
-            timePeriodUnit: 'Days'
-        }, config.eventview.searchDetail);
-
-        $scope.makeBottonClass = function (type, elText) {
-            if (type === elText) {
-                return 'btn-info';
-            } else {
-                return 'btn-default';
-            }
-        };
-        $scope.filterOptions = {
-            severities: [],
-            tags: [],
-            address: []
-        };
-
-        $scope.onFilterCheckbox = function (option, val) {
-            var index = _.indexOf(option, val);
-
-            if (index === -1) {
-                option.push(val);
-            } else {
-                option.splice(index, 1);
-            }
-        };
-
-        $scope.eventFilter = function (options) {
-            return function( item ) {
-
-                if (_.head(options.severities)) {
-                    if (_.indexOf(options.severities, item._source.severity) === -1) {
-                        return false;
-                    }
-                }
-
-                if (_.head(options.tags)) {
-                    if (_.indexOf(options.tags, item._source.tag) === -1) {
-                        return false;
-                    }
-                }
-
-                if (_.head(options.address)) {
-                    if (_.indexOf(options.address, item._source.address) === -1) {
-                        return false;
-                    }
-                }
-                //return item.name === options.name;
-                return true;
-            };
-        };
-
-        function genSearchReq(options) {
+        function RefreshCtrl(options) {
             options = options || {};
 
-            function makeAggsReg() {
-                return {
+            if (typeof options.intervalFn !== 'function') {
+                throw new Error('intervalFn is required');
+            }
+
+            if (typeof options.hookFn !== 'function') {
+                throw new Error('hookFn is required');
+            }
+
+            // plugin
+            var intervalFn = options.intervalFn,
+                hookFn = options.hookFn;
+
+            var self = (function init(options) {
+                var opts = {
+                    enabled: false,
+                    interval: 1000, // unit: ms
+
+                    // inner status
+                    timer: null
+                };
+
+                if (typeof options.interval !== 'undefined') {
+                    opts.interval = options.interval;
+                }
+
+                if (typeof options.enabled !== 'undefined') {
+                    opts.enabled = options.enabled;
+                }
+
+                return opts;
+            })(options);
+
+            if (self.enabled) {
+                start();
+            }
+
+            function getInterval() {
+                return self.interval;
+            }
+
+            function parseInterval(str) {
+                var unit = str.substr(str.length - 1),
+                    int = str.substr(0, str.length - 1),
+                    ms = parseInt(int, 10);
+
+                if (unit === 's') {
+                    ms *= 1000;
+                } else if (unit === 'm') {
+                    ms *= 1000000;
+                } else {
+                    throw new TypeError('Invalid interval value ' + str);
+                }
+
+                return ms;
+            }
+
+            function intervalPrettyString(interval) {
+                if (interval < 60000) {
+                    return '' + (interval / 1000) + 's';
+                } else {
+                    return '' + (interval / 1000000) + 'm';
+                }
+            }
+
+            function setInterval(value) {
+                if (typeof value === 'string') {
+                    value = parseInterval(value);
+                }
+
+                if (self.interval === value) {
+                    return;
+                }
+
+                self.interval = value;
+                if (self.enabled) {
+                    restart();
+                }
+            }
+
+            function getEnabledStatus() {
+                return self.enabled;
+            }
+
+            function restart() {
+                stop();
+                start();
+            }
+
+            function start() {
+                console.log('start refresh');
+                if (self.timer) {
+                    throw new Error('coding defect, self.timer should be null');
+                }
+
+                self.timer = intervalFn(hookFn, self.interval);
+            }
+
+            function stop() {
+                console.log('stop refresh');
+                if (self.timer) {
+                    intervalFn.cancel(self.timer);
+                    self.timer = null;
+                }
+            }
+
+            function setEnabledStatus(value) {
+                console.log('set enabled status from ' + (self.enabled ? 'true' : 'false') + ' to ' + (value ? 'true' : 'false'));
+
+                if (value === true) {
+                    start();
+                } else {
+                    stop();
+                }
+
+                self.enabled = value;
+            }
+
+            return {
+                toggle: function () {
+                    var enabled = this.enabled();
+                    enabled = !enabled;
+
+                    console.log('toggle status to ' + (enabled ? 'true' : 'false'));
+
+                    this.enabled(enabled);
+                },
+                interval: function (value) {
+                    if (typeof value === 'undefined') {
+                        return getInterval();
+                    } else {
+                        setInterval(value);
+                    }
+                },
+                intervalPrettyString: function () {
+                    var interval = this.interval();
+
+                    return intervalPrettyString(interval);
+                },
+                enabled: function (value) {
+                    if (typeof value === 'undefined') {
+                        return getEnabledStatus();
+                    } else {
+                        return setEnabledStatus(value);
+                    }
+                }
+            }
+        }
+
+        app.controller('eventViewCtrl', ['$scope', '$interval', '$http', 'client', 'esFactory', function ($scope, $interval, $http, client, esFactory) {
+            var assert = chai
+                .assert;
+
+            (function () {
+                var exist = [],
+                    resp = [{
+                        _id: '1234'
+                    }];
+
+                var newExist = updateData(exist, resp);
+
+                assert.deepEqual(newExist, [{_id: '1234'}]);
+
+            })();
+
+            (function () {
+                var exist = [
+                        {_id: '1234'}],
+                    resp = [
+                        {_id: '1236'},
+                        {_id: '1235'}
+                    ];
+
+                var newExist = updateData(exist, resp);
+
+                assert.deepEqual(newExist, [
+                    {_id: '1236'},
+                    {_id: '1235'},
+                    {_id: '1234'}
+                ]);
+
+            })();
+
+            (function () {
+                var exist = [
+                        {_id: '1234'}],
+                    resp = [
+                        {_id: '1233'},
+                        {_id: '1232'}
+                    ];
+
+                var newExist = updateData(exist, resp);
+
+                assert.deepEqual(newExist, [
+                    {_id: '1234'},
+                    {_id: '1233'},
+                    {_id: '1232'}
+                ]);
+
+            })();
+
+            (function () {
+                var exist = [
+                        {_id: '1234'}],
+                    resp = [
+                        {_id: '1234'}
+                    ];
+
+                var newExist = updateData(exist, resp);
+
+                assert.deepEqual(newExist, [
+                    {_id: '1234'}
+                ]);
+
+            })();
+
+            console.log('xx');
+
+            $scope.showSearchOptions = true;
+
+            $scope.toggleSearchOptions = function () {
+                $scope.showSearchOptions = !$scope.showSearchOptions;
+            };
+
+            $scope.isShowSearchOptions = function () {
+                return $scope.showSearchOptions;
+            };
+
+            $scope.searchOptions = Object.assign({
+                q: '',
+                terms: [],
+                type: 'All',
+                severity: 'All',
+                source: 'All',
+                timePeriod: 7,
+                timePeriodUnit: 'Days'
+            }, config.eventview.searchDetail);
+
+            $scope.makeBottonClass = function (type, elText) {
+                if (type === elText) {
+                    return 'btn-info';
+                } else {
+                    return 'btn-default';
+                }
+            };
+            $scope.filterOptions = {
+                severities: [],
+                tags: [],
+                address: []
+            };
+
+            $scope.onFilterCheckbox = function (option, val) {
+                var index = _.indexOf(option, val);
+
+                if (index === -1) {
+                    option.push(val);
+                } else {
+                    option.splice(index, 1);
+                }
+            };
+
+            $scope.eventFilter = function (options) {
+                return function (item) {
+
+                    if (_.head(options.severities)) {
+                        if (_.indexOf(options.severities, item._source.severity) === -1) {
+                            return false;
+                        }
+                    }
+
+                    if (_.head(options.tags)) {
+                        if (_.indexOf(options.tags, item._source.tag) === -1) {
+                            return false;
+                        }
+                    }
+
+                    if (_.head(options.address)) {
+                        if (_.indexOf(options.address, item._source.address) === -1) {
+                            return false;
+                        }
+                    }
+                    //return item.name === options.name;
+                    return true;
+                };
+            };
+
+            function genSearchReq(options) {
+                options = options || {};
+
+                function makeAggsReg() {
+                    return {
 //                        avg_severity: {
 //                            avg: {
 //                                field: 'severity'
 //                            }
 //                        },
-                    severities: {
-                        terms: {
-                            field: 'severity'
-                        }
-                    },
-                    tags: {
-                        terms: {
-                            field: 'tag'
-                        }
-                    },
-                    hostnames: {
-                        terms: {
-                            field: 'hostname'
-                        }
-                    },
-                    addresses: {
-                        terms: {
-                            field: 'address'
-                        }
-                    },
-                    event_time_min: {
-                        min: {
-                            field: 'time'
-                        }
-                    },
-                    event_time_max: {
-                        max: {
-                            field: 'time'
-                        }
-                    },
-                    event_over_time: {
-                        date_histogram: {
-                            field: 'time',
+                        severities: {
+                            terms: {
+                                field: 'severity'
+                            }
+                        },
+                        tags: {
+                            terms: {
+                                field: 'tag'
+                            }
+                        },
+                        hostnames: {
+                            terms: {
+                                field: 'hostname'
+                            }
+                        },
+                        addresses: {
+                            terms: {
+                                field: 'address'
+                            }
+                        },
+                        event_time_min: {
+                            min: {
+                                field: 'time'
+                            }
+                        },
+                        event_time_max: {
+                            max: {
+                                field: 'time'
+                            }
+                        },
+                        event_over_time: {
+                            date_histogram: {
+                                field: 'time',
                                 interval: 'day'
+                            }
                         }
-                    }
-                };
-            }
+                    };
+                }
 
-            var uiConvertor = {
-                type: function (text) {
-                    if (text === 'System') {
-                        return 'test';
-                    } else if (text === 'Fabric') {
-                        return 'foo';
-                    }
+                var uiConvertor = {
+                    type: function (text) {
+                        if (text === 'System') {
+                            return 'test';
+                        } else if (text === 'Fabric') {
+                            return 'foo';
+                        }
 
-                    return '';
-                },
-                dateRangeUnit: function (text) {
-                    if (text === 'Minutes') {
-                        return 'm';
-                    } else if (text === 'Hours') {
-                        return 'h';
-                    } else if (text === 'Days') {
+                        return '';
+                    },
+                    dateRangeUnit: function (text) {
+                        if (text === 'Minutes') {
+                            return 'm';
+                        } else if (text === 'Hours') {
+                            return 'h';
+                        } else if (text === 'Days') {
+                            return 'd';
+                        }
+
                         return 'd';
                     }
-
-                    return 'd';
-                }
-            };
-
-            function makeQueryReg(options) {
-                var req = {
-                    bool: {
-                        must: []
-                    }
                 };
+
+                function makeQueryReg(options) {
+                    var req = {
+                        bool: {
+                            must: []
+                        }
+                    };
 
 //                req.bool.must.push({
 //                    term: {
@@ -715,30 +753,39 @@
 //                    }
 //                });
 
-                // OR operations
-                var terms_should = {
-                    bool: {
-                        should: []
-                    }
-                };
-
-                angular.forEach(options.terms, function (value) {
-                    var s = value.trim();
-
-                    if (!s) {
-                        return;
-                    }
-
-                    terms_should.bool.should.push({
-                        term: {
-                            message: value
+                    // OR operations
+                    var terms_should = {
+                        bool: {
+                            should: []
                         }
-                    });
-                });
+                    };
 
-                if (terms_should.bool.should.length) {
-                    req.bool.must.push(terms_should);
-                }
+                    options.q = options.q.trim();
+                    if (options.q && _.indexOf(options.terms, options.q) === -1) {
+                        terms_should.bool.should.push({
+                            term: {
+                                message: options.q
+                            }
+                        });
+                    }
+
+                    angular.forEach(options.terms, function (value) {
+                        var s = value.trim();
+
+                        if (!s) {
+                            return;
+                        }
+
+                        terms_should.bool.should.push({
+                            term: {
+                                message: value
+                            }
+                        });
+                    });
+
+                    if (terms_should.bool.should.length) {
+                        req.bool.must.push(terms_should);
+                    }
 
 //                req.bool.must.push({
 //                    bool: {
@@ -757,237 +804,250 @@
 //                    }
 //                });
 
-                if (options.severity !== 'All') {
+                    if (options.severity !== 'All') {
+                        req.bool.must.push({
+                            term: {
+                                severity: severityStringToNumber(options.severity)
+                            }
+                        });
+                    }
+
+                    function convertDateRange(options) {
+                        var query = {
+                            gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit) + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit),
+                            lt: 'now' + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit)
+                        };
+
+                        return query;
+                    }
+
                     req.bool.must.push({
-                        term: {
-                            severity: severityStringToNumber(options.severity)
+                        range: {
+                            time: convertDateRange(options)
                         }
                     });
+
+                    return req;
                 }
 
-                function convertDateRange(options) {
-                    var query = {
-                        gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit) + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit),
-                        lt: 'now' + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit)
-                    };
-
-                    return query;
-                }
-
-                req.bool.must.push({
-                    range: {
-                        time: convertDateRange(options)
+                var req = {
+                    size: 300,
+                    maxSize: 300,
+                    body: {
+                        query: makeQueryReg(options),
+                        aggs: makeAggsReg(options)
                     }
-                });
+                };
+
+                if (typeof options.index === 'string') {
+                    req.index = options.index;
+                }
+
+                if (options.type !== 'All') {
+                    req.type = uiConvertor.type(options.type);
+                }
 
                 return req;
             }
 
-            var req = {
-                size: 300,
-                maxSize: 300,
-                body: {
-                    query: makeQueryReg(options),
-                    aggs: makeAggsReg(options)
+            var get = ESSearch(client),
+                req;
+
+            var chart = EventStatsBar({
+                canvasContext: 'event-stats-chart'
+            });
+
+            function updateChart(stats) {
+                var data = [];
+
+                var minDate = new Date(stats.event_time_min.value_as_string),
+                    maxData = new Date(stats.event_time_max.value_as_string);
+
+                var sameYear = minDate.getFullYear() === maxData.getFullYear();
+
+                angular.forEach(stats.event_over_time.buckets, function (value, key) {
+
+                    var date = new Date(value.key_as_string);
+
+                    if (sameYear) {
+                        data.push({
+                            label: '' + (date.getMonth() + 1) + '/' + date.getDate(), //value.key_as_string,
+                            data: value.doc_count
+                        });
+                    } else {
+                        data.push({
+                            label: '' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear(), //value.key_as_string,
+                            data: value.doc_count
+                        });
+                    }
+                });
+
+                chart.update(data);
+            }
+
+            function updateData(exist, resp) {
+                if (exist === []) {
+                    return _.cloneDeep(resp);
+                }
+
+                return _.reverse(
+                    _.unionBy(
+                        _.sortBy(
+                            _.concat(resp, exist), ['_id']),
+                        '_id'
+                    ));
+            }
+
+            $scope.searchFn = function () {
+                $scope.searchResult = {
+                    items: [],
+                    stats: {},
+                    finished: false
+                };
+                req = genSearchReq($scope.searchOptions);
+
+                get(req, respCb);
+            };
+
+            $scope.addTermFn = function (options, term) {
+                term = String.prototype.trim.call(term);
+
+                if (!term) {
+                    return;
+                }
+
+                if (_.indexOf(_.slice(options.terms, 1), term) === -1) {
+                    options.terms.push(term);
+
+                    // FIXME: bad ...
+                    options.q = '';
                 }
             };
 
-            req.index = 'mars';
+            $scope.removeTermFn = function (options, term) {
+                var idx = _.indexOf(options.terms, term);
+                if (idx === -1) {
+                    return;
+                }
 
-            if (options.type !== 'All') {
-                req.type = uiConvertor.type(options.type);
-            }
+                options.terms.splice(idx, 1);
+            };
 
-            return req;
-        }
+            $scope.searchFn();
 
-        var get = ESSearch(client),
-            //req = genSearchReq();
-            req;
-
-        var chart = EventStatsBar({
-            canvasContext: 'event-stats-chart'
-        });
-
-        function updateChart(stats) {
-            var data = [];
-
-            var minDate = new Date(stats.event_time_min.value_as_string),
-                maxData = new Date(stats.event_time_max.value_as_string);
-
-            var sameYear = minDate.getFullYear() === maxData.getFullYear();
-
-            angular.forEach(stats.event_over_time.buckets, function (value, key) {
-
-                var date = new Date(value.key_as_string);
-
-                if (sameYear) {
-                    data.push({
-                        label: '' + (date.getMonth() + 1) + '/' + date.getDate(), //value.key_as_string,
-                        data: value.doc_count
-                    });
-                } else {
-                    data.push({
-                        label: '' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear(), //value.key_as_string,
-                        data: value.doc_count
-                    });
+            var refreshCtrl = RefreshCtrl({
+                interval: 5000,
+                intervalFn: $interval,
+                hookFn: function () {
+                    req = genSearchReq($scope.searchOptions);
+                    $scope.searchResult.finished = false;
+                    get(req, respCb);
                 }
             });
 
-            chart.update(data);
-        }
+            $scope.toggleRefresh = refreshCtrl.toggle.bind(refreshCtrl);
+            $scope.setRefreshInterval = refreshCtrl.interval.bind(refreshCtrl);
+            $scope.refreshInterval = refreshCtrl.intervalPrettyString.bind(refreshCtrl);
 
-        function updateData(exist, resp) {
-            if (exist === []) {
-                return _.cloneDeep(resp);
-            }
-
-            return _.reverse(
-                        _.unionBy(
-                            _.sortBy(
-                                _.concat(resp, exist), ['_id']),
-                            '_id'
-                        ));
-        }
-
-        $scope.searchFn = function () {
-            $scope.searchResult = {
-                items: [],
-                stats: {},
-                finished: false
-            };
-            req = genSearchReq($scope.searchOptions);
-
-            get(req, respCb);
-        };
-
-        $scope.searchFn();
-
-        $scope.auto_refresh = 'OFF';
-        $scope.toggleAutoRefresh = (function () {
-            var auto_refresh_timer;
-            return function () {
-                if ($scope.auto_refresh === 'ON') {
-                    $scope.auto_refresh = 'OFF';
-                } else {
-                    $scope.auto_refresh = 'ON';
-                }
-
-                if ($scope.auto_refresh === 'OFF') {
-                    if (auto_refresh_timer) {
-                        $interval.cancel(auto_refresh_timer);
-                        auto_refresh_timer = null;
-                    }
-                } else {
-                    if (!auto_refresh_timer) {
-                        auto_refresh_timer = $interval(function () {
-                            req = genSearchReq();
-
-                            $scope.searchResult.finished = false;
-                            get(req, respCb);
-                        }, 2000);
-                    }
-                }
-            }
-        })();
-
-        $scope.makeAutoRefreshClass = function () {
-            return $scope.auto_refresh === 'ON' ? 'btn-info' : '';
-        };
-
-        $scope.getMore = function () {
-            if ($scope.searchResult.stats.total === $scope.searchResult.items.length) {
-                return;
-            }
-
-            req.maxSize = $scope.searchResult.items.length + 2;
-
-            $scope.searchResult.finished = false;
-            get(req, respCb);
-        };
-
-        function respCb(err, resp) {
-            if (err) {
-                $scope.searchResult.finished = true;
-                return;
-            }
-
-            $scope.searchResult.items = updateData($scope.searchResult.items, resp.hits.hits);
-
-            if (resp.aggregations) {
-                $scope.searchResult.stats = _.cloneDeep(resp.aggregations);
-                $scope.searchResult.stats.total = resp.hits.total;
-
-                updateChart($scope.searchResult.stats);
-            }
-
-            if (this.$scope.last) {
-                $scope.searchResult.finished = true;
-            }
-        }
-
-        $scope.severityString = function (lvl) {
-            var severity = {
-                0: 'Emergency',
-                1: 'Alert',
-                2: 'Critical',
-                3: 'Error',
-                4: 'Warning',
-                5: 'Notice',
-                6: 'Informational',
-                7: 'Debug'
+            $scope.makeAutoRefreshClass = function () {
+                return refreshCtrl.enabled() ? 'btn-info' : '';
             };
 
-            return severity[lvl];
-        };
+            $scope.getMore = function () {
+                if ($scope.searchResult.stats.total === $scope.searchResult.items.length) {
+                    return;
+                }
 
-        function severityStringToNumber(str) {
-            var severity = {
-                    'Emergency': 0,
-                    'Alert': 1,
-                    'Critical': 2,
-                    'Error': 3,
-                    'Warning': 4,
-                    'Notice': 5,
-                    'Informational': 6,
-                    'Debug': 7
-                },
-                severity2 = {
-                    'Emerg': 0,
-                    'Alert': 1,
-                    'Crit': 2,
-                    'Err': 3,
-                    'Warning': 4,
-                    'Notice': 5,
-                    'Info': 6,
-                    'Debug': 7
+                req.maxSize = $scope.searchResult.items.length + 2;
+
+                $scope.searchResult.finished = false;
+                get(req, respCb);
+            };
+
+            function respCb(err, resp) {
+                if (err) {
+                    $scope.searchResult.finished = true;
+                    return;
+                }
+
+                $scope.searchResult.items = updateData($scope.searchResult.items, resp.hits.hits);
+
+                if (resp.aggregations) {
+                    $scope.searchResult.stats = _.cloneDeep(resp.aggregations);
+                    $scope.searchResult.stats.total = resp.hits.total;
+
+                    updateChart($scope.searchResult.stats);
+                }
+
+                if (this.$scope.last) {
+                    $scope.searchResult.finished = true;
+                }
+            }
+
+            $scope.severityString = function (lvl) {
+                var severity = {
+                    0: 'Emergency',
+                    1: 'Alert',
+                    2: 'Critical',
+                    3: 'Error',
+                    4: 'Warning',
+                    5: 'Notice',
+                    6: 'Informational',
+                    7: 'Debug'
                 };
 
-            if (typeof severity[str] !== 'undefined') {
-                return severity[str];
+                return severity[lvl];
+            };
+
+            function severityStringToNumber(str) {
+                var severity = {
+                        'Emergency': 0,
+                        'Alert': 1,
+                        'Critical': 2,
+                        'Error': 3,
+                        'Warning': 4,
+                        'Notice': 5,
+                        'Informational': 6,
+                        'Debug': 7
+                    },
+                    severity2 = {
+                        'Emerg': 0,
+                        'Alert': 1,
+                        'Crit': 2,
+                        'Err': 3,
+                        'Warning': 4,
+                        'Notice': 5,
+                        'Info': 6,
+                        'Debug': 7
+                    };
+
+                if (typeof severity[str] !== 'undefined') {
+                    return severity[str];
+                }
+
+
+                return severity2[str];
             }
 
+            $scope.scrolled = false;
+            $('#event-view').scroll(function () {
+                if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                    //$("span").show();
+                    $scope.scrolled = true;
+                } else {
+                    //$("span").hide();
+                    $scope.scrolled = false;
+                }
+                $scope.$digest();
 
-            return severity2[str];
-        }
+                if ($scope.scrolled === true) {
+                    $scope.getMore();
+                }
+            });
 
-        $scope.scrolled = false;
-        $('#event-view').scroll(function () {
-            if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-                //$("span").show();
-                $scope.scrolled = true;
-            } else {
-                //$("span").hide();
-                $scope.scrolled = false;
-            }
-            $scope.$digest();
+        }]);
 
-            if ($scope.scrolled === true) {
-                $scope.getMore();
-            }
-        });
-
-    }]);
+    }());
 
 </script>
 
