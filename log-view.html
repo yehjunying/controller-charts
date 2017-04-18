@@ -3,6 +3,9 @@
 <script src="./node_modules/angular/angular.js"></script>
 <script src="./node_modules/chai/chai.js"></script>
 <script src="./node_modules/chart.js/dist/Chart.js"></script>
+<script src="./node_modules/d3/d3.min.js"></script>
+<!--<script src="https://d3js.org/d3.v3.js"></script>-->
+<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
 <script src="./node_modules/jquery/dist/jquery.js"></script>
 <script src="./node_modules/lodash/lodash.min.js"></script>
 
@@ -41,15 +44,20 @@
 
     #ov-event-view .chat ul {
         list-style: none;
-        margin: -15px;
-        padding: 15px;
+        /*margin: -15px;*/
+        /*padding: 15px;*/
+        padding: unset;
+        padding-left: 2px;
     }
 
     #ov-event-view .chat ul li {
-        margin-bottom: 10px;
-        padding: 15px 5px;
+        /*margin-bottom: 10px;*/
+        /*padding: 15px 5px;*/
         border-bottom: 1px solid #eee;
-    }
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 16px;
+        padding-right: 16px;    }
 
     #ov-event-view .chat ul li.danger {
         border-left: solid;
@@ -70,11 +78,11 @@
     /*}*/
 
     #ov-event-view .chat ul li.left .chat-body {
-        margin-left: 30px;
+        margin-left: 10px;
     }
 
     #ov-event-view .chat ul li.right .chat-body {
-        margin-right: 30px;
+        margin-right: 10px;
     }
 
     #ov-event-view .chat ul li .chat-body p {
@@ -88,6 +96,7 @@
     #ov-event-view .chat .panel-body {
         overflow-y: auto;
         height: 300px;
+        padding: unset;
     }
 
     #ov-event-view .chat-body small {
@@ -103,6 +112,10 @@
         line-height: 20px;
         text-align: center;
         background: rgba(226, 8, 12, 0.9);
+    }
+
+    .m-t-1 {
+        margin-top: 1rem;
     }
 
     .p-t-1 {
@@ -162,15 +175,30 @@
                 <button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()" ng-click="toggleRefresh()">
                     <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 </button>
+
+                <div class="dropdown inline-box">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        DEBUG: Progress bar status, value {{progressBar.value()}} width: {{progressBar.width()}}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" ng-click="progressBar.value(0)">0%</a></li>
+                        <li><a href="#" ng-click="progressBar.value(10)">10%</a></li>
+                        <li><a href="#" ng-click="progressBar.value(50)">50%</a></li>
+                        <li><a href="#" ng-click="progressBar.value(100)">100%</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="row">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for..." ng-model="searchOptions.q">
+                            <input type="text" class="form-control" placeholder="Search for..."
+                                   ng-model="searchOptions.q"
+                                   ng-keypress="onSearchKeyPressed($event)" >
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="searchFn()">
+                                <button type="button" class="btn btn-default" ng-click="search()">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                                 </button>
 
@@ -184,6 +212,8 @@
 
                             </span>
                         </div><!-- /input-group -->
+
+                        <div id="progress-bar" style="line-height: 0px"></div>
 
                         <div class="btn-group" ng-show="searchOptions.terms.length">
                             <button class="btn btn-default btn-sm" aria-label="Left Align" type="button"
@@ -271,25 +301,30 @@
                     <div class="panel panel-default chat">
                         <div id="event-view" class="panel-body">
                             <ul>
-                                <li class="left clearfix" ng-repeat="i in searchResult.items | filter: eventFilter(filterOptions)" ng-class="makeClass(i)">
-                                    <!--<span class="chat-img pull-left"></span>-->
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">{{$index+1}}, {{i._id}}</strong>
-                                            <small class="text-muted">{{i._source.localeDateTime}}</small>
-                                        </div>
-                                        <p>
-                                            facility: <strong class="primary-font">{{i._source.facility}}</strong>
-                                            severity: <strong class="primary-font">{{i._source.severity}}</strong>
-                                            tag: <strong class="primary-font">{{i._source.tag}}</strong>
-                                            hostname: <strong class="primary-font">{{i._source.hostname}}</strong>
-                                            address: <strong class="primary-font">{{i._source.address}}</strong>
-                                        </p>
-                                        <span>
+                                <div ng-repeat="i in searchResult.items | filter: eventFilter(filterOptions)">
+                                    <li class="left clearfix" ng-class="makeEventListClass(i._source)">
+                                        <!--<span class="chat-img pull-left"></span>-->
+                                        <div class="chat-body clearfix">
+                                            <div class="header">
+                                                <strong class="primary-font">{{$index+1}}, {{i._source.address}}</strong>
+                                                <small class="text-muted">{{i._source.localeDateTime}}</small>
+                                            </div>
+                                            <p>
+                                                facility: <strong class="primary-font">{{i._source.facility}}</strong>
+                                                severity: <strong class="primary-font">{{i._source.severity}}</strong>
+                                                tag: <strong class="primary-font">{{i._source.tag}}</strong>
+                                            </p>
+                                            <span>
                                             {{i._source.message}}
                                         </span>
-                                    </div>
-                                </li>
+                                        </div>
+                                    </li>
+                                    <button type="button" class="btn btn-default center-block m-t-1"
+                                            ng-show="$last && haveMore()"
+                                            ng-click="loadMore()">
+                                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Load More...
+                                    </button>
+                                </div>
                             </ul>
                         </div>
                         <!--<div class="panel-footer">EVENT</div>-->
@@ -337,7 +372,7 @@
                             <pre>scrolled: {{scrolled}}</pre>
                         </div>
                         <div class="col-xs-6 col-md-6">
-                            <pre>searchResult.finished: {{searchResult.finished}}</pre>
+                            <pre>searchProgressing: {{searchProgressing}}</pre>
                         </div>
                     </div>
                     <pre style="height: 200px">{{searchResult.items | prettyJSON}}</pre>
@@ -531,141 +566,27 @@
             }
         }
 
-        app.controller('eventViewCtrl', ['$scope', '$interval', '$http', 'client', 'esFactory', function ($scope, $interval, $http, client, esFactory) {
-            var assert = chai
-                .assert;
+        function SearchWrapper(options) {
+            options = options || {};
 
-            (function () {
-                var exist = [],
-                    resp = [{
-                        _id: '1234'
-                    }];
+            if (typeof options.client !== 'object') {
+                throw new Error('intervalFn is required');
+            }
 
-                var newExist = updateData(exist, resp);
+            var get = ESSearch(options.client),
+                req;
 
-                assert.deepEqual(newExist, [{_id: '1234'}]);
-
-            })();
-
-            (function () {
-                var exist = [
-                        {_id: '1234'}],
-                    resp = [
-                        {_id: '1236'},
-                        {_id: '1235'}
-                    ];
-
-                var newExist = updateData(exist, resp);
-
-                assert.deepEqual(newExist, [
-                    {_id: '1236'},
-                    {_id: '1235'},
-                    {_id: '1234'}
-                ]);
-
-            })();
-
-            (function () {
-                var exist = [
-                        {_id: '1234'}],
-                    resp = [
-                        {_id: '1233'},
-                        {_id: '1232'}
-                    ];
-
-                var newExist = updateData(exist, resp);
-
-                assert.deepEqual(newExist, [
-                    {_id: '1234'},
-                    {_id: '1233'},
-                    {_id: '1232'}
-                ]);
-
-            })();
-
-            (function () {
-                var exist = [
-                        {_id: '1234'}],
-                    resp = [
-                        {_id: '1234'}
-                    ];
-
-                var newExist = updateData(exist, resp);
-
-                assert.deepEqual(newExist, [
-                    {_id: '1234'}
-                ]);
-
-            })();
-
-            console.log('xx');
-
-            $scope.showSearchOptions = true;
-
-            $scope.toggleSearchOptions = function () {
-                $scope.showSearchOptions = !$scope.showSearchOptions;
-            };
-
-            $scope.isShowSearchOptions = function () {
-                return $scope.showSearchOptions;
-            };
-
-            $scope.searchOptions = Object.assign({
-                q: '',
-                terms: [],
-                type: 'All',
-                severity: 'All',
-                source: 'All',
-                timePeriod: 7,
-                timePeriodUnit: 'Days'
-            }, config.eventview.searchDetail);
-
-            $scope.makeBottonClass = function (type, elText) {
-                if (type === elText) {
-                    return 'btn-info';
-                } else {
-                    return 'btn-default';
+            var self =  {
+                searchResult: {
+                    items: [],
+                    stats: {},
+                    finished: false
+                },
+                listeners: {
+                    begin: [],
+                    more_begin: [],
+                    updated: []
                 }
-            };
-            $scope.filterOptions = {
-                severities: [],
-                tags: [],
-                address: []
-            };
-
-            $scope.onFilterCheckbox = function (option, val) {
-                var index = _.indexOf(option, val);
-
-                if (index === -1) {
-                    option.push(val);
-                } else {
-                    option.splice(index, 1);
-                }
-            };
-
-            $scope.eventFilter = function (options) {
-                return function (item) {
-
-                    if (_.head(options.severities)) {
-                        if (_.indexOf(options.severities, item._source.severity) === -1) {
-                            return false;
-                        }
-                    }
-
-                    if (_.head(options.tags)) {
-                        if (_.indexOf(options.tags, item._source.tag) === -1) {
-                            return false;
-                        }
-                    }
-
-                    if (_.head(options.address)) {
-                        if (_.indexOf(options.address, item._source.address) === -1) {
-                            return false;
-                        }
-                    }
-                    //return item.name === options.name;
-                    return true;
-                };
             };
 
             function genSearchReq(options) {
@@ -813,12 +734,12 @@
                     }
 
                     function convertDateRange(options) {
-                        var query = {
-                            gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit) + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit),
-                            lt: 'now' + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit)
-                        };
-
-                        return query;
+                        return {
+                            //gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit) + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit),
+                            //lt: 'now' + '/' + uiConvertor.dateRangeUnit(options.timePeriodUnit)
+                            gte: 'now-' + options.timePeriod + uiConvertor.dateRangeUnit(options.timePeriodUnit),
+                            lt: 'now'
+                        }
                     }
 
                     req.bool.must.push({
@@ -831,8 +752,8 @@
                 }
 
                 var req = {
-                    size: 300,
-                    maxSize: 300,
+                    size: options.fetchSize,
+                    maxSize: options.pageSize,
                     body: {
                         query: makeQueryReg(options),
                         aggs: makeAggsReg(options)
@@ -850,8 +771,417 @@
                 return req;
             }
 
-            var get = ESSearch(client),
-                req;
+            function respCb(err, resp) {
+                if (err) {
+                    self.searchResult.finished = true;
+                    // FIXME: should consider the error case
+                    self.listeners.last[0]();
+                    return;
+                }
+
+                self.searchResult.items = _.concat(self.searchResult.items, resp.hits.hits);
+
+                if (resp.aggregations) {
+                    self.searchResult.stats = _.cloneDeep(resp.aggregations);
+                    self.searchResult.stats.total = resp.hits.total;
+
+                    self.searchResult.first = true;
+                } else {
+                    self.searchResult.first = false;
+                }
+
+                if (this.$scope.last) {
+                    self.searchResult.last = true;
+                } else {
+                    self.searchResult.last = false;
+                }
+
+                self.listeners.updated[0](self.searchResult);
+            }
+
+            return {
+                searchResult: function () {
+                    return self.searchResult;
+                },
+                search: function (options) {
+                    self.searchResult = {
+                        items: [],
+                        stats: {},
+                        finished: false
+                    };
+
+                    req = genSearchReq(options);
+
+                    self.listeners.begin[0](req);
+
+                    get(req, respCb);
+
+                    return this;
+                },
+                more: function () {
+                    self.searchResult = {
+                        items: [],
+                        stats: {},
+                        finished: false
+                    };
+
+                    req.$scope.climb = 0;
+
+                    self.listeners.more_begin[0](req);
+
+                    get(req, respCb);
+
+                    return this;
+                },
+                on: function (type, cb) {
+                    if (type === 'begin') {
+                        self.listeners.begin.push(cb.bind(this));
+                    } else if (type === 'more_begin') {
+                        self.listeners.more_begin.push(cb.bind(this));
+                    } else if (type === 'updated') {
+                        self.listeners.updated.push(cb.bind(this));
+                    } else {
+                        throw new TypeError('invalid type ' + type);
+                    }
+
+                    return this;
+                }
+            }
+        }
+
+        function ProgressBar(options) {
+            options = options || {};
+
+            var height = 5,
+                logger = function () {};
+
+            if (typeof options.id !== 'string') {
+                throw new Error('id is required');
+            }
+
+            if (options.log) {
+                if (typeof options.log === 'function') {
+                    logger = options.log;
+                }
+                else if (typeof options.log === 'string' && options.log === 'trace') {
+                    logger = console.log;
+                }
+            }
+
+            var svg = d3.select(options.id)
+                .append('svg')
+                .attr('height', height)
+                .attr('width', '100%');
+
+            svg.append('rect')
+                .attr('class', 'bg-rect')
+                .attr('rx', 0)
+                .attr('ry', 0)
+                //.attr('fill', 'gray')
+                .attr('opacity', 0)
+                .attr('height', height)
+                .attr('width', '100%')
+                .attr('x', 0);
+
+            var progress = svg.append('rect')
+                .attr('class', 'progress-rect')
+                .attr('fill', '#4286f4')
+                .attr('height', height)
+                .attr('width', 0)
+                .attr('rx', 0)
+                .attr('ry', 0)
+                .attr('x', 0);
+
+            var self = {
+                value: 0,
+                max: 100,
+                listeners: {
+                    end: []
+                }
+            };
+
+            setValue(self.value);
+
+            function width(el) {
+                if (typeof el === 'undefined') {
+                    el = svg;
+                }
+
+                return el.node().getBBox().width;
+            }
+
+            function dispatchEvent(type) {
+                if (typeof self.listeners[type] === 'undefined') {
+                    throw new TypeError('invalid listener type');
+                }
+
+                self.listeners[type].forEach(function (fn) {
+                    fn();
+                });
+
+                self.listeners[type] = [];
+            }
+
+            function finialize() {
+                progress.transition()
+                    .duration(300)
+                    .attr('opacity', 0)
+                    .each('end', (function (value) {
+                        dispatchEvent('end');
+                    }))
+                    .each('interrupt', (function (value) {
+                        dispatchEvent('end');
+                    }))
+            }
+
+            function getValue() {
+                return self.value;
+            }
+
+            function setValue(value, immediately) {
+                self.value = value;
+
+                if (immediately) {
+                    progress.attr('width', function () {
+                        return (self.value / self.max) * width(svg);
+                    });
+                } else {
+                    logger('progress-bar: setValue(' + value + ')');
+
+                    var progressTrans = progress.transition()
+                        .duration(50)
+                        .attr('width', function () {
+                            logger('progress-bar: width = ' + (self.value / self.max) * width(svg));
+                            return (self.value / self.max) * width(svg);
+                        });
+
+                    if (d3.version[0] === '3') {
+                        progressTrans
+                            .each('end', (function (value) {
+                                return function () {
+                                    logger('progress-bar: setValue(' + value + ') finished');
+
+                                    if (value === self.max) {
+                                        finialize();
+                                    }
+
+                                }
+                            })(value))
+                            .each('interrupt', (function (value) {
+                                return function () {
+                                    logger('progress-bar: setValue ' + value + ' interrupted');
+                                }
+                            })(value));
+                    }
+                    else if (d3.version[0] === '4') {
+                        progressTrans
+                            .on('end', (function (value) {
+                                return function () {
+                                    logger('progress-bar: setValue ' + value + ' finished');
+
+                                    if (value === self.max) {
+                                        finialize();
+                                    }
+                                }
+                            })(value))
+                            .on('interrupt', (function (value) {
+                                return function () {
+                                    logger('progress-bar: setValue ' + value + ' interrupted');
+                                }
+                            })(value));
+                    }
+                }
+            }
+
+            function getMax() {
+                return self.max;
+            }
+
+            function setMax(value) {
+                self.max = value;
+            }
+
+            return {
+                reset: function () {
+                    progress.attr('width', 0)
+                        .attr('opacity', 1);
+                    return this;
+                },
+                value: function (value, immediately) {
+                    if (typeof value === 'undefined') {
+                        return getValue();
+                    } else {
+                        setValue(value, immediately);
+                        return this;
+                    }
+                },
+                max: function (value) {
+                    if (typeof value === 'undefined') {
+                        return getMax();
+                    } else {
+                        setMax(value);
+                        return this;
+                    }
+                },
+                width: width,
+                on: function (type, cb) {
+                    if (type === 'end') {
+                        self.listeners.end.push(cb.bind(this));
+                    } else {
+                        throw new TypeError('invalid type ' + type);
+                    }
+
+                    return this;
+                }
+            }
+        }
+
+        app.controller('eventViewCtrl', ['$scope', '$interval', '$http', 'client', function ($scope, $interval, $http, client) {
+            $scope.progressBar = ProgressBar({
+                id: '#progress-bar',
+                //log: console.log
+            });
+
+//            var assert = chai.assert;
+//
+//            (function () {
+//                var exist = [],
+//                    resp = [{
+//                        _id: '1234'
+//                    }];
+//
+//                var newExist = updateData(exist, resp);
+//
+//                assert.deepEqual(newExist, [{_id: '1234'}]);
+//
+//            })();
+//
+//            (function () {
+//                var exist = [
+//                        {_id: '1234'}],
+//                    resp = [
+//                        {_id: '1236'},
+//                        {_id: '1235'}
+//                    ];
+//
+//                var newExist = updateData(exist, resp);
+//
+//                assert.deepEqual(newExist, [
+//                    {_id: '1236'},
+//                    {_id: '1235'},
+//                    {_id: '1234'}
+//                ]);
+//
+//            })();
+//
+//            (function () {
+//                var exist = [
+//                        {_id: '1234'}],
+//                    resp = [
+//                        {_id: '1233'},
+//                        {_id: '1232'}
+//                    ];
+//
+//                var newExist = updateData(exist, resp);
+//
+//                assert.deepEqual(newExist, [
+//                    {_id: '1234'},
+//                    {_id: '1233'},
+//                    {_id: '1232'}
+//                ]);
+//
+//            })();
+//
+//            (function () {
+//                var exist = [
+//                        {_id: '1234'}],
+//                    resp = [
+//                        {_id: '1234'}
+//                    ];
+//
+//                var newExist = updateData(exist, resp);
+//
+//                assert.deepEqual(newExist, [
+//                    {_id: '1234'}
+//                ]);
+//
+//            })();
+//
+//            console.log('xx');
+
+            $scope.showSearchOptions = true;
+
+            $scope.toggleSearchOptions = function () {
+                $scope.showSearchOptions = !$scope.showSearchOptions;
+            };
+
+            $scope.isShowSearchOptions = function () {
+                return $scope.showSearchOptions;
+            };
+
+            $scope.searchOptions = Object.assign({
+                fetchSize: 200, // per fetch size
+                pageSize: 200,  // one page size
+                q: '',
+                terms: [],
+                type: 'All',
+                severity: 'All',
+                source: 'All',
+                timePeriod: 7,
+                timePeriodUnit: 'Days'
+            }, config.eventview.searchDetail);
+
+            $scope.makeBottonClass = function (type, elText) {
+                if (type === elText) {
+                    return 'btn-info';
+                } else {
+                    return 'btn-default';
+                }
+            };
+            $scope.filterOptions = {
+                severities: [],
+                tags: [],
+                address: []
+            };
+
+            $scope.onFilterCheckbox = function (option, val) {
+                var index = _.indexOf(option, val);
+
+                if (index === -1) {
+                    option.push(val);
+                } else {
+                    option.splice(index, 1);
+                }
+            };
+
+            $scope.eventFilter = function (options) {
+                return function (item) {
+
+                    if (_.head(options.severities)) {
+                        if (_.indexOf(options.severities, item._source.severity) === -1) {
+                            return false;
+                        }
+                    }
+
+                    if (_.head(options.tags)) {
+                        if (_.indexOf(options.tags, item._source.tag) === -1) {
+                            return false;
+                        }
+                    }
+
+                    if (_.head(options.address)) {
+                        if (_.indexOf(options.address, item._source.address) === -1) {
+                            return false;
+                        }
+                    }
+                    //return item.name === options.name;
+                    return true;
+                };
+            };
+
+            var searchCtrl = SearchWrapper({
+                client: client
+            });
 
             var chart = EventStatsBar({
                 canvasContext: 'event-stats-chart'
@@ -871,12 +1201,12 @@
 
                     if (sameYear) {
                         data.push({
-                            label: '' + (date.getMonth() + 1) + '/' + date.getDate(), //value.key_as_string,
+                            label: '' + (date.getMonth() + 1) + '/' + date.getDate(),
                             data: value.doc_count
                         });
                     } else {
                         data.push({
-                            label: '' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear(), //value.key_as_string,
+                            label: '' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear(),
                             data: value.doc_count
                         });
                     }
@@ -885,29 +1215,104 @@
                 chart.update(data);
             }
 
-            function updateData(exist, resp) {
-                if (exist === []) {
-                    return _.cloneDeep(resp);
-                }
+            $scope.searchResult = {
+                items: [],
+                stats: {},
+                finished: false
+            };
 
-                return _.reverse(
-                    _.unionBy(
-                        _.sortBy(
-                            _.concat(resp, exist), ['_id']),
-                        '_id'
-                    ));
+            $scope.searchProgressing = false;
+
+            function searchFinished() {
+                console.log('search finished');
+                $scope.searchProgressing = false;
+                $scope.$digest();
             }
 
-            $scope.searchFn = function () {
+            searchCtrl.on('begin', function (req) {
+                console.log('search beginning');
+
                 $scope.searchResult = {
                     items: [],
                     stats: {},
                     finished: false
                 };
-                req = genSearchReq($scope.searchOptions);
 
-                get(req, respCb);
+                $scope.searchProgressing = true;
+                $scope.progressBar.on('end', searchFinished);
+
+                $scope.progressBar.max(req.maxSize);
+                $scope.progressBar.reset();
+                $scope.progressBar.value($scope.progressBar.max()/200);
+            }).on('more_begin', function (req) {
+                console.log('search beginning');
+
+                $scope.searchProgressing = true;
+                $scope.progressBar.on('end', searchFinished);
+
+                $scope.progressBar.max(req.maxSize);
+                $scope.progressBar.reset();
+                $scope.progressBar.value($scope.progressBar.max()/200);
+            }).on('updated', function (searchResult) {
+                function updateData(exist, resp) {
+                    if (exist === []) {
+                        return _.cloneDeep(resp);
+                    }
+
+                    return _.reverse(
+                        _.unionBy(
+                            _.sortBy(
+                                _.concat(resp, exist), ['_id']),
+                            '_id'
+                        ));
+                }
+
+                $scope.searchResult.items = updateData($scope.searchResult.items, searchResult.items);
+
+                if (searchResult.first) {
+                    $scope.searchResult.stats = searchResult.stats;
+                    updateChart(searchResult.stats);
+                }
+
+                if (searchResult.last) {
+                    $scope.progressBar.value($scope.progressBar.max());
+                } else {
+                    $scope.progressBar.value(searchResult.items.length);
+                }
+            });
+
+            $scope.onSearchKeyPressed = function ($event) {
+                var keyCode = $event.which || $event.keyCode;
+                if (keyCode === 13) {
+                    searchCtrl.search($scope.searchOptions);
+                }
             };
+
+            $scope.search = function () {
+                if ($scope.searchProgressing === true) {
+                    return;
+                }
+
+                searchCtrl.search($scope.searchOptions);
+            };
+
+            $scope.haveMore = function () {
+                if (typeof $scope.searchResult === 'undefined') {
+                    return true;
+                }
+
+                return $scope.searchResult.items.length < $scope.searchResult.stats.total;
+            };
+
+            $scope.loadMore = function () {
+                if ($scope.searchProgressing === true) {
+                    return;
+                }
+
+                searchCtrl.more();
+            };
+
+            searchCtrl.search($scope.searchOptions);
 
             $scope.addTermFn = function (options, term) {
                 term = String.prototype.trim.call(term);
@@ -933,15 +1338,11 @@
                 options.terms.splice(idx, 1);
             };
 
-            $scope.searchFn();
-
             var refreshCtrl = RefreshCtrl({
                 interval: 5000,
                 intervalFn: $interval,
                 hookFn: function () {
-                    req = genSearchReq($scope.searchOptions);
-                    $scope.searchResult.finished = false;
-                    get(req, respCb);
+                    searchCtrl.search($scope.searchOptions);
                 }
             });
 
@@ -952,37 +1353,6 @@
             $scope.makeAutoRefreshClass = function () {
                 return refreshCtrl.enabled() ? 'btn-info' : '';
             };
-
-            $scope.getMore = function () {
-                if ($scope.searchResult.stats.total === $scope.searchResult.items.length) {
-                    return;
-                }
-
-                req.maxSize = $scope.searchResult.items.length + 2;
-
-                $scope.searchResult.finished = false;
-                get(req, respCb);
-            };
-
-            function respCb(err, resp) {
-                if (err) {
-                    $scope.searchResult.finished = true;
-                    return;
-                }
-
-                $scope.searchResult.items = updateData($scope.searchResult.items, resp.hits.hits);
-
-                if (resp.aggregations) {
-                    $scope.searchResult.stats = _.cloneDeep(resp.aggregations);
-                    $scope.searchResult.stats.total = resp.hits.total;
-
-                    updateChart($scope.searchResult.stats);
-                }
-
-                if (this.$scope.last) {
-                    $scope.searchResult.finished = true;
-                }
-            }
 
             $scope.severityString = function (lvl) {
                 var severity = {
@@ -1001,6 +1371,7 @@
 
             function severityStringToNumber(str) {
                 var severity = {
+                    fullText: {
                         'Emergency': 0,
                         'Alert': 1,
                         'Critical': 2,
@@ -1010,7 +1381,7 @@
                         'Informational': 6,
                         'Debug': 7
                     },
-                    severity2 = {
+                    keyword: {
                         'Emerg': 0,
                         'Alert': 1,
                         'Crit': 2,
@@ -1019,34 +1390,40 @@
                         'Notice': 5,
                         'Info': 6,
                         'Debug': 7
-                    };
+                    }
+                };
 
-                if (typeof severity[str] !== 'undefined') {
-                    return severity[str];
+                if (typeof severity.fullText[str] !== 'undefined') {
+                    return severity.fullText[str];
                 }
 
-
-                return severity2[str];
+                return severity.keyword[str];
             }
+
+            $scope.makeEventListClass = function (item) {
+                if (item.severity < 4) {
+                    return 'danger';
+                } else if (item.severity === 4) {
+                    return 'warning';
+                } else {
+                    return 'info';
+                }
+            };
 
             $scope.scrolled = false;
             $('#event-view').scroll(function () {
                 if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-                    //$("span").show();
                     $scope.scrolled = true;
                 } else {
-                    //$("span").hide();
                     $scope.scrolled = false;
                 }
                 $scope.$digest();
 
                 if ($scope.scrolled === true) {
-                    $scope.getMore();
+                    $scope.loadMore();
                 }
             });
-
         }]);
-
     }());
 
 </script>

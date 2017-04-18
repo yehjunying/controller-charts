@@ -141,25 +141,15 @@
                         }
                     }
 
-                    // req.body = {
-                    //     query: {
-                    //         range: {
-                    //             id: {
-                    //                 lt: _.last(o.$scope.hits)._id
-                    //             }
-                    //         }
-                    //     }
-                    // };
-
                     client.search(req, searchCallback);
                     return;
                 } else {
                     o.$scope.climb += resp.hits.hits.length;
                     o.$scope.scrollId = resp._scroll_id;
 
-                    o.$scope.hits = deepCopy(resp.hits.hits); //_.cloneDeep(resp.hits.hits);
+                    o.$scope.hits = deepCopy(resp.hits.hits);
 
-                    if (maxSize && maxSize <= o.$scope.climb || resp.hits.total == o.$scope.climb) {
+                    if (maxSize && maxSize <= o.$scope.climb || resp.hits.hits.length === 0) {
                         o.$scope.last = true;
                     }
 
@@ -170,7 +160,7 @@
                     return;
                 }
 
-                if (resp.hits.total > o.$scope.climb) {
+                if (!o.$scope.last) {
                     _search(o, cb);
                 }
             }

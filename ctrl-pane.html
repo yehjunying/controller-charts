@@ -326,7 +326,7 @@
                     <pre ng-click="autoRefresh()">Auto Refresh {{auto_refresh}}</pre>
                 </div>
                 <div class="row">
-                    <pre ng-click="getMore()">GetMore...</pre>
+                    <pre ng-click="loadMore()">GetMore...</pre>
                 </div>
             </div>
 
@@ -607,7 +607,7 @@
             }
         };
 
-        $scope.getMore = function () {
+        $scope.loadMore = function () {
             req.maxSize = $scope.items.length + 2;
 
             get(req, respCb);
