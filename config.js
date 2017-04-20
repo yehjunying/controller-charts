@@ -15,7 +15,7 @@
         },
         eventview: {
             'searchDetail': {
-                fetchSize: 50,
+                fetchSize: 1000,
                 pageSize: 1000,
                 index: 'mars',
                 timePeriod: 100,
