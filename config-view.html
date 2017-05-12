@@ -146,7 +146,7 @@
                                                             <!--<small class="text-muted">test</small>-->
                                                         </div>
                                                         <small>
-                                                            by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{item.modified}}
+                                                            by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}
                                                         </small>
                                                     </div>
                                                     <div class="col-xs-4 col-md-3">
@@ -274,7 +274,8 @@
                 return moment(date).calendar(null, {
                     sameDay: '[Today] A hh:mm:ss',
                     lastDay: '[Yesterday] A hh:mm:ss',
-                    lastWeek: 'YYYY/MM/DD A hh:mm:ss'
+                    lastWeek: 'YYYY/MM/DD A hh:mm:ss',
+                    sameElse: 'YYYY/MM/DD A hh:mm:ss'
                 });
             };
         }]);
