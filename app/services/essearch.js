@@ -1,3 +1,4 @@
+// TODO: Use Browserify or Webpack instead the following code for modulizing
 ;(function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
         typeof define === 'function' && define.amd ? define(factory) :
@@ -19,6 +20,8 @@
             return JSON.parse(JSON.stringify(original));
         }
 
+        // TODO: delete former scrollID if launch a new search
+        // TODO: work with ElasticSearch 5.3 or upper version
         function _search(o, cb) {
             o = o || {};
             o.size = o.size || 100;

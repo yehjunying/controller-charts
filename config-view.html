@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="./node_modules/es5-shim/es5-sham.min.js"></script>
+    <script src="./node_modules/es6-shim/es6-sham.min.js"></script>
+    <script src="./node_modules/lodash/lodash.min.js"></script>
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <!--<script src="./node_modules/chai/chai.js"></script>-->
+    <script src="./node_modules/angular/angular.min.js"></script>
+    <script src="./node_modules/chart.js/dist/Chart.min.js"></script>
+    <script src="./node_modules/d3/d3.min.js"></script>
+    <script src="./node_modules/moment/min/moment.min.js"></script>
+
+    <script src="./config.js"></script>
+    <script src="./controller-chart.js"></script>
+    <script src="./elasticsearch.angular.js"></script>
+    <script src="app/services/essearch.js"></script>
+    <script src="app/services/event-stats-bar.js"></script>
+
+    <link href="./node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="./node_modules/bootstrap/dist/css/bootstrap-theme.css.map" rel="stylesheet">
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style>
+        #ov-config-view .controller > .panel-body {
+            height: 360px;
+        }
+
+        #ov-config-view .row {
+            padding-bottom: 5px;
+        }
+
+        #ov-config-view .chat ul {
+            list-style: none;
+            /*margin: -15px;*/
+            /*padding: 15px;*/
+            padding: unset;
+            padding-left: 5px;
+        }
+
+        #ov-config-view .chat .chat-date {
+            background-color: #f8f9fa;
+            height: 2em;
+        }
+
+        #ov-config-view .chat ul li {
+            /*margin-bottom: 10px;*/
+            /*padding: 15px 5px;*/
+            border-bottom: 1px solid #eee;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        #ov-config-view .chat ul li.danger {
+            border-left: solid;
+            border-left-width: 0.5em;
+            border-left-color: #ed1c24;
+        }
+
+        #ov-config-view .chat ul li.warning {
+            border-left: solid;
+            border-left-width: 0.5em;
+            border-left-color: rgb(250, 187, 61);
+        }
+
+        #ov-config-view .chat ul li.active {
+            border-left: solid;
+            border-left-width: 0.5em;
+            border-left-color: rgb(0, 69, 153);
+        }
+
+        #ov-config-view .chat .panel-body {
+            overflow-y: auto;
+            height: 300px;
+            padding: unset;
+        }
+
+        .m-t-1 {
+            margin-top: 1rem;
+        }
+
+        .p-t-1 {
+            padding-top: 1rem;
+        }
+
+        .p-x-1 {
+            padding-right: 1rem;
+            padding-left: 1rem;
+        }
+
+        .p-y-1 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .inline-box {
+            display: inline-block;
+        }
+
+        body {
+            /*background-color: #EFEFEF;*/
+            background-color: #e4e5e6;
+        }
+
+        #ov-config-view .panel {
+            border-radius: 0;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+            margin-bottom: 18px;
+        }
+
+        #ov-config-view .panel-heading {
+            background-color: #f8f9fa;
+        }
+
+        #ov-config-view #search-result-detail {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+    </style>
+</head>
+
+<body>
+<div ng-app="myApp">
+    <div ng-controller="configViewCtrl">
+        <div id="ov-config-view" class="container">
+            <div style="margin-top: 18px" />
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="row p-x-1">
+                        <div class="col-md-12">
+                            <div id="search-result-detail" class="panel panel-default chat">
+                                <div id="event-view" class="panel-body">
+                                    <ul>
+                                        <div ng-repeat="item in configHistory">
+                                            <li ng-class="{ 'active': item.active }" >
+                                                <div class="row">
+                                                    <div class="col-xs-8 col-md-9">
+                                                        <div>
+                                                            <strong class="primary-font">{{item.description}}</strong>
+                                                            <!--<small class="text-muted">test</small>-->
+                                                        </div>
+                                                        <small>
+                                                            by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{item.modified}}
+                                                        </small>
+                                                    </div>
+                                                    <div class="col-xs-4 col-md-3">
+                                                        <div class="btn-group pull-right">
+                                                            <button type="button" class="btn btn-default"
+                                                                    ng-click="setSearchOptionsAndSearch({type: 'All'})">View
+                                                            </button>
+                                                            <button type="button" class="btn btn-default"
+                                                                    ng-click="setSearchOptionsAndSearch({type: 'Fabric'})"
+                                                                    ng-disabled="item.active">Restore
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div> <!-- configViewCtrl -->
+</div> <!-- myApp -->
+
+<script>
+
+    var app = angular.module('myApp', []);
+
+    app.filter('prettyJSON', function () {
+        function prettyPrintJson(json) {
+            return JSON ? JSON.stringify(json, null, '  ') : 'your browser doesnt support JSON so cant pretty print';
+        }
+
+        return prettyPrintJson;
+    });
+
+//    app.config(function ($httpProvider) {
+//        $httpProvider.defaults.useXDomain = true;
+//        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+//    });
+
+    var configHistory = {
+        'network': [
+            {
+                'id': '20170501011000000',
+                'modified': '2017-05-01 01:10:00.000',
+                'modifiedBy': 'who',
+                'description': 'last version'
+            },
+            {
+                'id': '20170501010000000',
+                'modified': '2017-05-01 01:00:00.000',
+                'modifiedBy': 'who',
+                'description': '6th version',
+
+                'active': true
+            },
+            {
+                'id': '20170501005000000',
+                'modified': '2017-05-01 00:50:00.000',
+                'modifiedBy': 'who',
+                'description': '5th version'
+            },
+            {
+                'id': '20170501004000000',
+                'modified': '2017-05-01 00:40:00.000',
+                'modifiedBy': 'who',
+                'description': '4th version'
+            },
+            {
+                'id': '20170501003000000',
+                'modified': '2017-05-01 00:30:00.000',
+                'modifiedBy': 'who',
+                'description': 'third version'
+            },
+            {
+                'id': '20170501002000000',
+                'modified': '2017-05-01 00:20:00.000',
+                'modifiedBy': 'who',
+                'description': 'second version'
+            },
+            {
+                'id': '20170501001000000',
+                'modified': '2017-05-01 00:10:00.000',
+                'modifiedBy': 'who',
+                'description': 'init version'
+            }
+        ],
+        'foo': [
+            {
+                'id': '20170501000000000',
+                'modified': '2017-05-01 00:00:00.000',
+                'modifiedBy': 'who',
+                'description': 'first version'
+            },
+            {
+                'id': '20170501001000000',
+                'modified': '2017-05-01 00:10:00.000',
+                'modifiedBy': 'who',
+                'description': 'second version'
+            },
+            {
+                'id': '20170501002000000',
+                'modified': '2017-05-01 00:10:00.000',
+                'modifiedBy': 'who',
+                'description': 'third version'
+            }
+        ]
+    };
+
+    (function () {
+        'use strict';
+
+        app.controller('configViewCtrl', ['$scope', '$interval', '$http', function ($scope, $interval, $http) {
+            $scope.configHistory = _.cloneDeep(configHistory['network']);
+
+            // TODO: function not work ?
+            $scope.friendlyDateString = function (date) {
+                return moment(date).calendar(null, {
+                    sameDay: '[Today] A hh:mm:ss',
+                    lastDay: '[Yesterday] A hh:mm:ss',
+                    lastWeek: 'YYYY/MM/DD A hh:mm:ss'
+                });
+            };
+        }]);
+    }());
+
+</script>
+
+</body>
+</html>

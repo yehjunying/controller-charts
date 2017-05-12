@@ -1039,6 +1039,7 @@
             }
         }
 
+        // TODO: progress-bar does not work well with Edge, investigate why
         function ProgressBar(options) {
             options = options || {};
 
@@ -1399,6 +1400,7 @@
                 }
             });
 
+            // TODO: When use press enter on 'Time period' input controller it should launch a new search
             $scope.onSearchKeyPressed = function ($event) {
                 var keyCode = $event.which || $event.keyCode;
                 if (keyCode === 13) {
