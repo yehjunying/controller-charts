@@ -1,0 +1,101 @@
+#ov-configHistoryDetail {
+    position: absolute;
+    overflow-y: auto;
+    margin-left: 22px;
+    margin-top: 18px;
+    height: 90%;
+    width: calc(100% - 30px);
+}
+
+#ov-configHistoryDetail h2 {
+    margin: unset;
+}
+
+#ov-configHistoryDetail .row {
+    padding-bottom: 5px;
+}
+
+#ov-configHistoryDetail .chat ul {
+    list-style: none;
+    padding: unset;
+    padding-left: 5px;
+}
+
+#ov-configHistoryDetail .chat .chat-date {
+    background-color: #f8f9fa;
+    height: 2em;
+}
+
+#ov-configHistoryDetail .chat ul li {
+    border-bottom: 1px solid #eee;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+#ov-configHistoryDetail .chat ul li.danger {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: #ed1c24;
+}
+
+#ov-configHistoryDetail .chat ul li.warning {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(250, 187, 61);
+}
+
+#ov-configHistoryDetail .chat ul li.active {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(0, 69, 153);
+}
+
+#ov-configHistoryDetail .chat .panel-body {
+    padding: unset;
+}
+
+.p-x-1 {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+#ov-configHistoryDetail .panel {
+    border-radius: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    margin-right: 22px;
+}
+
+#ov-configHistoryDetail .panel-heading {
+    background-color: #f8f9fa;
+}
+
+#ov-configHistoryDetail #search-result-detail {
+    border-radius: 0;
+    box-shadow: none;
+    margin-right: unset;
+}
+
+#ov-configHistoryDetail .inline-box {
+    display: inline-block;
+}
+
+#ov-configHistoryDetail .title {
+    margin-top: 20px;
+}
+
+#ov-configHistoryDetail div.align-right {
+    float: right;
+}
+
+#ov-configHistoryDetail td.table-label {
+    text-align: right;
+    vertical-align: top;
+    padding-right: 5px;
+}
+
+#ov-configHistoryDetail td.table-value {
+    text-align: left;
+    padding-left: 5px;
+}

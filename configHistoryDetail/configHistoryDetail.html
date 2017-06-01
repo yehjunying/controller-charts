@@ -1,0 +1,88 @@
+<!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">-->
+<!--<link rel="stylesheet" href="app/view/configHistoryDetail/configHistoryDetail.css">-->
+<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="configHistoryDetail/configHistoryDetail.css">
+
+<div id="ov-configHistoryDetail" class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row p-x-1 title">
+                <div class="col-md-1">
+                    <button class="btn btn-primary" ng-click="backToPreviousPage()">Back</button>
+                </div>
+                <div class="col-md-10">
+                    <div><h4><strong>{{currentConfig.id}}</strong></h4></div>
+                    <div>{{currentConfig.description}}</div>
+                    <div>{{currentConfig.modifiedBy}} modified {{currentConfig.modified}}</div>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary">Restore</button>
+                </div>
+            </div>
+            <div class="row p-x-1">
+                <div class="col-md-12">
+                    <div id="search-result-detail" class="panel panel-default chat">
+                        <div class="col-md-6">
+                            <div><h4><strong>{{currentConfig.id}}</strong></h4></div>
+                            <div class="global">
+                                <div>
+                                    <h4 class="inline-box">Global</h4>
+                                    <div class="glyphicon glyphicon-chevron-up align-right"></div>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <td class="table-label"><strong>Reserved VLAN Range</strong></td>
+                                        <td class="table-value">{{currentConfig.networkCfg.global.reservedVlanRange.begin}}
+                                            to {{currentConfig.networkCfg.global.reservedVlanRange.end}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="table-label" rowspan="{{currentConfig.networkCfg.global.reservedSubnet.length+1}}"><strong>Reserved Subnet</strong></td>
+                                    </tr>
+                                    <tr ng-repeat="item in currentConfig.networkCfg.global.reservedSubnet">
+                                        <td class="table-value">{{item}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6"></div>
+                        <!--<div id="event-view" class="panel-body">-->
+                            <!--<ul>-->
+                                <!--<div ng-repeat="item in configHistory">-->
+                                    <!--<li ng-class="{ 'active': item.active }" >-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-xs-8 col-md-9">-->
+                                                <!--<div>-->
+                                                    <!--<strong class="primary-font">{{friendlyDateString(item.modified)}}</strong>-->
+                                                    <!--&lt;!&ndash;<strong class="primary-font">{{item.description}}</strong>&ndash;&gt;-->
+                                                    <!--&lt;!&ndash;<small class="text-muted">test</small>&ndash;&gt;-->
+                                                <!--</div>-->
+                                                <!--<small>-->
+                                                    <!--description-->
+                                                    <!--&lt;!&ndash;by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}&ndash;&gt;-->
+                                                <!--</small>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-xs-4 col-md-3">-->
+                                                <!--<div class="btn-group pull-right">-->
+                                                    <!--<button type="button" class="btn btn-default"-->
+                                                            <!--ng-click="setSearchOptionsAndSearch({type: 'All'})">View-->
+                                                    <!--</button>-->
+                                                    <!--<button type="button" class="btn btn-default"-->
+                                                            <!--ng-click="restore(item.id)"-->
+                                                            <!--ng-disabled="item.active">Restore-->
+                                                    <!--</button>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</li>-->
+                                <!--</div>-->
+                            <!--</ul>-->
+                        <!--</div>-->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
