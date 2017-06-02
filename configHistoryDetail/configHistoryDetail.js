@@ -3,48 +3,6 @@
 
     var $window, $log, $scope, $loc, mast, fs, wss, ns;
 
-    // var configHistoryDetailCurrent = {
-    //     id: '20170501011000000',
-    //     modified: '2017-05-01 01:10:00.000',
-    //     modifiedBy: 'mars',
-    //     description: 'Device had added; Link had added',
-    //     networkCfg: {
-    //         global: {
-    //             reservedSubnet: [
-    //                 "192.168.1.0/24",
-    //                 "192.168.2.0/24",
-    //                 "192.168.3.0/24",
-    //                 "192.168.4.0/24",
-    //                 "192.168.5.0/24",
-    //                 "192.168.6.0/24",
-    //                 "192.168.7.0/24",
-    //                 "192.168.8.0/24",
-    //                 "192.168.9.0/24",
-    //                 "192.168.10.0/24",
-    //                 "192.168.11.0/24",
-    //                 "192.168.12.0/24",
-    //                 "192.168.13.0/24",
-    //                 "192.168.14.0/24",
-    //                 "192.168.15.0/24",
-    //                 "192.168.16.0/24",
-    //                 "192.168.17.0/24",
-    //                 "192.168.18.0/24",
-    //                 "192.168.19.0/24",
-    //                 "192.168.20.0/24",
-    //                 "192.168.21.0/24",
-    //                 "192.168.22.0/24",
-    //                 "192.168.23.0/24",
-    //                 "192.168.24.0/24",
-    //                 "192.168.25.0/24"
-    //             ],
-    //             reservedVlanRange: {
-    //                 begin: 4001,
-    //                 end: 4094
-    //             }
-    //         }
-    //     }
-    // };
-
     angular.module('ovConfigHistoryDetail', [])
     .controller('OvConfigHistoryDetailCtrl',
         ['$window', '$log', '$scope', '$location'/*, 'MastService', 'FnService'*/, 'WebSocketService'/*, 'NavService'*/,
@@ -97,15 +55,15 @@
                 ns.navTo($scope.searchOptions.prevPage);
             };
 
-            function configHistoryDetailDataResponse(data) {
-                if (data.status === 200) {
-                    $scope.currentConfig = _.cloneDeep(data.config);
+            function configHistoryDetailDataResponse(resp) {
+                if (resp.status === 200) {
+                    $scope.currentConfig = _.cloneDeep(resp.data);
                 }
 
                 $scope.$digest();
             }
 
-            $scope.currentConfig = _.cloneDeep(configHistoryDetailCurrent);
+            // $scope.currentConfig = _.cloneDeep(configHistoryDetailCurrent);
 
             // TODO: function not work ?
             $scope.friendlyDateString = function (date) {
@@ -121,8 +79,8 @@
                 wss.sendEvent('configRestoreRequest', {id: id});
             };
 
-            function configRestoreResponse(data) {
-                if (data.status === 200) {
+            function configRestoreResponse(resp) {
+                if (resp.status === 200) {
                     wss.sendEvent('configHistoryDataRequest');
                 }
             }

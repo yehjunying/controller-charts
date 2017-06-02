@@ -27,53 +27,13 @@
 
 <body ng-app="myApp" ng-cloak>
 
-    <a href="#red">Red</a>
-
-    <div ng-view></div>
+    <div ng-controller="appCtrl">
+        <a href="#red">Red</a>
+        <div ng-view></div>
+    </div>
 
     <!-- Your application bootstrap  -->
     <script type="text/javascript">
-        var configHistoryDetailCurrent = {
-            id: '20170501011000000',
-            modified: '2017-05-01 01:10:00.000',
-            modifiedBy: 'mars',
-            description: 'Device had added; Link had added',
-            networkCfg: {
-                global: {
-                    reservedSubnet: [
-                        "192.168.1.0/24",
-                        "192.168.2.0/24",
-                        "192.168.3.0/24",
-                        "192.168.4.0/24",
-                        "192.168.5.0/24",
-                        "192.168.6.0/24",
-                        "192.168.7.0/24",
-                        "192.168.8.0/24",
-                        "192.168.9.0/24",
-                        "192.168.10.0/24",
-                        "192.168.11.0/24",
-                        "192.168.12.0/24",
-                        "192.168.13.0/24",
-                        "192.168.14.0/24",
-                        "192.168.15.0/24",
-                        "192.168.16.0/24",
-                        "192.168.17.0/24",
-                        "192.168.18.0/24",
-                        "192.168.19.0/24",
-                        "192.168.20.0/24",
-                        "192.168.21.0/24",
-                        "192.168.22.0/24",
-                        "192.168.23.0/24",
-                        "192.168.24.0/24",
-                        "192.168.25.0/24"
-                    ],
-                    reservedVlanRange: {
-                        begin: 4001,
-                        end: 4094
-                    }
-                }
-            }
-        };
 
         angular.module("myApp", ['ngRoute', 'oc.lazyLoad'])
             .config(function ($routeProvider) {
@@ -99,18 +59,20 @@
                 //         console.log('received ' + key + ' data: ' + JSON.stringify(data));
                 //     }, 0);
                 // });
+                function createHandler() {
+                    return {}
+                }
 
                 return {
                     bindHandlers: function (handlers) {
                         angular.forEach(handlers, function (fn, key) {
-                            this[key] = this[key] || {};
+                            this[key] = this[key] || createHandler();
                             this[key].fn = fn;
                         }, _handlers);
-                        // _handlers = handlers;
                     },
                     bindResponseData: function (responses) {
                         angular.forEach(responses, function (data, key) {
-                            this[key] = this[key] || {};
+                            this[key] = this[key] || createHandler();
                             this[key].data = data;
                         }, _handlers);
                     },
@@ -124,9 +86,18 @@
                             if (_handlers[respKey] && typeof _handlers[respKey].fn === 'function') {
                                 setTimeout(function () {
                                     console.log('call ' + respKey);
-                                    var respData = _handlers[respKey].data || null;
+                                    var respData;
+                                    if (typeof _handlers[respKey].data !== 'undefined') {
+                                        respData = {
+                                            status: 200,
+                                            data: _.cloneDeep(_handlers[respKey].data)
+                                        };
+                                    } else {
+                                        respData = {
+                                            status: 404
+                                        };
+                                    }
                                     _handlers[respKey].fn(respData);
-                                    //_handlers[respKey]({hello: 'hello'});
                                 }, 0);
                             } else {
                                 console.log('response handler not found');
@@ -137,7 +108,51 @@
                     }
                 };
             })
+            .controller('appCtrl', ['$scope', function ($scope) {
+
+            }])
             .run(['$location', 'WebSocketService', function ($location, wss) {
+                var configHistoryDetailCurrent = {
+                    id: '20170501011000000',
+                    modified: '2017-05-01 01:10:00.000',
+                    modifiedBy: 'mars',
+                    description: 'Device had added; Link had added',
+                    networkCfg: {
+                        global: {
+                            reservedSubnet: [
+                                "192.168.1.0/24",
+                                "192.168.2.0/24",
+                                "192.168.3.0/24",
+                                "192.168.4.0/24",
+                                "192.168.5.0/24",
+                                "192.168.6.0/24",
+                                "192.168.7.0/24",
+                                "192.168.8.0/24",
+                                "192.168.9.0/24",
+                                "192.168.10.0/24",
+                                "192.168.11.0/24",
+                                "192.168.12.0/24",
+                                "192.168.13.0/24",
+                                "192.168.14.0/24",
+                                "192.168.15.0/24",
+                                "192.168.16.0/24",
+                                "192.168.17.0/24",
+                                "192.168.18.0/24",
+                                "192.168.19.0/24",
+                                "192.168.20.0/24",
+                                "192.168.21.0/24",
+                                "192.168.22.0/24",
+                                "192.168.23.0/24",
+                                "192.168.24.0/24",
+                                "192.168.25.0/24"
+                            ],
+                            reservedVlanRange: {
+                                begin: 4001,
+                                end: 4094
+                            }
+                        }
+                    }
+                };
                 wss.bindResponseData({
                     configHistoryDetailDataResponse: configHistoryDetailCurrent
                 });
