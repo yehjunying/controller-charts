@@ -1,9 +1,9 @@
 (function () {
     'use strict';
 
-    var $window, $log, $scope, $loc, mast, fs, wss, ns;
+    var $window, $log, $scope, $loc/*, mast, fs*/, wss, ns;
 
-    angular.module('ovConfigHistoryDetail', [])
+    angular.module('ovConfigHistoryDetail', ['angAccordion'])
     .controller('OvConfigHistoryDetailCtrl',
         ['$window', '$log', '$scope', '$location'/*, 'MastService', 'FnService'*/, 'WebSocketService'/*, 'NavService'*/,
 
@@ -44,8 +44,11 @@
 
             if (params.hasOwnProperty('id')) {
                 $scope.searchOptions.historyId = params['id'];
+                $scope.searchOptions.other = params['other'];
 
-                wss.sendEvent('configHistoryDetailDataRequest', { id: $scope.searchOptions.historyId });
+                wss.sendEvent('configHistoryDetailDataRequest', {
+                    id: [$scope.searchOptions.historyId, $scope.searchOptions.other]
+                });
             } else {
                 // TODO: show error msg ?
                 console.log('show error msg');
@@ -55,9 +58,104 @@
                 ns.navTo($scope.searchOptions.prevPage);
             };
 
+            function objectify(array, key) {
+                var obj = {};
+                angular.forEach(array, function(elem) {
+                    var id = elem[key].toString();
+                    obj[id] = _.cloneDeep(elem);
+                }, obj);
+
+                return obj;
+            }
+
             function configHistoryDetailDataResponse(resp) {
                 if (resp.status === 200) {
-                    $scope.currentConfig = _.cloneDeep(resp.data);
+                    // $scope.currentConfig = _.cloneDeep(resp.data);
+                    $scope.currentConfig = _.cloneDeep(resp.data[$scope.searchOptions.historyId]);
+                    $scope.otherConfig = _.cloneDeep(resp.data[$scope.searchOptions.other]);
+
+                    $scope.currentConfig.networkCfg.devices = objectify($scope.currentConfig.networkCfg.devices, 'id');
+                    $scope.currentConfig.networkCfg.links = objectify($scope.currentConfig.networkCfg.links, 'id');
+                    $scope.currentConfig.networkCfg.networks = objectify($scope.currentConfig.networkCfg.networks, 'name');
+
+                    $scope.otherConfig.networkCfg.devices = objectify($scope.otherConfig.networkCfg.devices, 'id');
+                    $scope.otherConfig.networkCfg.links = objectify($scope.otherConfig.networkCfg.links, 'id');
+                    $scope.otherConfig.networkCfg.networks = objectify($scope.otherConfig.networkCfg.networks, 'name');
+
+                    $scope.config = {
+                        devices: [],
+                        links: [],
+                        networks: []
+                    };
+
+                    angular.forEach($scope.currentConfig.networkCfg.devices, function (device) {
+                        var xx = {
+                            current: device
+                        };
+
+                        if ($scope.otherConfig.networkCfg.devices[device.id]) {
+                            xx.other = $scope.otherConfig.networkCfg.devices[device.id];
+                            delete $scope.otherConfig.networkCfg.devices[device.id];
+                        }
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.devices);
+
+                    angular.forEach($scope.otherConfig.networkCfg.devices, function (device) {
+                        var xx = {
+                            other: device
+                        };
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.devices);
+
+                    ////////
+
+                    angular.forEach($scope.currentConfig.networkCfg.links, function (link) {
+                        var xx = {
+                            current: link
+                        };
+
+                        if ($scope.otherConfig.networkCfg.links[link.id]) {
+                            xx.other = $scope.otherConfig.networkCfg.links[link.id];
+                            delete $scope.otherConfig.networkCfg.links[link.id];
+                        }
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.links);
+
+                    angular.forEach($scope.otherConfig.networkCfg.links, function (link) {
+                        var xx = {
+                            other: link
+                        };
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.links);
+
+                    ////////
+
+                    angular.forEach($scope.currentConfig.networkCfg.networks, function (network) {
+                        var xx = {
+                            current: network
+                        };
+
+                        if ($scope.otherConfig.networkCfg.networks[network.name]) {
+                            xx.other = $scope.otherConfig.networkCfg.networks[network.name];
+                            delete $scope.otherConfig.networkCfg.networks[network.name];
+                        }
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.networks);
+
+                    angular.forEach($scope.otherConfig.networkCfg.networks, function (network) {
+                        var xx = {
+                            other: network
+                        };
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.networks);
+
+                    console.log('');
                 }
 
                 $scope.$digest();

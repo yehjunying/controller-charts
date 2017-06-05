@@ -1,87 +1,236 @@
+<!--<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">-->
-<link rel="stylesheet" href="app/view/configHistoryDetail/configHistoryDetail.css">
-<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+<!--<link rel="stylesheet" href="app/view/configHistoryDetail/configHistoryDetail.css">-->
+<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
 
 <div id="ov-configHistoryDetail" class="container">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="row p-x-1 title">
-                <div class="col-md-1">
-                    <button class="btn btn-primary" ng-click="backToPreviousPage()">Back</button>
-                </div>
-                <div class="col-md-10">
+            <div class="row p-x-1 top-panel" style="margin-top: -10px; border-width: 1px;border-color: #ccc;border-bottom-style: solid">
+                <button class="btn btn-default pull-right" ng-click="restore(currentconfig.id)">Restore</button>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4" style="padding-left: 0px;padding-right: 0px">
                     <div><h4><strong>{{currentConfig.id}}</strong></h4></div>
                     <div>{{currentConfig.description}}</div>
-                    <div>{{currentConfig.modifiedBy}} modified {{currentConfig.modified}}</div>
+                    <div><strong>{{currentConfig.modifiedBy}}</strong> modified {{currentConfig.modified}}</div>
                 </div>
-                <div class="col-md-1">
-                    <button class="btn btn-primary" ng-click="restore(currentconfig.id)">Restore</button>
+                <div class="col-md-4" style="padding-left: 0px;padding-right: 0px">
+                    <div><h4><strong>{{otherConfig.id}}</strong></h4></div>
+                    <div>{{otherConfig.description}}</div>
+                    <div><strong>{{otherConfig.modifiedBy}}</strong> modified {{otherConfig.modified}}</div>
                 </div>
             </div>
-            <div class="row p-x-1">
-                <div class="col-md-12">
-                    <div id="search-result-detail" class="panel panel-default chat">
-                        <div class="col-md-6">
-                            <div><h4><strong>{{currentConfig.id}}</strong></h4></div>
-                            <div class="global">
-                                <div>
-                                    <h4 class="inline-box">Global</h4>
-                                    <div class="glyphicon glyphicon-chevron-up align-right"></div>
-                                </div>
-                                <table>
-                                    <tr>
-                                        <td class="table-label"><strong>Reserved VLAN Range</strong></td>
-                                        <td class="table-value">{{currentConfig.networkCfg.global.reservedVlanRange.begin}}
-                                            to {{currentConfig.networkCfg.global.reservedVlanRange.end}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="table-label" rowspan="{{currentConfig.networkCfg.global.reservedSubnet.length+1}}"><strong>Reserved Subnet</strong></td>
-                                    </tr>
-                                    <tr ng-repeat="item in currentConfig.networkCfg.global.reservedSubnet">
-                                        <td class="table-value">{{item}}</td>
-                                    </tr>
-                                </table>
+            <div class="row">
+                <ang-accordion icon-position="right" close-icon-class="fa fa-chevron-right" open-icon-class="fa fa-chevron-down">
+                    <collapsible-item item-title="Global" initially-open="true">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span>Reserved VLAN Range</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{currentConfig.networkCfg.global.reservedVlanRange.begin}}
+                                    to {{currentConfig.networkCfg.global.reservedVlanRange.end}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{otherConfig.networkCfg.global.reservedVlanRange.begin}}
+                                    to {{otherConfig.networkCfg.global.reservedVlanRange.end}}</span>
                             </div>
                         </div>
-                        <div class="col-md-6"></div>
-                        <!--<div id="event-view" class="panel-body">-->
-                            <!--<ul>-->
-                                <!--<div ng-repeat="item in configHistory">-->
-                                    <!--<li ng-class="{ 'active': item.active }" >-->
-                                        <!--<div class="row">-->
-                                            <!--<div class="col-xs-8 col-md-9">-->
-                                                <!--<div>-->
-                                                    <!--<strong class="primary-font">{{friendlyDateString(item.modified)}}</strong>-->
-                                                    <!--&lt;!&ndash;<strong class="primary-font">{{item.description}}</strong>&ndash;&gt;-->
-                                                    <!--&lt;!&ndash;<small class="text-muted">test</small>&ndash;&gt;-->
-                                                <!--</div>-->
-                                                <!--<small>-->
-                                                    <!--description-->
-                                                    <!--&lt;!&ndash;by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}&ndash;&gt;-->
-                                                <!--</small>-->
-                                            <!--</div>-->
-                                            <!--<div class="col-xs-4 col-md-3">-->
-                                                <!--<div class="btn-group pull-right">-->
-                                                    <!--<button type="button" class="btn btn-default"-->
-                                                            <!--ng-click="setSearchOptionsAndSearch({type: 'All'})">View-->
-                                                    <!--</button>-->
-                                                    <!--<button type="button" class="btn btn-default"-->
-                                                            <!--ng-click="restore(item.id)"-->
-                                                            <!--ng-disabled="item.active">Restore-->
-                                                    <!--</button>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</li>-->
-                                <!--</div>-->
-                            <!--</ul>-->
-                        <!--</div>-->
 
-                    </div>
-                </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <span>Reserved Subnet</span>
+                            </div>
+                            <div class="col-md-4">
+                                <p ng-repeat="item in currentConfig.networkCfg.global.reservedSubnet">{{item}}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p ng-repeat="item in otherConfig.networkCfg.global.reservedSubnet">{{item}}</p>
+                            </div>
+                        </div>
+                    </collapsible-item>
+                    <collapsible-item item-title="Device" initially-open="true">
+                        <div ng-repeat="item in config.devices">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Name</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.current.name}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.other.name}}</span>
+                                </div>
+                            </div>
 
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>IP</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.ip}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.ip}}</span>
+                            </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>Role</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.role}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.role}}</span>
+                            </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>Description</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.desc}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.desc}}</span>
+                            </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>Protocol</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.protocol}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.protocol}}</span>
+                            </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>Port</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.port}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.port}}</span>
+                            </div>
+                            </div>
+
+                            <div class="row">
+                            <div class="col-md-4">
+                                <span>Username</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.current.username}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span>{{item.other.username}}</span>
+                            </div>
+                            </div>
+
+                            <hr ng-show="!$last">
+                        </div>
+                    </collapsible-item>
+                    <collapsible-item item-title="Link" initially-open="true">
+                        <div ng-repeat="item in config.links">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Source</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span ng-show="item.current">{{item.current.src.device}}/{{item.current.src.port}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span ng-show="item.other">{{item.other.src.device}}/{{item.other.src.port}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Destination</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span ng-show="item.current">{{item.current.dst.device}}/{{item.current.dst.port}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span ng-show="item.other">{{item.other.dst.device}}/{{item.other.dst.port}}</span>
+                                </div>
+                            </div>
+
+                            <hr ng-show="!$last">
+                        </div>
+                    </collapsible-item>
+                    <collapsible-item item-title="Network" initially-open="true">
+                        <div ng-repeat="item in config.networks">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Name</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.current.name}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.other.name}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Description</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.current.desc}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.other.desc}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>VLAN</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.current.vlan}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span>{{item.other.vlan}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <span>Destination</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <div ng-show="item.current.members.length">
+                                        <span ng-repeat="member in item.current.members">{{member}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div ng-show="item.other.members.length">
+                                        <span ng-repeat="member in item.other.members">{{member}}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr ng-show="!$last">
+                        </div>
+
+                    </collapsible-item>
+                </ang-accordion>
             </div>
+
         </div>
     </div>
 </div>

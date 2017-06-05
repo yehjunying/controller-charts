@@ -41,7 +41,12 @@
                                 setTimeout(function () {
                                     console.log('call ' + respKey);
                                     var respData;
-                                    if (typeof _handlers[respKey].data !== 'undefined') {
+                                    if (typeof _handlers[respKey].data === 'function') {
+                                        respData = {
+                                            status: 200,
+                                            data: _handlers[respKey].data(data)
+                                        };
+                                    } else if (typeof _handlers[respKey].data !== 'undefined') {
                                         respData = {
                                             status: 200,
                                             data: _.cloneDeep(_handlers[respKey].data)
