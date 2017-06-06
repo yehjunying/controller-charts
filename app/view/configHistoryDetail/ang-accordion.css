@@ -7,7 +7,7 @@
   font-size: 1.2em;
   font-weight: 700;
   padding: 10px;
-  /*background-color: #f5f5f5;*/
+  background-color: #f5f5f5;
   /*background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);*/
   /*background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));*/
   /*background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);*/
@@ -64,12 +64,17 @@
 }
 
 .collapsible-item.open > .body {
-  max-height: 1000px;
+  max-height: 5000px;
   z-index: 1;
 }
 
 .collapsible-item.open .title {
-  border-bottom-style: none;
+  background-color: #f5f5f5;
+  /*border-bottom-style: none;*/
+  border-width: 1px;
+  border-color: #ccc;
+  border-top-style:solid;
+  border-bottom-style:solid;
   /*-webkit-border-radius: 5px 5px 0 0;*/
      /*-moz-border-radius: 5px 5px 0 0;*/
           /*border-radius: 5px 5px 0 0;*/

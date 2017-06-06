@@ -60,6 +60,7 @@
 
             function objectify(array, key) {
                 var obj = {};
+
                 angular.forEach(array, function(elem) {
                     var id = elem[key].toString();
                     obj[id] = _.cloneDeep(elem);
@@ -69,33 +70,65 @@
             }
 
             function configHistoryDetailDataResponse(resp) {
+                $scope.config = {
+                    global: {
+                        reservedVlanRange: {},
+                        reservedSubnet: []
+                    },
+                    devices: [],
+                    links: [],
+                    networks: []
+                };
+
                 if (resp.status === 200) {
                     // $scope.currentConfig = _.cloneDeep(resp.data);
                     $scope.currentConfig = _.cloneDeep(resp.data[$scope.searchOptions.historyId]);
                     $scope.otherConfig = _.cloneDeep(resp.data[$scope.searchOptions.other]);
 
-                    $scope.currentConfig.networkCfg.devices = objectify($scope.currentConfig.networkCfg.devices, 'id');
+                    $scope.currentConfig.networkCfg.devices = objectify($scope.currentConfig.networkCfg.devices, 'name');
                     $scope.currentConfig.networkCfg.links = objectify($scope.currentConfig.networkCfg.links, 'id');
                     $scope.currentConfig.networkCfg.networks = objectify($scope.currentConfig.networkCfg.networks, 'name');
 
-                    $scope.otherConfig.networkCfg.devices = objectify($scope.otherConfig.networkCfg.devices, 'id');
+                    $scope.otherConfig.networkCfg.devices = objectify($scope.otherConfig.networkCfg.devices, 'name');
                     $scope.otherConfig.networkCfg.links = objectify($scope.otherConfig.networkCfg.links, 'id');
                     $scope.otherConfig.networkCfg.networks = objectify($scope.otherConfig.networkCfg.networks, 'name');
 
-                    $scope.config = {
-                        devices: [],
-                        links: [],
-                        networks: []
-                    };
+                    //// global
+                    $scope.config.global.reservedVlanRange.current = _.clone($scope.currentConfig.networkCfg.global.reservedVlanRange);
+                    $scope.config.global.reservedVlanRange.other = _.clone($scope.otherConfig.networkCfg.global.reservedVlanRange);
 
-                    angular.forEach($scope.currentConfig.networkCfg.devices, function (device) {
+                    angular.forEach($scope.currentConfig.networkCfg.global.reservedSubnet, function (subnet) {
                         var xx = {
-                            current: device
+                            current: subnet
+                        }, index;
+
+
+                        if ((index = _.findIndex($scope.otherConfig.networkCfg.global.reservedSubnet, function (o) { return o == subnet; })) !== -1) {
+                            xx.other = $scope.otherConfig.networkCfg.global.reservedSubnet[index];
+                            delete $scope.otherConfig.networkCfg.global.reservedSubnet[index];
+                        }
+
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.global.reservedSubnet);
+
+                    angular.forEach($scope.otherConfig.networkCfg.global.reservedSubnet, function (device) {
+                        var xx = {
+                            other: device
                         };
 
-                        if ($scope.otherConfig.networkCfg.devices[device.id]) {
-                            xx.other = $scope.otherConfig.networkCfg.devices[device.id];
-                            delete $scope.otherConfig.networkCfg.devices[device.id];
+                        Array.prototype.push.call(this, xx);
+                    }, $scope.config.global.reservedSubnet);
+
+                    //// devices
+                    angular.forEach($scope.currentConfig.networkCfg.devices, function (device) {
+                        var xx = {
+                            current: device,
+                            other: {}
+                        };
+
+                        if ($scope.otherConfig.networkCfg.devices[device.name]) {
+                            xx.other = $scope.otherConfig.networkCfg.devices[device.name];
+                            delete $scope.otherConfig.networkCfg.devices[device.name];
                         }
 
                         Array.prototype.push.call(this, xx);
@@ -103,17 +136,19 @@
 
                     angular.forEach($scope.otherConfig.networkCfg.devices, function (device) {
                         var xx = {
+                            current: {},
                             other: device
                         };
 
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.devices);
 
-                    ////////
+                    //////// links
 
                     angular.forEach($scope.currentConfig.networkCfg.links, function (link) {
                         var xx = {
-                            current: link
+                            current: link,
+                            other: {}
                         };
 
                         if ($scope.otherConfig.networkCfg.links[link.id]) {
@@ -126,17 +161,19 @@
 
                     angular.forEach($scope.otherConfig.networkCfg.links, function (link) {
                         var xx = {
+                            current: {},
                             other: link
                         };
 
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.links);
 
-                    ////////
+                    //////// networks
 
                     angular.forEach($scope.currentConfig.networkCfg.networks, function (network) {
                         var xx = {
-                            current: network
+                            current: network,
+                            other: {}
                         };
 
                         if ($scope.otherConfig.networkCfg.networks[network.name]) {
@@ -149,6 +186,7 @@
 
                     angular.forEach($scope.otherConfig.networkCfg.networks, function (network) {
                         var xx = {
+                            current: {},
                             other: network
                         };
 
@@ -171,6 +209,73 @@
                     lastWeek: 'YYYY/MM/DD A hh:mm:ss',
                     sameElse: 'YYYY/MM/DD A hh:mm:ss'
                 });
+            };
+
+            $scope.makeClass = function (val1, val2) {
+                if (!_.isEqual(val1, val2)) {
+                    if (_.isUndefined(val1) || (_.isObject(val1) || _.isArray(val1)) && _.isEmpty(val1)) {
+                        return 'deletion';
+                    } else if (_.isUndefined(val2) || (_.isObject(val2) || _.isArray(val2)) && _.isEmpty(val2)) {
+                        return 'addition';
+                    } else {
+                        return 'modification';
+                    }
+                }
+
+                return '';
+            };
+
+            (function () {
+                var kls;
+                // kls = $scope.makeClass(1, 2);
+                // kls = $scope.makeClass(1, undefined);
+                // kls = $scope.makeClass(undefined, 1);
+                //
+                // kls = $scope.makeClass('1', '2');
+                // kls = $scope.makeClass('1', undefined);
+                // kls = $scope.makeClass(undefined, '1');
+                //
+                // kls = $scope.makeClass({hello: 'hi'}, {hello: 'good'});
+                // kls = $scope.makeClass({hello: 'hi'}, {});
+                // kls = $scope.makeClass({}, {hello: 'good'});
+
+                kls = $scope.makeClass({hello: 'hi'}, undefined);
+                kls = $scope.makeClass(undefined, {hello: 'good'});
+
+                kls = $scope.makeClass(['hi'], ['good']);
+                kls = $scope.makeClass(['hi'], []);
+                kls = $scope.makeClass([], ['good']);
+
+                kls = $scope.makeClass(['hi'], undefined);
+                kls = $scope.makeClass(undefined, ['good']);
+            })();
+
+            $scope.setting = $scope.setting || {};
+            $scope.setting.hideUnchangedItems = false;
+            $scope.setHideUnchangedItems = function () {
+                $scope.setting.hideUnchangedItems = !$scope.setting.hideUnchangedItems;
+            };
+
+            $scope.hideUnchangedItems = function (val1, val2) {
+                if ($scope.setting.hideUnchangedItems === false) {
+                    return false;
+                }
+
+                if (_.isUndefined(val2)) {
+                    if (_.isArray(val1)) {
+                        for (var i = 0; i < val1.length; ++i) {
+                            if (!_.isEqual(val1[i].current, val1[i].other)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    } else if (_.isObject(val1)) {
+                        return _.isEqual(val1.current, val1.other);
+                    }
+                }
+
+                return _.isEqual(val1, val2);
             };
 
             $scope.restore = function(id) {

@@ -26,6 +26,11 @@
     "angular-mocks": "^1.6.4",
     "async": "^2.3.0",
     "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "jsdom": "^3.1.2",
     "mocha": "^3.2.0",
     "oclazyload": "^1.1.0"

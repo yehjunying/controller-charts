@@ -1,14 +1,18 @@
-<!--<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap.min.css">-->
 <!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">-->
 <!--<link rel="stylesheet" href="app/view/configHistoryDetail/configHistoryDetail.css">-->
-<!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
 
 <div id="ov-configHistoryDetail" class="container">
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row p-x-1 top-panel" style="margin-top: -10px; border-width: 1px;border-color: #ccc;border-bottom-style: solid">
-                <button class="btn btn-default pull-right" ng-click="restore(currentconfig.id)">Restore</button>
+                <button type="button" class="btn btn-default pull-right"
+                        ng-click="restore(currentconfig.id)">Restore</button>
+                <button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"
+                        ng-click="setHideUnchangedItems()">
+                    <span class="glyphicon glyphicon-eye-open"
+                          ng-class="setting.hideUnchangedItems ? 'glyphicon-eye-close': 'glyphicon-eye-open'"></span> Show Unchanged items
+                    </button>
             </div>
             <div class="row">
                 <div class="col-md-4"></div>
@@ -26,144 +30,181 @@
             <div class="row">
                 <ang-accordion icon-position="right" close-icon-class="fa fa-chevron-right" open-icon-class="fa fa-chevron-down">
                     <collapsible-item item-title="Global" initially-open="true">
-                        <div class="row">
+                        <div class="row"
+                             ng-hide="hideUnchangedItems(config.global.reservedVlanRange)">
                             <div class="col-md-4">
                                 <span>Reserved VLAN Range</span>
                             </div>
-                            <div class="col-md-4">
-                                <span>{{currentConfig.networkCfg.global.reservedVlanRange.begin}}
-                                    to {{currentConfig.networkCfg.global.reservedVlanRange.end}}</span>
+                            <div class="col-md-4 value"
+                                 ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other)">
+                                <span>{{config.global.reservedVlanRange.current.begin}}
+                                    to {{config.global.reservedVlanRange.current.end}}</span>
                             </div>
-                            <div class="col-md-4">
-                                <span>{{otherConfig.networkCfg.global.reservedVlanRange.begin}}
-                                    to {{otherConfig.networkCfg.global.reservedVlanRange.end}}</span>
+                            <div class="col-md-4 value"
+                                 ng-class="makeClass(config.global.reservedVlanRange.other, config.global.reservedVlanRange.current)">
+                                <span>{{config.global.reservedVlanRange.other.begin}}
+                                    to {{config.global.reservedVlanRange.other.end}}</span>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row"
+                             ng-hide="hideUnchangedItems(config.global.reservedSubnet)">
                             <div class="col-md-4">
                                 <span>Reserved Subnet</span>
                             </div>
-                            <div class="col-md-4">
-                                <p ng-repeat="item in currentConfig.networkCfg.global.reservedSubnet">{{item}}</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p ng-repeat="item in otherConfig.networkCfg.global.reservedSubnet">{{item}}</p>
+                            <div class="col-md-8">
+                                <div class="row"
+                                     ng-repeat="item in config.global.reservedSubnet"
+                                     ng-hide="hideUnchangedItems(item)">
+                                    <div class="col-md-6 value"
+                                         ng-class="makeClass(item.current, item.other)">
+                                        <span>{{item.current || '&empty;'}}</span>
+                                    </div>
+                                    <div class="col-md-6 value"
+                                         ng-class="makeClass(item.other, item.current)">
+                                        <span>{{item.other || '&empty;'}}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Device" initially-open="true">
-                        <div ng-repeat="item in config.devices">
+                        <div ng-repeat="item in config.devices"
+                             ng-hide="hideUnchangedItems(item)">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <span>Name</span>
+                                    <span><strong>{{item.current.name || item.other.name}}</strong></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <span>{{item.current.name}}</span>
+                                <div class="col-md-8">
+                                    <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Description</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc)">
+                                                <span>{{item.current.desc || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.desc, item.current.desc)">
+                                                <span>{{item.other.desc || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.ip, item.other.ip)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>IP</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.ip, item.other.ip)">
+                                                <span>{{item.current.ip || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.ip, item.current.ip)">
+                                                <span>{{item.other.ip || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.role, item.other.role)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Role</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.role, item.other.role)">
+                                                <span>{{item.current.role || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.role, item.current.role)">
+                                                <span>{{item.other.role || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.protocol, item.other.protocol)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Protocol</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.protocol, item.other.protocol)">
+                                                <span>{{item.current.protocol || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.protocol, item.current.protocol)">
+                                                <span>{{item.other.protocol || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.port, item.other.port)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Port</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.port, item.other.port)">
+                                                <span>{{item.current.port || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.port, item.current.port)">
+                                                <span>{{item.other.port || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.username, item.other.username)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Username</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.username, item.other.username)">
+                                                <span>{{item.current.username || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.username, item.current.username)">
+                                                <span>{{item.other.username || '&empty;'}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <span>{{item.other.name}}</span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>IP</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.ip}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.ip}}</span>
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>Role</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.role}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.role}}</span>
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>Description</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.desc}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.desc}}</span>
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>Protocol</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.protocol}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.protocol}}</span>
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>Port</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.port}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.port}}</span>
-                            </div>
-                            </div>
-
-                            <div class="row">
-                            <div class="col-md-4">
-                                <span>Username</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.current.username}}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <span>{{item.other.username}}</span>
-                            </div>
                             </div>
 
                             <hr ng-show="!$last">
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Link" initially-open="true">
-                        <div ng-repeat="item in config.links">
+                        <div ng-repeat="item in config.links"
+                             ng-hide="hideUnchangedItems(item)">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <span>Source</span>
+                                    <span>Port A &harr; Port B</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <span ng-show="item.current">{{item.current.src.device}}/{{item.current.src.port}}</span>
+                                <div class="col-md-4 value"
+                                     ng-class="makeClass(item.current, item.other)">
+                                    <span ng-show="item.current.src && item.current.dst">{{item.current.src.device}}/{{item.current.src.port}} &harr; {{item.current.dst.device}}/{{item.current.dst.port}}</span>
+                                    <span ng-hide="item.current.src && item.current.dst">&empty;</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <span ng-show="item.other">{{item.other.src.device}}/{{item.other.src.port}}</span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>Destination</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span ng-show="item.current">{{item.current.dst.device}}/{{item.current.dst.port}}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span ng-show="item.other">{{item.other.dst.device}}/{{item.other.dst.port}}</span>
+                                <div class="col-md-4 value"
+                                     ng-class="makeClass(item.other, item.current)">
+                                    <span ng-show="item.other.src && item.other.dst">{{item.other.src.device}}/{{item.other.src.port}} &harr; {{item.other.dst.device}}/{{item.other.dst.port}}</span>
+                                    <span ng-hide="item.other.src && item.other.dst">&empty;</span>
                                 </div>
                             </div>
 
@@ -171,56 +212,68 @@
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Network" initially-open="true">
-                        <div ng-repeat="item in config.networks">
+                        <div ng-repeat="item in config.networks"
+                             ng-hide="hideUnchangedItems(item)">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <span>Name</span>
+                                    <span><strong>{{item.current.name || item.other.name}}</strong></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <span>{{item.current.name}}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>{{item.other.name}}</span>
-                                </div>
-                            </div>
+                                <div class="col-md-8">
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>Description</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>{{item.current.desc}}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>{{item.other.desc}}</span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>VLAN</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>{{item.current.vlan}}</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <span>{{item.other.vlan}}</span>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <span>Destination</span>
-                                </div>
-                                <div class="col-md-4">
-                                    <div ng-show="item.current.members.length">
-                                        <span ng-repeat="member in item.current.members">{{member}}</span>
+                                    <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Description</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc)">
+                                                <span>{{item.current.desc || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.desc, item.current.desc)">
+                                                <span>{{item.other.desc || '&empty;'}}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div ng-show="item.other.members.length">
-                                        <span ng-repeat="member in item.other.members">{{member}}</span>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.vlan, item.other.vlan)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>VLAN</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.vlan, item.other.vlan)">
+                                                <span>{{item.current.vlan || '&empty;'}}</span>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.vlan, item.current.vlan)">
+                                                <span>{{item.other.vlan || '&empty;'}}</span>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    <div ng-hide="hideUnchangedItems(item.current.members, item.other.members)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Members</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.current.members, item.other.members)">
+                                                <p ng-repeat="member in item.current.members">{{member}}</p>
+                                            </div>
+                                            <div class="col-md-6 value bottom-line"
+                                                 ng-class="makeClass(item.other.members, item.current.members)">
+                                                <p ng-repeat="member in item.other.members">{{member}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 

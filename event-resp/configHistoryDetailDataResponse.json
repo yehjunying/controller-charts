@@ -1,0 +1,366 @@
+{
+  "20170501011000000": {
+    "id": "20170501011000000",
+    "modified": "2017-05-01 01:10:00.000",
+    "modifiedBy": "mars",
+    "description": "Device had added; Link had added",
+    "networkCfg": {
+      "global": {
+        "reservedSubnet": [
+          "192.168.1.0/24",
+          "192.168.2.0/24",
+          "192.168.3.0/24"
+        ],
+        "reservedVlanRange": {
+          "begin": 4001,
+          "end": 4094
+        }
+      },
+      "devices": [
+        {
+          "id": "rest:1.1.1.1:443",
+          "name": "Spine-1",
+          "ip": "1.1.1.1",
+          "role": "Spine",
+          "desc": "Spine Switch",
+          "protocol": "HTTPS",
+          "port": 443,
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "id": "rest:1.1.1.2:443",
+          "name": "Spine-2",
+          "ip": "1.1.1.2",
+          "role": "Spine",
+          "desc": "Spine Switch",
+          "protocol": "HTTPS",
+          "port": 443,
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "id": "rest:2.0.0.1:443",
+          "name": "Leaf-1",
+          "ip": "2.0.0.1",
+          "role": "Leaf",
+          "rack": "Rack-1",
+          "desc": "Leaf Switch with MLAG",
+          "accessSubnet": "10.10.1.0/24",
+          "accessVlan": "100",
+          "mlagStatus": "enabled",
+          "mlagPeerLink": 1,
+          "mlagVirtualIp": "10.10.1.10",
+          "mlagGroups": [
+            {
+              "id": 101,
+              "port": 1
+            },
+            {
+              "id": 102,
+              "port": 2
+            }
+          ],
+          "protocol": "HTTPS",
+          "port": 443,
+          "username": "admin",
+          "password": "admin"
+        }
+      ],
+      "links": [
+        {
+          "id": "rest:1.1.1.1:443/1-rest:1.1.1.2:443/1",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 1
+          },
+          "dst": {
+            "device": "rest:1.1.1.2:443",
+            "port": 1
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/2-rest:1.1.1.2:443/2",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 2
+          },
+          "dst": {
+            "device": "rest:1.1.1.2:443",
+            "port": 2
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/3-rest:2.0.0.2:443/3",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 3
+          },
+          "dst": {
+            "device": "rest:2.0.0.2:443",
+            "port": 3
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/4-rest:2.0.0.3:443/4",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 4
+          },
+          "dst": {
+            "device": "rest:2.0.0.3:443",
+            "port": 4
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/5-rest:2.0.0.4:443/5",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 5
+          },
+          "dst": {
+            "device": "rest:2.0.0.4:443",
+            "port": 5
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/6-rest:1.1.1.6:443/6",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 6
+          },
+          "dst": {
+            "device": "rest:1.1.1.6:443",
+            "port": 6
+          },
+          "direction": "bidirectional"
+        }
+      ],
+      "networks": [
+        {
+          "name": "blue",
+          "desc": "blue department",
+          "vlan": 100,
+          "members": [
+            "rest:2.0.0.1:443/1",
+            "rest:2.0.0.2:443/1"
+          ]
+        },
+        {
+          "name": "red",
+          "desc": "red department",
+          "vlan": 200,
+          "members": [
+            "rest:2.0.0.2:443/1",
+            "rest:2.0.0.2:443/2"
+          ]
+        },
+        {
+          "name": "green",
+          "desc": "green department",
+          "vlan": 300,
+          "members": [
+            "rest:2.0.0.2:443/3",
+            "rest:2.0.0.3:443/3"
+          ]
+        },
+        {
+          "name": "yellow",
+          "desc": "yellow department",
+          "vlan": 400,
+          "members": [
+            "rest:2.0.0.4:443/4",
+            "rest:1.1.1.6:443/4"
+          ]
+        }
+      ]
+    }
+  },
+  "20170501011009999": {
+    "id": "20170501011009999",
+    "modified": "2017-05-01 01:10:00.999",
+    "modifiedBy": "onos",
+    "description": "Device had added; Link had added",
+    "networkCfg": {
+      "global": {
+        "reservedSubnet": [
+          "192.168.1.0/24",
+          "192.168.2.0/24",
+          "192.168.5.0/24"
+        ],
+        "reservedVlanRange": {
+          "begin": 4001,
+          "end": 4094
+        }
+      },
+      "devices": [
+        {
+          "id": "rest:2.2.2.2:80",
+          "name": "Spine-5",
+          "ip": "2.2.2.2",
+          "role": "Spine",
+          "desc": "Spine Switch",
+          "protocol": "HTTP",
+          "port": 80,
+          "username": "admin",
+          "password": "admin"
+        },
+        {
+          "id": "rest:1.1.1.2:443",
+          "name": "Spine-2",
+          "ip": "1.1.1.2",
+          "role": "Spine",
+          "desc": "Spine Switch",
+          "protocol": "HTTPS",
+          "port": 443,
+          "username": "onos",
+          "password": "onos"
+        },
+        {
+          "id": "rest:2.0.0.1:443",
+          "name": "Leaf-1",
+          "ip": "2.0.0.1",
+          "role": "Leaf",
+          "rack": "Rack-1",
+          "desc": "Leaf Switch with MLAG",
+          "accessSubnet": "10.10.1.0/24",
+          "accessVlan": "100",
+          "mlagStatus": "enabled",
+          "mlagPeerLink": 1,
+          "mlagVirtualIp": "10.10.1.10",
+          "mlagGroups": [
+            {
+              "id": 101,
+              "port": 1
+            },
+            {
+              "id": 102,
+              "port": 2
+            }
+          ],
+          "protocol": "HTTPS",
+          "port": 443,
+          "username": "admin",
+          "password": "admin"
+        }
+      ],
+      "links": [
+        {
+          "id": "rest:1.1.1.1:443/1-rest:2.2.2.3:443/1",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 1
+          },
+          "dst": {
+            "device": "rest:2.2.2.3:443",
+            "port": 1
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/2-rest:1.1.1.2:443/2",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 2
+          },
+          "dst": {
+            "device": "rest:1.1.1.2:443",
+            "port": 2
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/3-rest:2.0.0.2:443/3",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 5
+          },
+          "dst": {
+            "device": "rest:2.0.0.2:443",
+            "port": 3
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/4-rest:2.0.0.3:443/4",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 4
+          },
+          "dst": {
+            "device": "rest:2.0.0.3:443",
+            "port": 4
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/5-rest:2.0.0.4:443/5",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 5
+          },
+          "dst": {
+            "device": "rest:2.0.0.4:443",
+            "port": 5
+          },
+          "direction": "bidirectional"
+        },
+        {
+          "id": "rest:1.1.1.1:443/6-rest:1.1.1.6:443/6",
+          "src": {
+            "device": "rest:1.1.1.1:443",
+            "port": 6
+          },
+          "dst": {
+            "device": "rest:1.1.1.6:443",
+            "port": 6
+          },
+          "direction": "bidirectional"
+        }
+      ],
+      "networks": [
+        {
+          "name": "blue",
+          "desc": "BLUE department",
+          "vlan": 100,
+          "members": [
+            "rest:2.0.0.1:443/1",
+            "rest:2.0.0.2:443/1"
+          ]
+        },
+        {
+          "name": "red",
+          "desc": "red department",
+          "vlan": 201,
+          "members": [
+            "rest:2.0.0.2:443/1",
+            "rest:2.0.0.2:443/2"
+          ]
+        },
+        {
+          "name": "green",
+          "desc": "green department",
+          "vlan": 300,
+          "members": [
+            "rest:2.0.0.2:443/4",
+            "rest:2.0.0.3:443/3"
+          ]
+        },
+        {
+          "name": "yellow",
+          "desc": "yellow department",
+          "vlan": 400,
+          "members": [
+            "rest:2.0.0.4:443/4",
+            "rest:1.1.1.6:443/4"
+          ]
+        }
+      ]
+    }
+  }
+}

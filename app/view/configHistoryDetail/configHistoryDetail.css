@@ -104,3 +104,48 @@
     text-align: left;
     padding-left: 5px;
 }
+
+#ov-configHistoryDetail .label {
+    /* remove bootstrap style */
+    color: unset;
+    border-radius: unset;
+    padding: unset;
+
+    padding-left: 15px;
+    padding-right: 15px;
+    line-height: 1.5;
+    font-size: 80%;
+    font-weight: 700;
+    /*color: #0e70c0;*/
+
+    /*background-color: #fafafa;*/
+    /*background-color: #eaeaea;*/
+    text-align: left;
+}
+
+#ov-configHistoryDetail .value {
+    /*border-width: 1px;*/
+    /*border-color: #eeeeee;*/
+    /*border-bottom-style: solid;*/
+    line-height: 2;
+}
+
+#ov-configHistoryDetail .value.bottom-line {
+    border-width: 1px;
+    border-color: #e0e0e0;
+    border-bottom-style: solid;
+    line-height: 2;
+}
+
+#ov-configHistoryDetail .deletion {
+    background-color: #ffdddd;
+    border-color: #f1c0c0;
+}
+
+#ov-configHistoryDetail .addition {
+    background-color: #eaffea;
+}
+
+#ov-configHistoryDetail .modification {
+    background-color: #f3f8ff;
+}
