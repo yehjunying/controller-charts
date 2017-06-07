@@ -297,8 +297,8 @@
             })();
 
             $scope.setting = $scope.setting || {
-                    // style: 'dense'
-                    style: 'column'
+                    style: 'dense'
+                    // style: 'column'
                 };
             $scope.setting.hideUnchangedItems = false;
             $scope.setHideUnchangedItems = function () {

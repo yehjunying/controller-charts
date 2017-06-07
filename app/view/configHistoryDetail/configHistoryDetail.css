@@ -11,8 +11,14 @@
     margin: unset;
 }
 
+#ov-configHistoryDetail hr {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 #ov-configHistoryDetail .row {
-    padding-bottom: 5px;
+    /*padding-bottom: 5px;*/
+    padding-bottom: 1px;
 }
 
 #ov-configHistoryDetail .chat ul {
