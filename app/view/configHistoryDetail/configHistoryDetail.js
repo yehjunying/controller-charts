@@ -93,7 +93,9 @@
                     $scope.otherConfig.networkCfg.links = objectify($scope.otherConfig.networkCfg.links, 'id');
                     $scope.otherConfig.networkCfg.networks = objectify($scope.otherConfig.networkCfg.networks, 'name');
 
-                    //// global
+                    //
+                    // comparing global config
+                    //
                     $scope.config.global.reservedVlanRange.current = _.clone($scope.currentConfig.networkCfg.global.reservedVlanRange);
                     $scope.config.global.reservedVlanRange.other = _.clone($scope.otherConfig.networkCfg.global.reservedVlanRange);
 
@@ -119,7 +121,9 @@
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.global.reservedSubnet);
 
-                    //// devices
+                    //
+                    // comparing devices config
+                    //
                     angular.forEach($scope.currentConfig.networkCfg.devices, function (device) {
                         var xx = {
                             current: device,
@@ -143,8 +147,9 @@
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.devices);
 
-                    //////// links
-
+                    //
+                    // comparing links config
+                    //
                     angular.forEach($scope.currentConfig.networkCfg.links, function (link) {
                         var xx = {
                             current: link,
@@ -168,8 +173,9 @@
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.links);
 
-                    //////// networks
-
+                    //
+                    // comparing networks config
+                    //
                     angular.forEach($scope.currentConfig.networkCfg.networks, function (network) {
                         var xx = {
                             current: network,
@@ -193,10 +199,43 @@
                         Array.prototype.push.call(this, xx);
                     }, $scope.config.networks);
 
+                    angular.forEach($scope.config.networks, function (g) {
+                        g.members = compare(g.current.members, g.other.members);
+                    });
+
                     console.log('');
                 }
 
                 $scope.$digest();
+            }
+
+            function compare(array1, array2) {
+                var result = [];
+                array2 = _.cloneDeep(array2);
+
+                angular.forEach(array1, function (elem) {
+                    var xx = {
+                        current: elem
+                    }, index;
+
+
+                    if ((index = _.findIndex(array2, function (o) { return o == elem; })) !== -1) {
+                        xx.other = array2[index];
+                        delete array2[index];
+                    }
+
+                    Array.prototype.push.call(this, xx);
+                }, result);
+
+                angular.forEach(array2, function (elem) {
+                    var xx = {
+                        other: elem
+                    };
+
+                    Array.prototype.push.call(this, xx);
+                }, result);
+
+                return result;
             }
 
             // $scope.currentConfig = _.cloneDeep(configHistoryDetailCurrent);
@@ -211,18 +250,25 @@
                 });
             };
 
-            $scope.makeClass = function (val1, val2) {
+            $scope.makeClass = function (val1, val2, transform) {
+                var klass = 'equation';
                 if (!_.isEqual(val1, val2)) {
                     if (_.isUndefined(val1) || (_.isObject(val1) || _.isArray(val1)) && _.isEmpty(val1)) {
-                        return 'deletion';
+                        klass = 'deletion';
                     } else if (_.isUndefined(val2) || (_.isObject(val2) || _.isArray(val2)) && _.isEmpty(val2)) {
-                        return 'addition';
+                        klass = 'addition';
                     } else {
-                        return 'modification';
+                        klass = 'modification';
                     }
                 }
 
-                return '';
+                if (!_.isUndefined(transform)) {
+                    if (!_.isUndefined(transform[klass])) {
+                        klass = transform[klass];
+                    }
+                }
+
+                return klass;
             };
 
             (function () {
@@ -250,7 +296,10 @@
                 kls = $scope.makeClass(undefined, ['good']);
             })();
 
-            $scope.setting = $scope.setting || {};
+            $scope.setting = $scope.setting || {
+                    // style: 'dense'
+                    style: 'column'
+                };
             $scope.setting.hideUnchangedItems = false;
             $scope.setHideUnchangedItems = function () {
                 $scope.setting.hideUnchangedItems = !$scope.setting.hideUnchangedItems;
@@ -276,6 +325,10 @@
                 }
 
                 return _.isEqual(val1, val2);
+            };
+
+            $scope.equals = function (o1, o2) {
+                return _.isEqual(o1, o2);
             };
 
             $scope.restore = function(id) {

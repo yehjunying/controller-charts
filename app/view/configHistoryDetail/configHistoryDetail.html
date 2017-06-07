@@ -6,14 +6,37 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="row p-x-1 top-panel" style="margin-top: -10px; border-width: 1px;border-color: #ccc;border-bottom-style: solid">
+                <div class="col-md-8"
+                     ng-show="setting.style=='dense'">
+                    <div class="row">
+                        <span><strong>{{currentConfig.modifiedBy}}</strong> modified <strong>{{currentConfig.modified}}</strong></span> compare with
+                        <div class="dropdown" style="display: inline">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                {{otherConfig.modifiedBy}} modified {{otherConfig.modified}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-class="{'col-md-4': setting.style == 'dense', 'col-md-12': setting.style == 'column'}">
                 <button type="button" class="btn btn-default pull-right"
                         ng-click="restore(currentconfig.id)">Restore</button>
                 <button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"
                         ng-click="setHideUnchangedItems()">
                     <span class="glyphicon glyphicon-eye-open"
                           ng-class="setting.hideUnchangedItems ? 'glyphicon-eye-close': 'glyphicon-eye-open'"></span> Show Unchanged items
-                    </button>
+                </button>
+                </div>
             </div>
+            <div ng-show="setting.style=='column'">
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4" style="padding-left: 0px;padding-right: 0px">
@@ -27,9 +50,36 @@
                     <div><strong>{{otherConfig.modifiedBy}}</strong> modified {{otherConfig.modified}}</div>
                 </div>
             </div>
+            </div>
             <div class="row">
                 <ang-accordion icon-position="right" close-icon-class="fa fa-chevron-right" open-icon-class="fa fa-chevron-down">
                     <collapsible-item item-title="Global" initially-open="true">
+
+                        <div ng-show="setting.style=='dense'">
+                        <div class="row"
+                             ng-hide="hideUnchangedItems(config.global.reservedVlanRange)">
+                            <div class="col-md-4">
+                                <span>Reserved VLAN Range</span>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" ng-show="config.global.reservedVlanRange.other && !equals(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other)">
+                                    <div class="col-md-12 value"
+                                         ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'deletion'})">
+                                        <span>{{config.global.reservedVlanRange.current.begin}} to {{config.global.reservedVlanRange.current.end}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row" ng-show="config.global.reservedVlanRange.current">
+                                    <div class="col-md-12 value"
+                                         ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'addition'})">
+                                        <span>{{config.global.reservedVlanRange.other.begin}} to {{config.global.reservedVlanRange.other.end}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div ng-show="setting.style=='column'">
                         <div class="row"
                              ng-hide="hideUnchangedItems(config.global.reservedVlanRange)">
                             <div class="col-md-4">
@@ -46,11 +96,32 @@
                                     to {{config.global.reservedVlanRange.other.end}}</span>
                             </div>
                         </div>
+                        </div>
 
+                        <div ng-show="setting.style=='dense'">
                         <div class="row"
                              ng-hide="hideUnchangedItems(config.global.reservedSubnet)">
                             <div class="col-md-4">
                                 <span>Reserved Subnet</span>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row"
+                                     ng-repeat="item in config.global.reservedSubnet"
+                                     ng-hide="hideUnchangedItems(item)">
+                                    <div class="col-md-12 value"
+                                         ng-class="makeClass(item.current, item.other)">
+                                        <span>{{item.current || item.other}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div ng-show="setting.style=='column'">
+                        <div class="row"
+                             ng-hide="hideUnchangedItems(config.global.reservedSubnet)">
+                            <div class="col-md-4">
+                                <span>Reserved Subnet<strong>-old-style</strong></span>
                             </div>
                             <div class="col-md-8">
                                 <div class="row"
@@ -67,15 +138,41 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                     </collapsible-item>
                     <collapsible-item item-title="Device" initially-open="true">
                         <div ng-repeat="item in config.devices"
                              ng-hide="hideUnchangedItems(item)">
-                            <div class="row">
+                            <div class="row"
+                                 ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div class="col-md-4">
                                     <span><strong>{{item.current.name || item.other.name}}</strong></span>
                                 </div>
                                 <div class="col-md-8">
+
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Description</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.desc && item.current.desc != item.other.desc">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'deletion'})">
+                                                <span>{{item.other.desc}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.desc">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'addition'})">
+                                                <span>{{item.current.desc}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -93,7 +190,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.ip, item.other.ip)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>IP</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.ip && item.current.ip != item.other.ip">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.ip, item.other.ip, {'modification': 'deletion'})">
+                                                <span>{{item.other.ip}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.ip">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.ip, item.other.ip, {'modification': 'addition'})">
+                                                <span>{{item.current.ip}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.ip, item.other.ip)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -111,7 +232,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.role, item.other.role)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Role</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.role && item.current.role != item.other.role">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.role, item.other.role, {'modification': 'deletion'})">
+                                                <span>{{item.other.role}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.role">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.role, item.other.role, {'modification': 'addition'})">
+                                                <span>{{item.current.role}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.role, item.other.role)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -129,7 +274,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.protocol, item.other.protocol)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Protocol</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.protocol && item.current.protocol != item.other.protocol">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.protocol, item.other.protocol, {'modification': 'deletion'})">
+                                                <span>{{item.other.protocol}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.protocol">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.protocol, item.other.protocol, {'modification': 'addition'})">
+                                                <span>{{item.current.protocol}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.protocol, item.other.protocol)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -147,7 +316,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.port, item.other.port)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Port</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.port && item.current.port != item.other.port">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.port, item.other.port, {'modification': 'deletion'})">
+                                                <span>{{item.other.port}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.port">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.port, item.other.port, {'modification': 'addition'})">
+                                                <span>{{item.current.port}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.port, item.other.port)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -165,7 +358,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.username, item.other.username)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Username</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.username && item.current.username != item.other.username">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.username, item.other.username, {'modification': 'deletion'})">
+                                                <span>{{item.other.username}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.username">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.username, item.other.username, {'modification': 'addition'})">
+                                                <span>{{item.current.username}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.username, item.other.username)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -183,6 +400,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -192,7 +410,24 @@
                     <collapsible-item item-title="Link" initially-open="true">
                         <div ng-repeat="item in config.links"
                              ng-hide="hideUnchangedItems(item)">
-                            <div class="row">
+
+                            <div ng-show="setting.style=='dense'">
+                            <div class="row"
+                                 ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
+                                <div class="col-md-4">
+                                    <span>Port A &harr; Port B</span>
+                                </div>
+                                <div class="col-md-4 value"
+                                     ng-class="makeClass(item.current, item.other)">
+                                    <span ng-show="item.current.src && item.current.dst">{{item.current.src.device}}/{{item.current.src.port}} &harr; {{item.current.dst.device}}/{{item.current.dst.port}}</span>
+                                    <span ng-show="!equals(item.current, item.other) && item.other.src && item.other.dst">{{item.other.src.device}}/{{item.other.src.port}} &harr; {{item.other.dst.device}}/{{item.other.dst.port}}</span>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div ng-show="setting.style=='column'">
+                            <div class="row"
+                                 ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div class="col-md-4">
                                     <span>Port A &harr; Port B</span>
                                 </div>
@@ -207,6 +442,7 @@
                                     <span ng-hide="item.other.src && item.other.dst">&empty;</span>
                                 </div>
                             </div>
+                            </div>
 
                             <hr ng-show="!$last">
                         </div>
@@ -214,12 +450,36 @@
                     <collapsible-item item-title="Network" initially-open="true">
                         <div ng-repeat="item in config.networks"
                              ng-hide="hideUnchangedItems(item)">
-                            <div class="row">
+                            <div class="row"
+                                 ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div class="col-md-4">
                                     <span><strong>{{item.current.name || item.other.name}}</strong></span>
                                 </div>
                                 <div class="col-md-8">
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Description</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.desc && item.current.desc != item.other.desc">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'deletion'})">
+                                                <span>{{item.other.desc}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.desc">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'addition'})">
+                                                <span>{{item.current.desc}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -237,7 +497,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.vlan, item.other.vlan)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>VLAN</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.other.vlan && item.current.vlan != item.other.vlan">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.vlan, item.other.vlan, {'modification': 'deletion'})">
+                                                <span>{{item.other.vlan}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" ng-show="item.current.vlan">
+                                            <div class="col-md-12 value bottom-line"
+                                                 ng-class="makeClass(item.current.vlan, item.other.vlan, {'modification': 'addition'})">
+                                                <span>{{item.current.vlan}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.vlan, item.other.vlan)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -255,7 +539,27 @@
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
 
+                                    <div ng-show="setting.style=='dense'">
+                                    <div ng-hide="hideUnchangedItems(item.current.members, item.other.members)">
+                                        <div class="row">
+                                            <div class="col-md-12 label">
+                                                <span>Members</span>
+                                            </div>
+                                        </div>
+                                        <div class="row"
+                                             ng-repeat="member in item.members"
+                                             ng-hide="hideUnchangedItems(member)">
+                                            <div class="col-md-12 value"
+                                                 ng-class="makeClass(member.current, member.other)">
+                                                <span>{{member.current || member.other}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                    <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.members, item.other.members)">
                                         <div class="row">
                                             <div class="col-md-12 label">
@@ -272,6 +576,7 @@
                                                 <p ng-repeat="member in item.other.members">{{member}}</p>
                                             </div>
                                         </div>
+                                    </div>
                                     </div>
 
                                 </div>

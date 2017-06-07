@@ -177,6 +177,15 @@
             "rest:2.0.0.4:443/4",
             "rest:1.1.1.6:443/4"
           ]
+        },
+        {
+          "name": "new add",
+          "desc": "yellow department",
+          "vlan": 400,
+          "members": [
+            "rest:2.0.0.4:443/4",
+            "rest:1.1.1.6:443/4"
+          ]
         }
       ]
     }
@@ -195,7 +204,7 @@
         ],
         "reservedVlanRange": {
           "begin": 4001,
-          "end": 4094
+          "end": 9999
         }
       },
       "devices": [
@@ -217,7 +226,7 @@
           "role": "Spine",
           "desc": "Spine Switch",
           "protocol": "HTTPS",
-          "port": 443,
+          "port": 8080,
           "username": "onos",
           "password": "onos"
         },
@@ -278,7 +287,7 @@
           "id": "rest:1.1.1.1:443/3-rest:2.0.0.2:443/3",
           "src": {
             "device": "rest:1.1.1.1:443",
-            "port": 5
+            "port": 3
           },
           "dst": {
             "device": "rest:2.0.0.2:443",
@@ -353,6 +362,15 @@
         },
         {
           "name": "yellow",
+          "desc": "yellow department",
+          "vlan": 400,
+          "members": [
+            "rest:2.0.0.4:443/4",
+            "rest:1.1.1.6:443/4"
+          ]
+        },
+        {
+          "name": "deleted",
           "desc": "yellow department",
           "vlan": 400,
           "members": [
