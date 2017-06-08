@@ -300,6 +300,14 @@
                     style: 'dense'
                     // style: 'column'
                 };
+            $scope.changeStyle = function () {
+                if ($scope.setting.style === 'dense') {
+                    $scope.setting.style = 'column';
+                } else {
+                    $scope.setting.style = 'dense';
+                }
+            };
+
             $scope.setting.hideUnchangedItems = false;
             $scope.setHideUnchangedItems = function () {
                 $scope.setting.hideUnchangedItems = !$scope.setting.hideUnchangedItems;

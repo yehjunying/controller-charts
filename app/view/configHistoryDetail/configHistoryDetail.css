@@ -11,14 +11,8 @@
     margin: unset;
 }
 
-#ov-configHistoryDetail hr {
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-
 #ov-configHistoryDetail .row {
-    /*padding-bottom: 5px;*/
-    padding-bottom: 1px;
+    padding-bottom: 5px;
 }
 
 #ov-configHistoryDetail .chat ul {
@@ -111,6 +105,19 @@
     padding-left: 5px;
 }
 
+#ov-configHistoryDetail .row-wrapper {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom-width: 1px;
+    border-bottom-color: #ccc;
+    border-bottom-style: solid;
+}
+
+#ov-configHistoryDetail .row-value-wrapper {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 #ov-configHistoryDetail .label {
     /* remove bootstrap style */
     color: unset;
@@ -154,4 +161,18 @@
 
 #ov-configHistoryDetail .modification {
     background-color: #f3f8ff;
+}
+
+#ov-configHistoryDetail .dense .deletion span > strong,
+#ov-configHistoryDetail .dense .deletion > span {
+    text-decoration: line-through;
+    -moz-text-decoration-color: #000;
+    text-decoration-color: #000;
+    color: #C62828;
+}
+
+.rotate {
+    -ms-transform: rotate(90deg); /* IE 9 */
+    -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
 }
