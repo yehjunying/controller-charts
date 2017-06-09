@@ -5,7 +5,7 @@
     "modifiedBy": "mars",
     "description": "Device had added; Link had added",
     "networkCfg": {
-      "global": {
+      "globalCfgs": {
         "reservedSubnet": [
           "192.168.1.0/24",
           "192.168.2.0/24",
@@ -16,7 +16,7 @@
           "end": 4094
         }
       },
-      "devices": [
+      "deviceCfgs": [
         {
           "id": "rest:1.1.1.1:443",
           "name": "Spine-1",
@@ -67,7 +67,7 @@
           "password": "admin"
         }
       ],
-      "links": [
+      "linkCfgs": [
         {
           "id": "rest:1.1.1.1:443/1-rest:1.1.1.2:443/1",
           "src": {
@@ -141,7 +141,7 @@
           "direction": "bidirectional"
         }
       ],
-      "networks": [
+      "networkCfgs": [
         {
           "name": "blue",
           "desc": "blue department",
@@ -196,7 +196,7 @@
     "modifiedBy": "onos",
     "description": "Device had added; Link had added",
     "networkCfg": {
-      "global": {
+      "globalCfgs": {
         "reservedSubnet": [
           "192.168.1.0/24",
           "192.168.2.0/24",
@@ -207,7 +207,7 @@
           "end": 9999
         }
       },
-      "devices": [
+      "deviceCfgs": [
         {
           "id": "rest:2.2.2.2:80",
           "name": "Spine-5",
@@ -258,7 +258,7 @@
           "password": "admin"
         }
       ],
-      "links": [
+      "linkCfgs": [
         {
           "id": "rest:1.1.1.1:443/1-rest:2.2.2.3:443/1",
           "src": {
@@ -332,7 +332,7 @@
           "direction": "bidirectional"
         }
       ],
-      "networks": [
+      "networkCfgs": [
         {
           "name": "blue",
           "desc": "BLUE department",
