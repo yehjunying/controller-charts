@@ -11,10 +11,10 @@
                 <div class="col-md-8"
                      ng-show="setting.style=='dense'">
                     <div class="row">
-                        <span><strong>{{currentConfig.modifiedBy}}</strong> modified <strong>{{friendlyDateString(currentConfig.modified)}}</strong></span> compare with
+                        <span><strong>{{configuration.raw.current.modifiedBy}}</strong> modified <strong>{{friendlyDateString(configuration.raw.current.modified)}}</strong></span> compare with
                         <div class="dropdown" style="display: inline">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                {{otherConfig.modifiedBy}} modified {{friendlyDateString(otherConfig.modified)}}
+                                {{configuration.raw.other.modifiedBy}} modified {{friendlyDateString(configuration.raw.other.modified)}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -30,7 +30,7 @@
 
                 <div ng-class="{'col-md-4': setting.style == 'dense', 'col-md-12': setting.style == 'column'}">
                 <button type="button" class="btn btn-default pull-right"
-                        ng-click="restore(currentconfig.id)">Restore</button>
+                        ng-click="restore(configuration.raw.current.id)">Restore</button>
                 <button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"
                         ng-click="setHideUnchangedItems()">
                     <span class="glyphicon glyphicon-eye-open"
@@ -47,14 +47,14 @@
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-4" style="padding-left: 0px;padding-right: 0px">
-                    <div><h4><strong>{{currentConfig.id}}</strong></h4></div>
-                    <div>{{currentConfig.description}}</div>
-                    <div><strong>{{currentConfig.modifiedBy}}</strong> modified {{currentConfig.modified}}</div>
+                    <div><h4><strong>{{configuration.raw.current.id}}</strong></h4></div>
+                    <div>{{configuration.raw.current.description}}</div>
+                    <div><strong>{{configuration.raw.current.modifiedBy}}</strong> modified {{configuration.raw.current.modified}}</div>
                 </div>
                 <div class="col-md-4" style="padding-left: 0px;padding-right: 0px">
-                    <div><h4><strong>{{otherConfig.id}}</strong></h4></div>
-                    <div>{{otherConfig.description}}</div>
-                    <div><strong>{{otherConfig.modifiedBy}}</strong> modified {{otherConfig.modified}}</div>
+                    <div><h4><strong>{{configuration.raw.other.id}}</strong></h4></div>
+                    <div>{{configuration.raw.other.description}}</div>
+                    <div><strong>{{configuration.raw.other.modifiedBy}}</strong> modified {{configuration.raw.other.modified}}</div>
                 </div>
             </div>
             </div>
@@ -64,24 +64,24 @@
 
                         <div ng-show="setting.style=='dense'">
                         <div class="row row-wrapper"
-                             ng-hide="hideUnchangedItems(config.global.reservedVlanRange)">
+                             ng-hide="hideUnchangedItems(cc.global.reservedVlanRange)">
                             <div class="col-md-4">
                                 <span>Reserved VLAN Range</span>
                             </div>
                             <div class="col-md-8">
                                 <div class="row row-value-wrapper"
-                                     ng-show="config.global.reservedVlanRange.other && !equals(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other)">
+                                     ng-show="cc.global.reservedVlanRange.other && !equals(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other)">
                                     <div class="col-md-12 value"
-                                         ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'deletion'})">
-                                        <span>{{config.global.reservedVlanRange.other.begin}} to {{config.global.reservedVlanRange.other.end}}</span>
+                                         ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other, {'modification': 'deletion'})">
+                                        <span>{{cc.global.reservedVlanRange.other.begin}} to {{cc.global.reservedVlanRange.other.end}}</span>
                                     </div>
                                 </div>
 
                                 <div class="row row-value-wrapper"
-                                     ng-show="config.global.reservedVlanRange.current">
+                                     ng-show="cc.global.reservedVlanRange.current">
                                     <div class="col-md-12 value"
-                                         ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'addition'})">
-                                        <span>{{config.global.reservedVlanRange.current.begin}} to {{config.global.reservedVlanRange.current.end}}</span>
+                                         ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other, {'modification': 'addition'})">
+                                        <span>{{cc.global.reservedVlanRange.current.begin}} to {{cc.global.reservedVlanRange.current.end}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -90,33 +90,33 @@
 
                         <div ng-show="setting.style=='column'">
                         <div class="row row-wrapper"
-                             ng-hide="hideUnchangedItems(config.global.reservedVlanRange)">
+                             ng-hide="hideUnchangedItems(cc.global.reservedVlanRange)">
                             <div class="col-md-4">
                                 <span>Reserved VLAN Range</span>
                             </div>
                             <div class="col-md-4 value"
-                                 ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other)">
-                                <span>{{config.global.reservedVlanRange.current.begin}}
-                                    to {{config.global.reservedVlanRange.current.end}}</span>
+                                 ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other)">
+                                <span>{{cc.global.reservedVlanRange.current.begin}}
+                                    to {{cc.global.reservedVlanRange.current.end}}</span>
                             </div>
                             <div class="col-md-4 value"
-                                 ng-class="makeClass(config.global.reservedVlanRange.other, config.global.reservedVlanRange.current)">
-                                <span ng-show="config.global.reservedVlanRange.other">{{config.global.reservedVlanRange.other.begin}}
-                                    to {{config.global.reservedVlanRange.other.end}}</span>
-                                <span ng-hide="config.global.reservedVlanRange.other">&empty;</span>
+                                 ng-class="makeClass(cc.global.reservedVlanRange.other, cc.global.reservedVlanRange.current)">
+                                <span ng-show="cc.global.reservedVlanRange.other">{{cc.global.reservedVlanRange.other.begin}}
+                                    to {{cc.global.reservedVlanRange.other.end}}</span>
+                                <span ng-hide="cc.global.reservedVlanRange.other">&empty;</span>
                             </div>
                         </div>
                         </div>
 
                         <div ng-show="setting.style=='dense'">
                         <div class="row row-wrapper"
-                             ng-hide="hideUnchangedItems(config.global.reservedSubnet)">
+                             ng-hide="hideUnchangedItems(cc.global.reservedSubnet)">
                             <div class="col-md-4">
                                 <span>Reserved Subnet</span>
                             </div>
                             <div class="col-md-8">
                                 <div class="row row-value-wrapper"
-                                     ng-repeat="item in config.global.reservedSubnet"
+                                     ng-repeat="item in cc.global.reservedSubnet"
                                      ng-hide="hideUnchangedItems(item)">
                                     <div class="col-md-12 value"
                                          ng-class="makeClass(item.current, item.other)">
@@ -129,13 +129,13 @@
 
                         <div ng-show="setting.style=='column'">
                         <div class="row row-wrapper"
-                             ng-hide="hideUnchangedItems(config.global.reservedSubnet)">
+                             ng-hide="hideUnchangedItems(cc.global.reservedSubnet)">
                             <div class="col-md-4">
                                 <span>Reserved Subnet</span>
                             </div>
                             <div class="col-md-8">
                                 <div class="row row-value-wrapper"
-                                     ng-repeat="item in config.global.reservedSubnet"
+                                     ng-repeat="item in cc.global.reservedSubnet"
                                      ng-hide="hideUnchangedItems(item)">
                                     <div class="col-md-6 value"
                                          ng-class="makeClass(item.current, item.other)">
@@ -151,7 +151,7 @@
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Device" initially-open="true">
-                        <div ng-repeat="item in config.devices"
+                        <div ng-repeat="item in cc.devices"
                              ng-hide="hideUnchangedItems(item)">
                             <div class="row row-wrapper"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
@@ -428,7 +428,7 @@
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Link" initially-open="true">
-                        <div ng-repeat="item in config.links"
+                        <div ng-repeat="item in cc.links"
                              ng-hide="hideUnchangedItems(item)">
 
                             <div ng-show="setting.style=='dense'">
@@ -466,7 +466,7 @@
                         </div>
                     </collapsible-item>
                     <collapsible-item item-title="Network" initially-open="true">
-                        <div ng-repeat="item in config.networks"
+                        <div ng-repeat="item in cc.networks"
                              ng-hide="hideUnchangedItems(item)">
                             <div class="row row-wrapper"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">

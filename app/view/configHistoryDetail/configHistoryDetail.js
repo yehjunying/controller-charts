@@ -23,9 +23,6 @@
                 historyId: ''
             };
 
-            $scope.currentConfig = {};
-            $scope.compareConfig = {};
-
             var params = $loc.search();
 
             var handlers = {
@@ -76,15 +73,21 @@
                         reservedSubnet: []
                     },
                     devices: [],
-                        links: [],
+                    links: [],
                     networks: []
                 }
             }
 
-            $scope.config = initComparedConfig();
+            $scope.configuration = {
+                raw: {},
+                compared: initComparedConfig()
+            };
+            
+            $scope.cc = $scope.configuration.compared;
 
             function configHistoryDetailDataResponse(resp) {
-                $scope.config = initComparedConfig();
+                $scope.configuration.raw = {};
+                $scope.cc = initComparedConfig();
 
                 if (resp.status === 200) {
                     var getResponseConfig = function (data, id) {
@@ -106,124 +109,124 @@
                         }
                     };
 
-                    $scope.currentConfig = getResponseConfig(resp.data, $scope.searchOptions.historyId);
-                    $scope.otherConfig = getResponseConfig(resp.data, $scope.searchOptions.other);
+                    $scope.configuration.raw.current = getResponseConfig(resp.data, $scope.searchOptions.historyId);
+                    $scope.configuration.raw.other = getResponseConfig(resp.data, $scope.searchOptions.other);
 
-                    $scope.currentConfig.networkCfg.deviceCfgs = objectify($scope.currentConfig.networkCfg.deviceCfgs, 'name');
-                    $scope.currentConfig.networkCfg.linkCfgs = objectify($scope.currentConfig.networkCfg.linkCfgs, 'id');
-                    $scope.currentConfig.networkCfg.networkCfgs = objectify($scope.currentConfig.networkCfg.networkCfgs, 'name');
+                    $scope.configuration.raw.current.networkCfg.deviceCfgs = objectify($scope.configuration.raw.current.networkCfg.deviceCfgs, 'name');
+                    $scope.configuration.raw.current.networkCfg.linkCfgs = objectify($scope.configuration.raw.current.networkCfg.linkCfgs, 'id');
+                    $scope.configuration.raw.current.networkCfg.networkCfgs = objectify($scope.configuration.raw.current.networkCfg.networkCfgs, 'name');
 
-                    $scope.otherConfig.networkCfg.deviceCfgs = objectify($scope.otherConfig.networkCfg.deviceCfgs, 'name');
-                    $scope.otherConfig.networkCfg.linkCfgs = objectify($scope.otherConfig.networkCfg.linkCfgs, 'id');
-                    $scope.otherConfig.networkCfg.networkCfgs = objectify($scope.otherConfig.networkCfg.networkCfgs, 'name');
+                    $scope.configuration.raw.other.networkCfg.deviceCfgs = objectify($scope.configuration.raw.other.networkCfg.deviceCfgs, 'name');
+                    $scope.configuration.raw.other.networkCfg.linkCfgs = objectify($scope.configuration.raw.other.networkCfg.linkCfgs, 'id');
+                    $scope.configuration.raw.other.networkCfg.networkCfgs = objectify($scope.configuration.raw.other.networkCfg.networkCfgs, 'name');
 
                     //
                     // comparing global config
                     //
-                    $scope.config.global.reservedVlanRange.current = _.clone($scope.currentConfig.networkCfg.globalCfgs.reservedVlanRange);
-                    $scope.config.global.reservedVlanRange.other = _.clone($scope.otherConfig.networkCfg.globalCfgs.reservedVlanRange);
+                    $scope.cc.global.reservedVlanRange.current = _.clone($scope.configuration.raw.current.networkCfg.globalCfgs.reservedVlanRange);
+                    $scope.cc.global.reservedVlanRange.other = _.clone($scope.configuration.raw.other.networkCfg.globalCfgs.reservedVlanRange);
 
-                    angular.forEach($scope.currentConfig.networkCfg.globalCfgs.reservedSubnet, function (subnet) {
+                    angular.forEach($scope.configuration.raw.current.networkCfg.globalCfgs.reservedSubnet, function (subnet) {
                         var xx = {
                             current: subnet
                         }, index;
 
 
-                        if ((index = _.findIndex($scope.otherConfig.networkCfg.globalCfgs.reservedSubnet, function (o) { return o == subnet; })) !== -1) {
-                            xx.other = $scope.otherConfig.networkCfg.globalCfgs.reservedSubnet[index];
-                            delete $scope.otherConfig.networkCfg.globalCfgs.reservedSubnet[index];
+                        if ((index = _.findIndex($scope.configuration.raw.other.networkCfg.globalCfgs.reservedSubnet, function (o) { return o == subnet; })) !== -1) {
+                            xx.other = $scope.configuration.raw.other.networkCfg.globalCfgs.reservedSubnet[index];
+                            delete $scope.configuration.raw.other.networkCfg.globalCfgs.reservedSubnet[index];
                         }
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.global.reservedSubnet);
+                    }, $scope.cc.global.reservedSubnet);
 
-                    angular.forEach($scope.otherConfig.networkCfg.globalCfgs.reservedSubnet, function (device) {
+                    angular.forEach($scope.configuration.raw.other.networkCfg.globalCfgs.reservedSubnet, function (device) {
                         var xx = {
                             other: device
                         };
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.global.reservedSubnet);
+                    }, $scope.cc.global.reservedSubnet);
 
                     //
                     // comparing devices config
                     //
-                    angular.forEach($scope.currentConfig.networkCfg.deviceCfgs, function (device) {
+                    angular.forEach($scope.configuration.raw.current.networkCfg.deviceCfgs, function (device) {
                         var xx = {
                             current: device,
                             other: {}
                         };
 
-                        if ($scope.otherConfig.networkCfg.deviceCfgs[device.name]) {
-                            xx.other = $scope.otherConfig.networkCfg.deviceCfgs[device.name];
-                            delete $scope.otherConfig.networkCfg.deviceCfgs[device.name];
+                        if ($scope.configuration.raw.other.networkCfg.deviceCfgs[device.name]) {
+                            xx.other = $scope.configuration.raw.other.networkCfg.deviceCfgs[device.name];
+                            delete $scope.configuration.raw.other.networkCfg.deviceCfgs[device.name];
                         }
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.devices);
+                    }, $scope.cc.devices);
 
-                    angular.forEach($scope.otherConfig.networkCfg.deviceCfgs, function (device) {
+                    angular.forEach($scope.configuration.raw.other.networkCfg.deviceCfgs, function (device) {
                         var xx = {
                             current: {},
                             other: device
                         };
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.devices);
+                    }, $scope.cc.devices);
 
                     //
                     // comparing links config
                     //
-                    angular.forEach($scope.currentConfig.networkCfg.linkCfgs, function (link) {
+                    angular.forEach($scope.configuration.raw.current.networkCfg.linkCfgs, function (link) {
                         var xx = {
                             current: link,
                             other: {}
                         };
 
-                        if ($scope.otherConfig.networkCfg.linkCfgs[link.id]) {
-                            xx.other = $scope.otherConfig.networkCfg.linkCfgs[link.id];
-                            delete $scope.otherConfig.networkCfg.linkCfgs[link.id];
+                        if ($scope.configuration.raw.other.networkCfg.linkCfgs[link.id]) {
+                            xx.other = $scope.configuration.raw.other.networkCfg.linkCfgs[link.id];
+                            delete $scope.configuration.raw.other.networkCfg.linkCfgs[link.id];
                         }
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.links);
+                    }, $scope.cc.links);
 
-                    angular.forEach($scope.otherConfig.networkCfg.linkCfgs, function (link) {
+                    angular.forEach($scope.configuration.raw.other.networkCfg.linkCfgs, function (link) {
                         var xx = {
                             current: {},
                             other: link
                         };
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.links);
+                    }, $scope.cc.links);
 
                     //
                     // comparing networks config
                     //
-                    angular.forEach($scope.currentConfig.networkCfg.networkCfgs, function (network) {
+                    angular.forEach($scope.configuration.raw.current.networkCfg.networkCfgs, function (network) {
                         var xx = {
                             current: network,
                             other: {}
                         };
 
-                        if ($scope.otherConfig.networkCfg.networkCfgs[network.name]) {
-                            xx.other = $scope.otherConfig.networkCfg.networkCfgs[network.name];
-                            delete $scope.otherConfig.networkCfg.networkCfgs[network.name];
+                        if ($scope.configuration.raw.other.networkCfg.networkCfgs[network.name]) {
+                            xx.other = $scope.configuration.raw.other.networkCfg.networkCfgs[network.name];
+                            delete $scope.configuration.raw.other.networkCfg.networkCfgs[network.name];
                         }
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.networks);
+                    }, $scope.cc.networks);
 
-                    angular.forEach($scope.otherConfig.networkCfg.networkCfgs, function (network) {
+                    angular.forEach($scope.configuration.raw.other.networkCfg.networkCfgs, function (network) {
                         var xx = {
                             current: {},
                             other: network
                         };
 
                         Array.prototype.push.call(this, xx);
-                    }, $scope.config.networks);
+                    }, $scope.cc.networks);
 
-                    angular.forEach($scope.config.networks, function (g) {
+                    angular.forEach($scope.cc.networks, function (g) {
                         g.members = compare(g.current.members, g.other.members);
                     });
 
@@ -261,8 +264,6 @@
 
                 return result;
             }
-
-            // $scope.currentConfig = _.cloneDeep(configHistoryDetailCurrent);
 
             // TODO: function not work ?
             $scope.friendlyDateString = function (date) {
