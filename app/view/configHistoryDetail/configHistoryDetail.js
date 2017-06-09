@@ -34,7 +34,7 @@
             };
 
             wss.bindHandlers(handlers);
-            
+
             if (params.hasOwnProperty('from')) {
                 $scope.searchOptions.prevPage = params['from'];
             } else {
@@ -69,21 +69,45 @@
                 return obj;
             }
 
-            function configHistoryDetailDataResponse(resp) {
-                $scope.config = {
+            function initComparedConfig () {
+                return {
                     global: {
                         reservedVlanRange: {},
                         reservedSubnet: []
                     },
                     devices: [],
-                    links: [],
+                        links: [],
                     networks: []
-                };
+                }
+            }
+
+            $scope.config = initComparedConfig();
+
+            function configHistoryDetailDataResponse(resp) {
+                $scope.config = initComparedConfig();
 
                 if (resp.status === 200) {
-                    // $scope.currentConfig = _.cloneDeep(resp.data);
-                    $scope.currentConfig = _.cloneDeep(resp.data[$scope.searchOptions.historyId]);
-                    $scope.otherConfig = _.cloneDeep(resp.data[$scope.searchOptions.other]);
+                    var getResponseConfig = function (data, id) {
+                        var notExistConfig = function () {
+                            return {
+                                networkCfg: {
+                                    global: {},
+                                    devices: [],
+                                    links: [],
+                                    networks: []
+                                }
+                            };
+                        };
+
+                        if (_.isUndefined(data[id])) {
+                            return notExistConfig();
+                        } else {
+                            return _.cloneDeep(data[id]);
+                        }
+                    };
+
+                    $scope.currentConfig = getResponseConfig(resp.data, $scope.searchOptions.historyId);
+                    $scope.otherConfig = getResponseConfig(resp.data, $scope.searchOptions.other);
 
                     $scope.currentConfig.networkCfg.devices = objectify($scope.currentConfig.networkCfg.devices, 'name');
                     $scope.currentConfig.networkCfg.links = objectify($scope.currentConfig.networkCfg.links, 'id');
@@ -272,18 +296,20 @@
             };
 
             (function () {
+                return;
+
                 var kls;
-                // kls = $scope.makeClass(1, 2);
-                // kls = $scope.makeClass(1, undefined);
-                // kls = $scope.makeClass(undefined, 1);
-                //
-                // kls = $scope.makeClass('1', '2');
-                // kls = $scope.makeClass('1', undefined);
-                // kls = $scope.makeClass(undefined, '1');
-                //
-                // kls = $scope.makeClass({hello: 'hi'}, {hello: 'good'});
-                // kls = $scope.makeClass({hello: 'hi'}, {});
-                // kls = $scope.makeClass({}, {hello: 'good'});
+                kls = $scope.makeClass(1, 2);
+                kls = $scope.makeClass(1, undefined);
+                kls = $scope.makeClass(undefined, 1);
+
+                kls = $scope.makeClass('1', '2');
+                kls = $scope.makeClass('1', undefined);
+                kls = $scope.makeClass(undefined, '1');
+
+                kls = $scope.makeClass({hello: 'hi'}, {hello: 'good'});
+                kls = $scope.makeClass({hello: 'hi'}, {});
+                kls = $scope.makeClass({}, {hello: 'good'});
 
                 kls = $scope.makeClass({hello: 'hi'}, undefined);
                 kls = $scope.makeClass(undefined, {hello: 'good'});

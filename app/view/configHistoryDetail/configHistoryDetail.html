@@ -73,7 +73,7 @@
                                      ng-show="config.global.reservedVlanRange.other && !equals(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other)">
                                     <div class="col-md-12 value"
                                          ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'deletion'})">
-                                        <span>{{config.global.reservedVlanRange.current.begin}} to {{config.global.reservedVlanRange.current.end}}</span>
+                                        <span>{{config.global.reservedVlanRange.other.begin}} to {{config.global.reservedVlanRange.other.end}}</span>
                                     </div>
                                 </div>
 
@@ -81,7 +81,7 @@
                                      ng-show="config.global.reservedVlanRange.current">
                                     <div class="col-md-12 value"
                                          ng-class="makeClass(config.global.reservedVlanRange.current, config.global.reservedVlanRange.other, {'modification': 'addition'})">
-                                        <span>{{config.global.reservedVlanRange.other.begin}} to {{config.global.reservedVlanRange.other.end}}</span>
+                                        <span>{{config.global.reservedVlanRange.current.begin}} to {{config.global.reservedVlanRange.current.end}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -101,8 +101,9 @@
                             </div>
                             <div class="col-md-4 value"
                                  ng-class="makeClass(config.global.reservedVlanRange.other, config.global.reservedVlanRange.current)">
-                                <span>{{config.global.reservedVlanRange.other.begin}}
+                                <span ng-show="config.global.reservedVlanRange.other">{{config.global.reservedVlanRange.other.begin}}
                                     to {{config.global.reservedVlanRange.other.end}}</span>
+                                <span ng-hide="config.global.reservedVlanRange.other">&empty;</span>
                             </div>
                         </div>
                         </div>
