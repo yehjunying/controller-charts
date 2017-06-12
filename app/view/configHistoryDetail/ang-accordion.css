@@ -63,8 +63,8 @@
   /*padding: 20px 15px 20px 15px;*/
   padding-top: 0px;
   padding-bottom: 0px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .collapsible-item.open > .body {
