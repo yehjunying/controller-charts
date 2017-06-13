@@ -81,7 +81,7 @@
             .run(['$location', '$http', 'WebSocketService', function ($location, $http, wss) {
                 $http.get('event-resp/configHistoryDetailDataResponse.json').then(function(res){
                     wss.bindResponseData({
-                        configHistoryDetailDataResponse: res.data
+                        configHistoryDetailDataResponse: res.data // TODO: bind a function which use $http.get()
                     });
                     $location.path('/red')
                         .search('from', 'somewhere')

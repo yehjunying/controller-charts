@@ -3,13 +3,12 @@
 <!--<link rel="stylesheet" href="app/view/configHistoryDetail/configHistoryDetail.css">-->
 
 <div id="ov-configHistoryDetail" class="container">
-    <!--<div class="panel panel-default">-->
-    <md-toolbar layout="row">
+    <md-toolbar layout="row" class="toolbar">
         <h2>
             <span>{{configuration.raw.current.modifiedBy}} modified {{friendlyDateString(configuration.raw.current.modified)}}</span>
         </h2>
         <span flex></span>
-        <md-button class="md-raised" aria-label="Learn More">
+        <md-button class="md-raised" aria-attr-label="Learn More">
             Restore
         </md-button>
     </md-toolbar>
@@ -43,89 +42,44 @@
             </md-button>
         </md-card-actions>
 
-        <!--<div class="panel-body"-->
         <md-card-content layout="column" style="padding: unset;"
              ng-class="{'dense': setting.style == 'dense', 'column': setting.style == 'column'}">
-            <!--<div layout="row" class="row p-x-1 top-panel"-->
-                 <!--style="margin-top: -10px; border-width: 1px;border-color: #ccc;border-bottom-style: solid">-->
-                <!--<div flex class="col-md-8"-->
-                     <!--ng-show="setting.style=='dense'">-->
-                    <!--<div layout="row" class="row">-->
-                        <!--&lt;!&ndash;<span><strong>{{configuration.raw.current.modifiedBy}}</strong> modified <strong>{{friendlyDateString(configuration.raw.current.modified)}}</strong></span> compare with&ndash;&gt;-->
-                        <!--<span flex>Compare with</span>-->
-                        <!--&lt;!&ndash;<div class="dropdown" style="display: inline">&ndash;&gt;-->
-                        <!--<md-menu flex>-->
-                            <!--<md-button ng-click="">-->
-                                <!--{{configuration.raw.other.modifiedBy}} modified {{friendlyDateString(configuration.raw.other.modified)}}-->
-                                <!--<md-icon md-menu-origin md-svg-icon="call:phone"></md-icon>-->
-                            <!--</md-button>-->
-                            <!--<md-menu-content width="1">-->
-                                <!--<md-menu-item>-->
-                                    <!--<md-button ng-click="">-->
-                                        <!--<md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>-->
-                                        <!--Action-->
-                                    <!--</md-button>-->
-                                <!--</md-menu-item>-->
-                                <!--&lt;!&ndash;<md-menu-item><md-button>Another action</md-button></md-menu-item>&ndash;&gt;-->
-                            <!--</md-menu-content>-->
-                        <!--</md-menu>-->
-                    <!--</div>-->
-                <!--</div>-->
-
-                <!--<div flex></div>-->
-                <!--<div flex="30" ng-class="{'col-md-4': setting.style == 'dense', 'col-md-12': setting.style == 'column'}">-->
-                <!--&lt;!&ndash;<md-button type="button" class="btn btn-default pull-right"&ndash;&gt;-->
-                        <!--&lt;!&ndash;ng-click="restore(configuration.raw.current.id)">Restore</md-button>&ndash;&gt;-->
-                <!--<md-button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"-->
-                        <!--ng-click="setHideUnchangedItems()">-->
-                    <!--<span class="glyphicon glyphicon-eye-open"-->
-                          <!--ng-class="setting.hideUnchangedItems ? 'glyphicon-eye-close': 'glyphicon-eye-open'"></span> Show Unchanged items-->
-                <!--</md-button>-->
-                <!--<md-button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"-->
-                        <!--ng-click="changeStyle()">-->
-                    <!--<img src="img/icons/ic_view_stream_black_24px.svg" height="16px"-->
-                         <!--ng-class="{'rotate': setting.style == 'column'}"> View-->
-                <!--</md-button>-->
-                <!--</div>-->
-            <!--</div>-->
             <div ng-show="setting.style=='column'">
             <div layout="row">
-                <div flex></div>
+                <div flex="30"></div>
                 <div flex style="padding-left: 0px;padding-right: 0px">
-                    <div><h4><strong>{{configuration.raw.current.id}}</strong></h4></div>
-                    <div>{{configuration.raw.current.description}}</div>
                     <div><strong>{{configuration.raw.current.modifiedBy}}</strong> modified {{configuration.raw.current.modified}}</div>
+                    <div>{{configuration.raw.current.description}}</div>
                 </div>
                 <div flex style="padding-left: 0px;padding-right: 0px">
-                    <div><h4><strong>{{configuration.raw.other.id}}</strong></h4></div>
-                    <div>{{configuration.raw.other.description}}</div>
                     <div><strong>{{configuration.raw.other.modifiedBy}}</strong> modified {{configuration.raw.other.modified}}</div>
+                    <div>{{configuration.raw.other.description}}</div>
                 </div>
             </div>
             </div>
-            <div class="row">
+            <div>
                 <ang-accordion icon-position="right" close-icon-class="fa fa-chevron-right" open-icon-class="fa fa-chevron-down">
                     <collapsible-item item-title="Global" initially-open="true">
 
                         <div layout="column">
                         <div ng-show="setting.style=='dense'">
-                        <div flex layout="row" class="row-wrapper"
+                        <div flex layout="row" class="attr-row"
                              ng-hide="hideUnchangedItems(cc.global.reservedVlanRange)">
                             <div flex="30" class="attr-header">
                                 <span>Reserved VLAN Range</span>
                             </div>
                             <div flex="70" layout="column">
-                                <div flex class="row-value-wrapper"
+                                <div flex
                                      ng-show="cc.global.reservedVlanRange.other && !equals(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other)">
-                                    <div class="value"
+                                    <div class="attr-value"
                                          ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other, {'modification': 'deletion'})">
                                         <span>{{cc.global.reservedVlanRange.other.begin}} to {{cc.global.reservedVlanRange.other.end}}</span>
                                     </div>
                                 </div>
 
-                                <div flex class="row-value-wrapper"
+                                <div flex
                                      ng-show="cc.global.reservedVlanRange.current">
-                                    <div class="value"
+                                    <div class="attr-value"
                                          ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other, {'modification': 'addition'})">
                                         <span>{{cc.global.reservedVlanRange.current.begin}} to {{cc.global.reservedVlanRange.current.end}}</span>
                                     </div>
@@ -135,17 +89,17 @@
                         </div>
 
                         <div ng-show="setting.style=='column'">
-                        <div layout="row" class="row-wrapper"
+                        <div layout="row" class="attr-row"
                              ng-hide="hideUnchangedItems(cc.global.reservedVlanRange)">
                             <div flex="30" class="attr-header">
                                 <span>Reserved VLAN Range</span>
                             </div>
-                            <div flex class="value"
+                            <div flex class="attr-value"
                                  ng-class="makeClass(cc.global.reservedVlanRange.current, cc.global.reservedVlanRange.other)">
                                 <span>{{cc.global.reservedVlanRange.current.begin}}
                                     to {{cc.global.reservedVlanRange.current.end}}</span>
                             </div>
-                            <div flex class="value"
+                            <div flex class="attr-value"
                                  ng-class="makeClass(cc.global.reservedVlanRange.other, cc.global.reservedVlanRange.current)">
                                 <span ng-show="cc.global.reservedVlanRange.other">{{cc.global.reservedVlanRange.other.begin}}
                                     to {{cc.global.reservedVlanRange.other.end}}</span>
@@ -154,17 +108,17 @@
                         </div>
                         </div>
 
-                        <div ng-show="setting.style=='dense'">
-                        <div flex layout="row" class="row-wrapper"
+                        <div ng-show="setting.style=='dense'" class="even-wrap">
+                        <div flex layout="row" class="attr-row"
                              ng-hide="hideUnchangedItems(cc.global.reservedSubnet)">
                             <div flex="30" class="attr-header">
                                 <span>Reserved Subnet</span>
                             </div>
                             <div flex="70" layout="column">
-                                <div flex class="row-value-wrapper"
+                                <div flex
                                      ng-repeat="item in cc.global.reservedSubnet"
                                      ng-hide="hideUnchangedItems(item)">
-                                    <div class="value"
+                                    <div class="attr-value"
                                          ng-class="makeClass(item.current, item.other)">
                                         <span>{{item.current || item.other}}</span>
                                     </div>
@@ -173,21 +127,21 @@
                         </div>
                         </div>
 
-                        <div ng-show="setting.style=='column'">
-                        <div layout="row" class="row-wrapper"
+                        <div ng-show="setting.style=='column'" class="even-wrap">
+                        <div layout="row" class="attr-row"
                              ng-hide="hideUnchangedItems(cc.global.reservedSubnet)">
                             <div flex="30" class="attr-header">
                                 <span>Reserved Subnet</span>
                             </div>
                             <div flex="70">
-                                <div layout="row" class="row-value-wrapper"
+                                <div layout="row"
                                      ng-repeat="item in cc.global.reservedSubnet"
                                      ng-hide="hideUnchangedItems(item)">
-                                    <div flex class="value"
+                                    <div flex class="attr-value"
                                          ng-class="makeClass(item.current, item.other)">
                                         <span>{{item.current || '&empty;'}}</span>
                                     </div>
-                                    <div flex class="value"
+                                    <div flex class="attr-value"
                                          ng-class="makeClass(item.other, item.current)">
                                         <span>{{item.other || '&empty;'}}</span>
                                     </div>
@@ -200,8 +154,10 @@
                     </collapsible-item>
                     <collapsible-item item-title="Device" initially-open="true">
                         <div layout="column" ng-repeat="item in cc.devices"
-                             ng-hide="hideUnchangedItems(item)">
-                            <div flex layout="row" class="row-wrapper"
+                             ng-hide="hideUnchangedItems(item)"
+                             ng-class="{'even-wrap': !($index %2)}">
+
+                            <div flex layout="row" class="attr-row"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div flex="30" class="attr-header">
                                     <span><strong>{{item.current.name || item.other.name}}</strong></span>
@@ -210,19 +166,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Description</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.desc && item.current.desc != item.other.desc">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'deletion'})">
                                                 <span>{{item.other.desc}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.desc">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'addition'})">
                                                 <span>{{item.current.desc}}</span>
                                             </div>
@@ -232,15 +188,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Description</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc)">
                                                 <span>{{item.current.desc || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.desc, item.current.desc)">
                                                 <span>{{item.other.desc || '&empty;'}}</span>
                                             </div>
@@ -250,19 +206,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.ip, item.other.ip)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>IP</span>
                                         </div>
-                                        <div flex class="row row-value-wrapper"
+                                        <div flex class="row"
                                              ng-show="item.other.ip && item.current.ip != item.other.ip">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.ip, item.other.ip, {'modification': 'deletion'})">
                                                 <span>{{item.other.ip}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.ip">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.ip, item.other.ip, {'modification': 'addition'})">
                                                 <span>{{item.current.ip}}</span>
                                             </div>
@@ -272,15 +228,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.ip, item.other.ip)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>IP</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.ip, item.other.ip)">
                                                 <span>{{item.current.ip || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.ip, item.current.ip)">
                                                 <span>{{item.other.ip || '&empty;'}}</span>
                                             </div>
@@ -290,19 +246,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.role, item.other.role)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Role</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.role && item.current.role != item.other.role">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.role, item.other.role, {'modification': 'deletion'})">
                                                 <span>{{item.other.role}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.role">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.role, item.other.role, {'modification': 'addition'})">
                                                 <span>{{item.current.role}}</span>
                                             </div>
@@ -312,15 +268,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.role, item.other.role)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Role</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.role, item.other.role)">
                                                 <span>{{item.current.role || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.role, item.current.role)">
                                                 <span>{{item.other.role || '&empty;'}}</span>
                                             </div>
@@ -330,19 +286,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.protocol, item.other.protocol)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Protocol</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.protocol && item.current.protocol != item.other.protocol">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.protocol, item.other.protocol, {'modification': 'deletion'})">
                                                 <span>{{item.other.protocol}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.protocol">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.protocol, item.other.protocol, {'modification': 'addition'})">
                                                 <span>{{item.current.protocol}}</span>
                                             </div>
@@ -352,15 +308,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.protocol, item.other.protocol)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Protocol</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.protocol, item.other.protocol)">
                                                 <span>{{item.current.protocol || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.protocol, item.current.protocol)">
                                                 <span>{{item.other.protocol || '&empty;'}}</span>
                                             </div>
@@ -370,19 +326,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.port, item.other.port)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Port</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.port && item.current.port != item.other.port">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.port, item.other.port, {'modification': 'deletion'})">
                                                 <span>{{item.other.port}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.port">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.port, item.other.port, {'modification': 'addition'})">
                                                 <span>{{item.current.port}}</span>
                                             </div>
@@ -392,15 +348,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.port, item.other.port)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Port</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.port, item.other.port)">
                                                 <span>{{item.current.port || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.port, item.current.port)">
                                                 <span>{{item.other.port || '&empty;'}}</span>
                                             </div>
@@ -410,19 +366,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.username, item.other.username)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Username</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.username && item.current.username != item.other.username">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.username, item.other.username, {'modification': 'deletion'})">
                                                 <span>{{item.other.username}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.username">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.username, item.other.username, {'modification': 'addition'})">
                                                 <span>{{item.current.username}}</span>
                                             </div>
@@ -432,15 +388,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.username, item.other.username)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Username</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.username, item.other.username)">
                                                 <span>{{item.current.username || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.username, item.current.username)">
                                                 <span>{{item.other.username || '&empty;'}}</span>
                                             </div>
@@ -453,15 +409,16 @@
                     </collapsible-item>
                     <collapsible-item item-title="Link" initially-open="true">
                         <div layout="column" ng-repeat="item in cc.links"
-                             ng-hide="hideUnchangedItems(item)">
+                             ng-hide="hideUnchangedItems(item)"
+                             ng-class="{'even-wrap': !($index %2)}">
 
                             <div ng-show="setting.style=='dense'">
-                            <div flex layout="row" class="row-wrapper"
+                            <div flex layout="row" class="attr-row"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div flex="30" class="attr-header">
                                     <span>Port A &harr; Port B</span>
                                 </div>
-                                <div flex="70" class="value"
+                                <div flex="70" class="attr-value"
                                      ng-class="makeClass(item.current, item.other)">
                                     <span ng-show="item.current.src && item.current.dst">{{item.current.src.device}}/{{item.current.src.port}} &harr; {{item.current.dst.device}}/{{item.current.dst.port}}</span>
                                     <span ng-show="!equals(item.current, item.other) && item.other.src && item.other.dst">{{item.other.src.device}}/{{item.other.src.port}} &harr; {{item.other.dst.device}}/{{item.other.dst.port}}</span>
@@ -470,17 +427,17 @@
                             </div>
 
                             <div ng-show="setting.style=='column'">
-                            <div layout="row" class="row-wrapper"
+                            <div layout="row" class="attr-row"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
-                                <div flex="30">
+                                <div flex="30" class="attr-header">
                                     <span>Port A &harr; Port B</span>
                                 </div>
-                                <div flex class="value"
+                                <div flex class="attr-value"
                                      ng-class="makeClass(item.current, item.other)">
                                     <span ng-show="item.current.src && item.current.dst">{{item.current.src.device}}/{{item.current.src.port}} &harr; {{item.current.dst.device}}/{{item.current.dst.port}}</span>
                                     <span ng-hide="item.current.src && item.current.dst">&empty;</span>
                                 </div>
-                                <div flex class="value"
+                                <div flex class="attr-value"
                                      ng-class="makeClass(item.other, item.current)">
                                     <span ng-show="item.other.src && item.other.dst">{{item.other.src.device}}/{{item.other.src.port}} &harr; {{item.other.dst.device}}/{{item.other.dst.port}}</span>
                                     <span ng-hide="item.other.src && item.other.dst">&empty;</span>
@@ -491,8 +448,10 @@
                     </collapsible-item>
                     <collapsible-item item-title="Network" initially-open="true">
                         <div layout="column" ng-repeat="item in cc.networks"
-                             ng-hide="hideUnchangedItems(item)">
-                            <div flex layout="row" class="row-wrapper"
+                             ng-hide="hideUnchangedItems(item)"
+                             ng-class="{'even-wrap': !($index %2)}">
+
+                            <div flex layout="row" class="attr-row"
                                  ng-class="makeClass(item.current, item.other, {'modification': 'equation'})">
                                 <div flex="30" class="attr-header">
                                     <span><strong>{{item.current.name || item.other.name}}</strong></span>
@@ -501,19 +460,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Description</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.desc && item.current.desc != item.other.desc">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'deletion'})">
                                                 <span>{{item.other.desc}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.desc">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc, {'modification': 'addition'})">
                                                 <span>{{item.current.desc}}</span>
                                             </div>
@@ -523,15 +482,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.desc, item.other.desc)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Description</span>
                                         </div>
-                                        <div flex layout="row" class="row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.desc, item.other.desc)">
                                                 <span>{{item.current.desc || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.desc, item.current.desc)">
                                                 <span>{{item.other.desc || '&empty;'}}</span>
                                             </div>
@@ -541,19 +500,19 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.vlan, item.other.vlan)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>VLAN</span>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.other.vlan && item.current.vlan != item.other.vlan">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.vlan, item.other.vlan, {'modification': 'deletion'})">
                                                 <span>{{item.other.vlan}}</span>
                                             </div>
                                         </div>
-                                        <div flex class="row-value-wrapper"
+                                        <div flex
                                              ng-show="item.current.vlan">
-                                            <div class="value bottom-line"
+                                            <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.vlan, item.other.vlan, {'modification': 'addition'})">
                                                 <span>{{item.current.vlan}}</span>
                                             </div>
@@ -563,15 +522,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.vlan, item.other.vlan)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>VLAN</span>
                                         </div>
-                                        <div flex layout="row" class="row row-value-wrapper">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row" class="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.vlan, item.other.vlan)">
                                                 <span>{{item.current.vlan || '&empty;'}}</span>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.vlan, item.current.vlan)">
                                                 <span>{{item.other.vlan || '&empty;'}}</span>
                                             </div>
@@ -581,13 +540,13 @@
 
                                     <div ng-show="setting.style=='dense'">
                                     <div ng-hide="hideUnchangedItems(item.current.members, item.other.members)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Members</span>
                                         </div>
-                                        <div flex class="row row-value-wrapper"
+                                        <div flex class="row"
                                              ng-repeat="member in item.members"
                                              ng-hide="hideUnchangedItems(member)">
-                                            <div class="value"
+                                            <div class="attr-value"
                                                  ng-class="makeClass(member.current, member.other)">
                                                 <span>{{member.current || member.other}}</span>
                                             </div>
@@ -597,15 +556,15 @@
 
                                     <div ng-show="setting.style=='column'">
                                     <div ng-hide="hideUnchangedItems(item.current.members, item.other.members)">
-                                        <div flex class="label">
+                                        <div flex class="attr-label">
                                             <span>Members</span>
                                         </div>
-                                        <div flex layout="row" class="row">
-                                            <div flex class="value bottom-line"
+                                        <div flex layout="row">
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.members, item.other.members)">
                                                 <p ng-repeat="member in item.current.members">{{member}}</p>
                                             </div>
-                                            <div flex class="value bottom-line"
+                                            <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.other.members, item.current.members)">
                                                 <p ng-repeat="member in item.other.members">{{member}}</p>
                                             </div>

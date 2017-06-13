@@ -7,6 +7,9 @@
     width: calc(100% - 30px);
 }
 
+#ov-configHistoryDetail .toolbar {
+    align-items: center;
+}
 #ov-configHistoryDetail h2 {
     margin: unset;
 }
@@ -15,7 +18,7 @@
     display: inline-block;
 }
 
-#ov-configHistoryDetail .row-wrapper {
+#ov-configHistoryDetail .attr-row {
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom-width: 1px;
@@ -23,45 +26,34 @@
     border-bottom-style: solid;
 }
 
-#ov-configHistoryDetail .row-value-wrapper {
-    padding-top: 0px;
-    padding-bottom: 0px;
+/*#ov-configHistoryDetail*/ .even-wrap .attr-row {
+    background: #fbfbfb;
 }
 
 #ov-configHistoryDetail .attr-header {
     padding-left: 20px;
 }
 
-#ov-configHistoryDetail .label {
-    /* remove bootstrap style */
+#ov-configHistoryDetail .attr-label {
     color: unset;
     border-radius: unset;
     padding: unset;
 
-    /*padding-left: 15px;*/
-    /*padding-right: 15px;*/
     line-height: 1.5;
     font-size: 80%;
     font-weight: 700;
-    /*color: #0e70c0;*/
 
-    /*background-color: #fafafa;*/
-    /*background-color: #eaeaea;*/
     text-align: left;
 }
 
-#ov-configHistoryDetail .value {
-    /*border-width: 1px;*/
-    /*border-color: #eeeeee;*/
-    /*border-bottom-style: solid;*/
-    line-height: 2;
+#ov-configHistoryDetail .attr-value {
+    line-height: 1.5;
 }
 
-#ov-configHistoryDetail .value.bottom-line {
+#ov-configHistoryDetail .attr-value.bottom-line {
     border-width: 1px;
     border-color: #e0e0e0;
     border-bottom-style: solid;
-    line-height: 2;
 }
 
 #ov-configHistoryDetail .deletion {
