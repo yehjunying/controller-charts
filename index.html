@@ -78,18 +78,12 @@
             .controller('appCtrl', ['$scope', function ($scope) {
 
             }])
-            .run(['$location', '$http', 'WebSocketService', function ($location, $http, wss) {
-                $http.get('event-resp/configHistoryDetailDataResponse.json').then(function(res){
-                    wss.bindResponseData({
-                        configHistoryDetailDataResponse: res.data // TODO: bind a function which use $http.get()
-                    });
-                    $location.path('/red')
-                        .search('from', 'somewhere')
-                        .search('id', '20170501011000000')
-                        .search('other', '20170501011009999');
-                }, function (err) {
-                    console.log(err);
-                });
+            .run(['$location', 'WebSocketService', function ($location, wss) {
+                wss.setResponseHomeDir('event-resp');
+                $location.path('/red')
+                    .search('from', 'somewhere')
+                    .search('id', '20170501011000000')
+                    .search('other', '20170501011009999');
             }]);
     </script>
 
