@@ -209,7 +209,7 @@
                                         <div flex class="attr-label">
                                             <span>IP</span>
                                         </div>
-                                        <div flex class="row"
+                                        <div flex
                                              ng-show="item.other.ip && item.current.ip != item.other.ip">
                                             <div class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.ip, item.other.ip, {'modification': 'deletion'})">
@@ -525,7 +525,7 @@
                                         <div flex class="attr-label">
                                             <span>VLAN</span>
                                         </div>
-                                        <div flex layout="row" class="row">
+                                        <div flex layout="row">
                                             <div flex class="attr-value bottom-line"
                                                  ng-class="makeClass(item.current.vlan, item.other.vlan)">
                                                 <span>{{item.current.vlan || '&empty;'}}</span>
@@ -543,7 +543,7 @@
                                         <div flex class="attr-label">
                                             <span>Members</span>
                                         </div>
-                                        <div flex class="row"
+                                        <div flex
                                              ng-repeat="member in item.members"
                                              ng-hide="hideUnchangedItems(member)">
                                             <div class="attr-value"

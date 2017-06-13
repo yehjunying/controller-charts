@@ -1,0 +1,396 @@
+<!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap.min.css">-->
+<!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">-->
+<!--<link rel="stylesheet" href="app/view/event/event.css">-->
+
+<div id="ov-event-view" class="container">
+    <!--<div style="margin-top: 18px" />-->
+
+    <!--<div class="panel panel-default">-->
+        <!--<div class="panel-heading">-->
+            <!--<div class="row p-x-1">-->
+                <!--<div class="dropdown inline-box">-->
+                    <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"-->
+                            <!--data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                        <!--refreshed every {{refreshInterval()}}-->
+                        <!--<span class="caret"></span>-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+                        <!--&lt;!&ndash;<li><a href="#" ng-click="setRefreshInterval('1s')">1 seconds</a></li>&ndash;&gt;-->
+                        <!--<li><a href="#event" ng-click="setRefreshInterval('5s')">5 seconds</a></li>-->
+                        <!--<li><a href="#event" ng-click="setRefreshInterval('30s')">30 seconds</a></li>-->
+                        <!--<li><a href="#event" ng-click="setRefreshInterval('1m')">1 minutes</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+
+                <!--<button type="button" class="btn btn-default" ng-class="makeAutoRefreshClass()"-->
+                        <!--ng-click="toggleRefresh()">-->
+                    <!--<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="panel-body">-->
+            <!--<div class="row p-x-1">-->
+                <!--<div class="search-container">-->
+                    <!--<div class="search-input-group input-group">-->
+                        <!--<input type="text" class="form-control" placeholder="Search for..."-->
+                               <!--ng-model="searchOptions.q"-->
+                               <!--ng-keypress="onSearchKeyPressed($event)">-->
+                        <!--<span class="input-group-btn">-->
+                                <!--<button type="button" class="btn btn-default" ng-click="search()">-->
+                                    <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span>-->
+                                <!--</button>-->
+
+                                <!--<button type="button" class="btn btn-default"-->
+                                        <!--ng-click="addTermFn(searchOptions, searchOptions.q)">-->
+                                    <!--<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>-->
+                                <!--</button>-->
+
+                                <!--<button type="button" class="btn btn-default" ng-click="toggleSearchOptions()">-->
+                                    <!--<span class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>-->
+                                <!--</button>-->
+
+                            <!--</span>-->
+                    <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
+
+                    <!--<script>-->
+                        <!--$('.search-container input').focus(-->
+                            <!--function () {-->
+                                <!--$(this).parent('div').addClass('search-input-group-focus');-->
+                            <!--}).blur(-->
+                            <!--function () {-->
+                                <!--$(this).parent('div').removeClass('search-input-group-focus')-->
+                            <!--});-->
+                    <!--</script>-->
+
+                    <!--&lt;!&ndash;<div id="progress-bar" style="line-height: 10px"></div>&ndash;&gt;-->
+
+                    <!--<div class="btn-group" ng-show="searchOptions.terms.length">-->
+                        <!--<button class="btn btn-default btn-sm" aria-label="Left Align" type="button"-->
+                                <!--ng-repeat="i in searchOptions.terms"-->
+                                <!--ng-click="removeTermFn(searchOptions, i)">-->
+                            <!--<span class="glyphicon glyphicon-remove" aria-hidden="true"> {{i}}</span>-->
+                        <!--</button>-->
+                    <!--</div>-->
+
+                    <!--<div id="search-options" ng-show="isShowSearchOptions()">-->
+
+                        <!--<div class="p-t-1">-->
+                        <!--</div>-->
+
+                        <!--<div class="row p-x-1">-->
+                            <!--<div ng-class="makeColClass(3)">-->
+                                <!--<span>Event Log</span>-->
+                            <!--</div>-->
+                            <!--<div ng-class="makeColClass(9)">-->
+                                <!--<div class="btn-group">-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.type == 'All' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({type: 'All'})">All-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.type == 'System' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({type: 'System'})">System-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.type == 'Fabric' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({type: 'Fabric'})">Fabric-->
+                                    <!--</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!--<div class="row p-x-1">-->
+                            <!--<div ng-class="makeColClass(3)">-->
+                                <!--<span>Event Severity Levels</span>-->
+                            <!--</div>-->
+                            <!--<div ng-class="makeColClass(9)">-->
+                                <!--<div class="btn-group">-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'All' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'All'})">All-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Emerg' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Emerg'})">Emerg-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Alert' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Alert'})">Alert-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Crit' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Crit'})">Crit-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Err' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Err'})">Err-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Warning' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Warning'})">Warning-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Notice' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Notice'})">Notice-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Info' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Info'})">Info-->
+                                    <!--</button>-->
+                                    <!--<button type="button" class="btn"-->
+                                            <!--ng-class="searchOptions.severity == 'Debug' ? 'btn-info' : 'btn-default'"-->
+                                            <!--ng-click="setSearchOptionsAndSearch({severity: 'Debug'})">Debug-->
+                                    <!--</button>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+                        <!--<div class="row p-x-1">-->
+                            <!--<div ng-class="makeColClass(3)">-->
+                                <!--<span>Time Period</span>-->
+                            <!--</div>-->
+                            <!--<div ng-class="makeColClass(5)">-->
+                                <!--<div class="input-group">-->
+                                    <!--<input type="text" class="form-control" placeholder="Time Period (Required)"-->
+                                           <!--ng-model="searchOptions.timePeriod">-->
+                                    <!--<span class="input-group-btn">-->
+                                            <!--<button type="button" class="btn"-->
+                                                    <!--ng-class="searchOptions.timePeriodUnit == 'Minutes' ? 'btn-info' : 'btn-default'"-->
+                                                    <!--ng-click="setSearchOptionsAndSearch({timePeriodUnit: 'Minutes'})">Minutes-->
+                                            <!--</button>-->
+                                            <!--<button type="button" class="btn"-->
+                                                    <!--ng-class="searchOptions.timePeriodUnit == 'Hours' ? 'btn-info' : 'btn-default'"-->
+                                                    <!--ng-click="setSearchOptionsAndSearch({timePeriodUnit: 'Hours'})">Hours-->
+                                            <!--</button>-->
+                                            <!--<button type="button" class="btn"-->
+                                                    <!--ng-class="searchOptions.timePeriodUnit == 'Days' ? 'btn-info' : 'btn-default'"-->
+                                                    <!--ng-click="setSearchOptionsAndSearch({timePeriodUnit: 'Days'})">Days-->
+                                            <!--</button>-->
+                                        <!--</span>-->
+                                <!--</div>&lt;!&ndash; /input-group &ndash;&gt;-->
+                            <!--</div>-->
+                        <!--</div> &lt;!&ndash; row &ndash;&gt;-->
+
+                    <!--</div> &lt;!&ndash; search-options &ndash;&gt;-->
+                <!--</div> &lt;!&ndash; search-container &ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <md-card>
+        <md-card-content>
+            <div layout="column">
+
+                <md-chips id="search-input"
+                          ng-model="searchOptions.terms"
+                          readonly="false"
+                          md-removable="true"
+                          md-enable-chip-edit="false"
+                          md-separator-keys="keys"
+                          md-add-on-blur="true"
+                          placeholder="Press ENTER to search"
+                          ng-keypress="onSearchKeyPressed($event)">
+                </md-chips>
+
+                <div id="progress-bar" style="line-height: 5px"></div>
+
+                <div layout="row" style="padding-top: 15px">
+                    <md-input-container>
+                        <label>Source</label>
+                        <md-select ng-model="searchOptions.type">
+                            <md-option value="All">All</md-option>
+                            <md-option value="System">System</md-option>
+                            <md-option value="Fabric">Fabric</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Severity</label>
+                        <md-select ng-model="searchOptions.severity">
+                            <md-option value="All">All</md-option>
+                            <md-option value="Emerg">Emergency (0)</md-option>
+                            <md-option value="Alert">Alert (1)</md-option>
+                            <md-option value="Crit">Critical (2)</md-option>
+                            <md-option value="Err">Error (3)</md-option>
+                            <md-option value="Warning">Warning (4)</md-option>
+                            <md-option value="Notice">Notice (5)</md-option>
+                            <md-option value="Info">Infomational (6)</md-option>
+                            <md-option value="Debug">Debug (7)</md-option>
+                        </md-select>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Time Period</label>
+                        <md-select id="time-period-select"
+                                   ng-model="searchOptions.selectedPeriod"
+                                   ng-model-options="{trackBy: '$value.id'}"
+                                   md-on-close="onClosedTimePeriodSelect($event)">
+                            <md-option ng-repeat="p in searchOptions.predefinedTimePeriod" ng-value="p">{{p.period}} {{p.unit}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+
+            </div>
+        </md-card-content>
+    </md-card>
+
+    <!--<div class="panel panel-default">-->
+        <!--<div class="panel-body">-->
+            <!--<div class="row p-x-1">-->
+    <md-card>
+        <md-card-content>
+            <div ng-class="makeColClass(12)" style="width: 100%; height: 100px">
+                <canvas class="main-chart" id="event-stats-chart" width="600" height="150"></canvas>
+            </div>
+        </md-card-content>
+    </md-card>
+            <!--</div> &lt;!&ndash; result-chart &ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="panel panel-default">-->
+    <md-card>
+        <!--<div class="panel-body">-->
+        <md-card-content style="padding: unset;">
+            <div layout="column">
+
+                <!--<div flex layout="row">-->
+                    <!--<div flex="70">-->
+                        <!--<span>{{searchResult.items.length}} of {{searchResult.stats.total}} results</span>-->
+                    <!--</div>-->
+                    <!--<div flex>-->
+
+                    <!--</div>-->
+                <!--</div> &lt;!&ndash; result-stats &ndash;&gt;-->
+                <md-toolbar flex layout="row">
+                    <span flex="70" style="text-align: center; line-height: 2;">{{searchResult.items.length}} of {{searchResult.stats.total}} results</span>
+                    <div flex="30"></div>
+                </md-toolbar>
+
+                <div flex layout="row">
+                    <div flex="70" layout="column">
+
+                        <md-content flex id="event-view">
+                        <md-list>
+                            <div ng-repeat="items in searchResult.itemsPerDay">
+                                <md-subheader class="md-no-sticky"
+                                              ng-show="(items.data | filter: eventFilter(filterOptions)).length">
+                                    <span>{{items.date}}</span>
+                                </md-subheader>
+
+                                <md-list-item class="md-3-line event-item"
+                                              ng-repeat="i in items.data | filter: eventFilter(filterOptions) track by $index"
+                                              ng-click="null"
+                                              ng-class="makeEventListClass(i._source)">
+                                    <div class="md-list-item-text" layout="column">
+                                        <div>
+                                            <strong class="primary-font">{{i._source.address}}</strong>
+                                            <small class="text-muted">{{friendlyDateString(i._source.localeDateTime)}}</small>
+                                        </div>
+                                        <p>
+                                            facility: <strong
+                                                class="primary-font">{{i._source.facility}}</strong>
+                                            severity: <strong
+                                                class="primary-font">{{i._source.severity}}</strong>
+                                            tag: <strong class="primary-font">{{i._source.tag}}</strong>>                                        </p>
+                                        <span>{{i._source.message}}</span>
+                                    </div>
+                                </md-list-item>
+
+                            </div>
+                        </md-list>
+                        </md-content>
+
+                        <!--<div flex id="search-result-detail" class="panel panel-default chat">-->
+                            <!--&lt;!&ndash;<div id="event-view" class="panel-body">&ndash;&gt;-->
+                            <!--<div class="panel-body">-->
+                                <!--<ul>-->
+                                    <!--<div ng-repeat="items in searchResult.itemsPerDay">-->
+                                        <!--<div>-->
+                                            <!--<div class="chat-date"-->
+                                                 <!--ng-show="(items.data | filter: eventFilter(filterOptions)).length">-->
+                                                <!--<span>{{items.date}}</span>-->
+                                            <!--</div>-->
+                                            <!--<div ng-repeat="i in items.data | filter: eventFilter(filterOptions) track by $index">-->
+                                                <!--<li class="left clearfix" ng-class="makeEventListClass(i._source)">-->
+                                                    <!--<div class="chat-body clearfix">-->
+                                                        <!--<div class="header">-->
+                                                            <!--<strong class="primary-font">{{i._source.address}}</strong>-->
+                                                            <!--&lt;!&ndash;<small class="text-muted">{{i._source.localeDateTime}}</small>&ndash;&gt;-->
+                                                            <!--<small class="text-muted">{{friendlyDateString(i._source.localeDateTime)}}</small>-->
+                                                        <!--</div>-->
+                                                        <!--<p>-->
+                                                            <!--facility: <strong-->
+                                                                <!--class="primary-font">{{i._source.facility}}</strong>-->
+                                                            <!--severity: <strong-->
+                                                                <!--class="primary-font">{{i._source.severity}}</strong>-->
+                                                            <!--tag: <strong class="primary-font">{{i._source.tag}}</strong>-->
+                                                        <!--</p>-->
+                                                        <!--<span>{{i._source.message}}</span>-->
+                                                    <!--</div>-->
+                                                <!--</li>-->
+                                            <!--</div>-->
+
+                                            <!--<button type="button" class="btn btn-default center-block m-t-1"-->
+                                                    <!--ng-show="$last && haveMore()"-->
+                                                    <!--ng-click="loadMore()">-->
+                                                <!--<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>-->
+                                                <!--Load More...-->
+                                            <!--</button>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</ul>-->
+                            <!--</div>-->
+                            <!--&lt;!&ndash;<div class="panel-footer">EVENT</div>&ndash;&gt;-->
+                        <!--</div>-->
+                    </div> <!-- event-pane -->
+
+                    <div flex="30" style="padding-left: 20px">
+                        <h4>Filter by:</h4>
+
+                        <h4>Severity</h4>
+                        <div ng-repeat="i in searchResult.stats.severities.buckets | orderBy: 'key'">
+                            <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value=""-->
+                                              <!--ng-click="onFilterCheckbox(filterOptions.severities, i.key)">{{-->
+                                    <!--severityString(i.key) }} ({{i.doc_count}})</label>-->
+                            <!--</div>-->
+                            <md-checkbox ng-click="onFilterCheckbox(filterOptions.severities, i.key)">
+                                {{severityString(i.key) }} ({{i.doc_count}})
+                            </md-checkbox>
+                        </div>
+
+                        <h4>Tag</h4>
+                        <div ng-repeat="i in searchResult.stats.tags.buckets">
+                            <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value=""-->
+                                              <!--ng-click="onFilterCheckbox(filterOptions.tags, i.key)">{{i.key}}-->
+                                    <!--({{i.doc_count}})</label>-->
+                            <!--</div>-->
+                            <md-checkbox ng-click="onFilterCheckbox(filterOptions.tags, i.key)">
+                                {{i.key}} ({{i.doc_count}})
+                            </md-checkbox>
+                        </div>
+
+                        <h4>IP Address</h4>
+                        <div ng-repeat="i in searchResult.stats.addresses.buckets">
+                            <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value=""-->
+                                              <!--ng-click="onFilterCheckbox(filterOptions.address, i.key)">{{i.key}}-->
+                                    <!--({{i.doc_count}})</label>-->
+                            <!--</div>-->
+                            <md-checkbox ng-click="onFilterCheckbox(filterOptions.address, i.key)">
+                                {{i.key}} ({{i.doc_count}})
+                            </md-checkbox>
+                        </div>
+
+                    </div>
+                </div> <!-- result-detail -->
+
+            </div>
+        <!--</div>-->
+        </md-card-content>
+    </md-card>
+    <!--</div>-->
+</div>

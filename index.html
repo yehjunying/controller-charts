@@ -16,7 +16,8 @@
 <body ng-app="myApp" ng-cloak>
 
     <div ng-controller="appCtrl">
-        <a href="#red">Red</a>
+        <a href="#configDetial?from=somewhere&id=20170501011000000&other=20170501011009999">ConfigDetial</a>
+        <a href="#event">Event</a>
         <div ng-view></div>
     </div>
 
@@ -48,11 +49,11 @@
         angular.module("myApp", ['ngRoute', 'oc.lazyLoad', 'mockUtils', 'ngMaterial'])
             .config(function ($routeProvider) {
                 $routeProvider
-                    .when("/red", {
+                    .when("/configDetial", {
                         templateUrl: "app/view/configHistoryDetail/configHistoryDetail.html",
                         controller: 'OvConfigHistoryDetailCtrl',
                         resolve: {
-                            ctrl: ['$ocLazyLoad', function ($ocLazyLoad) {
+                            files: ['$ocLazyLoad', function ($ocLazyLoad) {
                                 return $ocLazyLoad.load([
                                     {
                                         files:[
@@ -73,6 +74,40 @@
                                 ]);
                             }]
                         }
+                    })
+                    .when("/event", {
+                        templateUrl: "app/view/event/event.html",
+                        controller: 'OvEventCtrl',
+                        resolve: {
+                            files: ['$ocLazyLoad', function ($ocLazyLoad) {
+                                return $ocLazyLoad.load([
+                                    {
+                                        files:[
+                                            'node_modules/jquery/dist/jquery.min.js',
+                                            'node_modules/chart.js/dist/Chart.min.js',
+                                            'node_modules/d3/d3.min.js',
+                                            'node_modules/moment/min/moment.min.js',
+                                            'elasticsearch.angular.js',
+                                            'app/services/essearch.js',
+                                            'app/view/event/event-stats-bar.js',
+//                                            'node_modules/bootstrap/dist/js/bootstrap.min.js',
+                                            'app/view/event/event.js'
+                                        ],
+                                        serie: true
+                                    },
+                                    {
+                                        files: [
+//                                            'node_modules/bootstrap/dist/css/bootstrap.css',
+                                            'app/view/event/event.css'
+                                        ],
+                                        serie: true
+                                    },
+//                                    {
+//                                        files: ['app/view/configHistoryDetail/ang-accordion.css']
+//                                    }
+                                ]);
+                            }]
+                        }
                     });
             })
             .controller('appCtrl', ['$scope', function ($scope) {
@@ -80,10 +115,11 @@
             }])
             .run(['$location', 'WebSocketService', function ($location, wss) {
                 wss.setResponseHomeDir('event-resp');
-                $location.path('/red')
-                    .search('from', 'somewhere')
-                    .search('id', '20170501011000000')
-                    .search('other', '20170501011009999');
+//                $location.path('/configDetial')
+//                    .search('from', 'somewhere')
+//                    .search('id', '20170501011000000')
+//                    .search('other', '20170501011009999');
+                $location.path('/event');
             }]);
     </script>
 
