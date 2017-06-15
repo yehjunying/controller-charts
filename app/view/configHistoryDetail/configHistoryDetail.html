@@ -14,21 +14,22 @@
     </md-toolbar>
     <md-card>
         <md-card-actions layout="row">
+
             <md-menu flex>
-                <md-button ng-click="">
-                    Compare with {{configuration.raw.other.modifiedBy}} modified {{friendlyDateString(configuration.raw.other.modified)}}
+                <md-button ng-click="$mdMenu.open($event)">
+                    Compare with <strong>{{configuration.raw.other.modifiedBy}}</strong> modified <strong>{{friendlyDateString(configuration.raw.other.modified)}}</strong>
                     <md-icon md-menu-origin md-svg-icon="call:phone"></md-icon>
                 </md-button>
-                <md-menu-content width="1">
-                    <md-menu-item>
-                        <md-button ng-click="">
-                            <md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>
-                            Action
-                        </md-button>
-                    </md-menu-item>
-                    <!--<md-menu-item><md-button>Another action</md-button></md-menu-item>-->
-                </md-menu-content>
+                <!--<md-menu-content width="1">-->
+                    <!--<md-menu-item>-->
+                        <!--<md-button ng-click="">-->
+                            <!--<md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>-->
+                            <!--Action-->
+                        <!--</md-button>-->
+                    <!--</md-menu-item>-->
+                <!--</md-menu-content>-->
             </md-menu>
+
             <div flex></div>
             <md-button type="botton" class="btn btn-default pull-right" style="margin-right: 5px"
                        ng-click="setHideUnchangedItems()">
