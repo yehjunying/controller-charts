@@ -11,13 +11,18 @@
     <link rel="stylesheet" href="css/onos/onos.css">
     <link rel="stylesheet" href="css/onos/onos-theme.css">
     <link rel="stylesheet" href="css/onos/common.css">
+    <style>
+        a {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body ng-app="myApp" ng-cloak>
 
     <div ng-controller="appCtrl">
-        <a href="#configDetial?from=somewhere&id=20170501011000000&other=20170501011009999">ConfigDetial</a>
-        <a href="#event">Event</a>
+        <a ng-click="go('/configDetial?from=somewhere&id=20170501011000000&other=20170501011009999')">ConfigDetial</a>
+        <a ng-click="go('/event')">Event</a>
         <div ng-view></div>
     </div>
 
@@ -110,8 +115,20 @@
                         }
                     });
             })
-            .controller('appCtrl', ['$scope', function ($scope) {
+            .controller('appCtrl', ['$scope', '$location', function ($scope, $location) {
+                $scope.go = function (url) {
+                    var p = url.split('?'),
+                        path = p[0],
+                        qs = p[1],
+                        loc = $location.path(path);
 
+                    if (qs) {
+                        qs.split('&').forEach(function (kv) {
+                            kv = kv.split('=');
+                            loc.search(kv[0], kv[1]);
+                        })
+                    }
+                }
             }])
             .run(['$location', 'WebSocketService', function ($location, wss) {
                 wss.setResponseHomeDir('event-resp');
