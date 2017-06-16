@@ -1,0 +1,104 @@
+#ov-configHistory {
+    position: absolute;
+    overflow-y: auto;
+    margin-left: 22px;
+    margin-top: 18px;
+    height: 90%;
+    width: calc(100% - 30px);
+}
+
+/*#ov-configHistory h4 {
+    margin: unset;
+}*/
+
+/*#ov-configHistory .row {
+    padding-bottom: 5px;
+}*/
+
+/*#ov-configHistory .chat ul {
+    list-style: none;
+    padding: unset;
+    padding-left: 5px;
+}*/
+
+/*#ov-configHistory .chat .chat-date {
+    background-color: #f8f9fa;
+    height: 2em;
+}*/
+
+/*#ov-configHistory .chat ul li {
+    border-bottom: 1px solid #eee;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+}*/
+
+/*#ov-configHistory .chat ul li.danger {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: #ed1c24;
+}*/
+
+/*#ov-configHistory .chat ul li.warning {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(250, 187, 61);
+}*/
+
+/*#ov-configHistory .chat ul li.active {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(0, 69, 153);
+}*/
+
+#ov-configHistory .active {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(0, 69, 153);
+}
+
+#ov-configHistory .config-item {
+    border-bottom-width: 1px;
+    border-bottom-color: #ccc;
+    border-bottom-style: solid;
+}
+
+#ov-configHistory .config-item:nth-child(even) {
+    background-color: #FFFFFF;
+    /*border-bottom-width: 1px;*/
+    /*border-bottom-color: #ccc;*/
+    /*border-bottom-style: solid;*/
+}
+
+/*#ov-configHistory .chat .panel-body {
+    padding: unset;
+}*/
+
+/*.p-x-1 {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}*/
+
+/*#ov-configHistory .panel {
+    border-radius: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    margin-right: 22px;
+}*/
+
+/*#ov-configHistory .panel-heading {
+    background-color: #f8f9fa;
+}*/
+
+/*#ov-configHistory #search-result-detail {
+    border-radius: 0;
+    box-shadow: none;
+}*/
+
+/*#ov-configHistory .inline-box {
+    display: inline-block;
+}*/
+
+/*#ov-configHistory .title {
+    margin-top: 20px;
+}*/

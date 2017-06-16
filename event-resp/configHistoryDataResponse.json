@@ -1,0 +1,48 @@
+{
+    "currentVersionId": "20170501010000000",
+    "history": [{
+            "id": "20170501011000000",
+            "modified": "2017-05-01 01:10:00.000",
+            "modifiedBy": "mars",
+            "description": "Device had added; Link had added"
+        },
+        {
+            "id": "20170501010000000",
+            "modified": "2017-05-01 01:00:00.000",
+            "modifiedBy": "karaf",
+            "description": "Network had modified",
+
+            "active": true
+        },
+        {
+            "id": "20170501005000000",
+            "modified": "2017-05-01 00:50:00.000",
+            "modifiedBy": "karaf",
+            "description": "Global had modified; Device had removed; Link had removed; Network had removed"
+        },
+        {
+            "id": "20170501004000000",
+            "modified": "2017-05-01 00:40:00.000",
+            "modifiedBy": "mars",
+            "description": "Network had added; Global had modified"
+        },
+        {
+            "id": "20170501003000000",
+            "modified": "2017-05-01 00:30:00.000",
+            "modifiedBy": "mars",
+            "description": "Device had added; Link had added"
+        },
+        {
+            "id": "20170501002000000",
+            "modified": "2017-05-01 00:20:00.000",
+            "modifiedBy": "who",
+            "description": "Global had modified"
+        },
+        {
+            "id": "20170501001000000",
+            "modified": "2017-05-01 00:10:00.000",
+            "modifiedBy": "karaf",
+            "description": "init version"
+        }
+    ]
+}

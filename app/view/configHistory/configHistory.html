@@ -1,0 +1,88 @@
+<!--<link rel="stylesheet" href="data/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">
+<link rel="stylesheet" href="app/view/configHistory/configHistory.css">-->
+
+<div id="ov-configHistory" layout="column" layout-fill>
+    <!--<div class="panel panel-default">-->
+
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button ng-click="backToPreviousPage()">
+                    Back
+                </md-button>
+
+                <h2 flex md-truncate>History</h2>
+            </div>
+        </md-toolbar>
+
+    <md-card>
+        <md-card-content style="padding: unset;">
+        <!--<div class="panel-body">-->
+            <!--<div class="row p-x-1 title">-->
+                <!--<div class="col-md-1">-->
+                    <!--<button class="btn btn-primary" ng-click="backToPreviousPage()">Back</button>-->
+                <!--</div>-->
+                <!--<div class="col-md-11">-->
+                    <!--<h2 class="inline-box">History</h2>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--<div class="row p-x-1">-->
+                <!--<div class="col-md-12">-->
+                    <!--<div id="search-result-detail" class="panel panel-default chat">-->
+                        <!--<div id="event-view" class="panel-body">-->
+                            <!--<ul>-->
+                                <md-list style="padding: unset;">
+                                <!--<div ng-repeat="item in configHistory">-->
+                                    <md-list-item class="config-item"
+                                                  ng-repeat="item in configHistory"
+                                                  ng-class="{ 'active': item.active }">
+
+                                    <!--<li ng-class="{ 'active': item.active }" >-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-xs-8 col-md-9">-->
+                                                <div>
+                                                <div>
+                                                    <strong class="primary-font">{{friendlyDateString(item.modified)}}</strong>
+                                                    {{$index}}
+                                                    <!--<strong class="primary-font">{{item.description}}</strong>-->
+                                                    <!--<small class="text-muted">test</small>-->
+                                                </div>
+                                                <small>
+                                                    description
+                                                    <!--by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}-->
+                                                </small>
+                                                </div>
+                                            <!--</div>-->
+
+                                            <!--<div class="col-xs-4 col-md-3">-->
+                                                <!--<div class="btn-group pull-right">-->
+                                                    <md-button class="md-secondary"
+                                                            ng-click="setSearchOptionsAndSearch({id: item.id, other: configHistory[$index+1].id})">View
+                                                    </md-button>
+                                                    <md-button class="md-secondary"
+                                                            ng-click="restore(item.id)"
+                                                            ng-disabled="item.active">Restore
+                                                    </md-button>
+                                                <!--</div>-->
+                                            <!--</div>-->
+
+                                        <!--</div>-->
+                                    <!--</li>-->
+
+                                        </div>
+                                    </md-list-item>
+                                <!--</div>-->
+                                </md-list>
+                            <!--</ul>-->
+                        <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
+
+            <!--</div>-->
+        </md-card-content>
+        <!--</div>-->
+    </md-card>
+    <!--</div>-->
+</div>

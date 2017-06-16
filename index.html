@@ -21,7 +21,8 @@
 <body ng-app="myApp" ng-cloak>
 
     <div ng-controller="appCtrl">
-        <a ng-click="go('/configDetial?from=somewhere&id=20170501011000000&other=20170501011009999')">ConfigDetial</a>
+        <a ng-click="go('/configHistory?from=somewhere')">ConfigHistory</a> |
+        <a ng-click="go('/configHistoryDetail?from=somewhere&id=20170501011000000&other=20170501011009999')">configHistoryDetail</a> |
         <a ng-click="go('/event')">Event</a>
         <div ng-view></div>
     </div>
@@ -46,15 +47,51 @@
 
     <script src="node_modules/lodash/lodash.min.js"></script>
 
+    <!-- Services -->
     <script src="app/services/mock/websocket.js"></script>
+    <script src="app/services/mock/nav.js"></script>
 
     <!-- Your application bootstrap  -->
     <script type="text/javascript">
 
-        angular.module("myApp", ['ngRoute', 'oc.lazyLoad', 'mockUtils', 'ngMaterial'])
+        angular.module("myApp", ['ngRoute', 'oc.lazyLoad', 'mockUtils', 'onosNav', 'ngMaterial'])
             .config(function ($routeProvider) {
                 $routeProvider
-                    .when("/configDetial", {
+                    .when("/configHistory", {
+                        templateUrl: "app/view/configHistory/configHistory.html",
+                        controller: 'OvConfigHistoryCtrl',
+                        resolve: {
+                            files: ['$ocLazyLoad', function ($ocLazyLoad) {
+                                return $ocLazyLoad.load([
+                                    {
+                                        files:[
+                                            'node_modules/jquery/dist/jquery.min.js',
+//                                            'node_modules/chart.js/dist/Chart.min.js',
+//                                            'node_modules/d3/d3.min.js',
+                                            'node_modules/moment/min/moment.min.js',
+//                                            'elasticsearch.angular.js',
+//                                            'app/services/essearch.js',
+//                                            'app/view/event/event-stats-bar.js',
+                                            'node_modules/bootstrap/dist/js/bootstrap.min.js',
+                                            'app/view/configHistory/configHistory.js'
+                                        ],
+                                        serie: true
+                                    },
+                                    {
+                                        files: [
+                                            'node_modules/bootstrap/dist/css/bootstrap.css',
+                                            'app/view/configHistory/configHistory.css'
+                                        ],
+                                        serie: true
+                                    },
+//                                    {
+//                                        files: ['app/view/configHistoryDetail/ang-accordion.css']
+//                                    }
+                                ]);
+                            }]
+                        }
+                    })
+                    .when("/configHistoryDetail", {
                         templateUrl: "app/view/configHistoryDetail/configHistoryDetail.html",
                         controller: 'OvConfigHistoryDetailCtrl',
                         resolve: {
@@ -136,7 +173,7 @@
 //                    .search('from', 'somewhere')
 //                    .search('id', '20170501011000000')
 //                    .search('other', '20170501011009999');
-                $location.path('/event');
+                $location.path('/configHistoryDetail').search('from', 'somewhere');
             }]);
     </script>
 
