@@ -21,7 +21,8 @@
 <body ng-app="myApp" ng-cloak>
 
     <div ng-controller="appCtrl">
-        <a ng-click="go('/accountCfg')">accountCfgy</a> |
+        <a ng-click="go('/dashboard')">dashboard</a> |
+        <a ng-click="go('/accountCfg')">accountCfg</a> |
         <a ng-click="go('/configHistory?from=somewhere')">ConfigHistory</a> |
         <a ng-click="go('/configHistoryDetail?from=somewhere&id=20170501011000000&other=20170501011009999')">configHistoryDetail</a> |
         <a ng-click="go('/event')">Event</a>
@@ -58,6 +59,34 @@
         angular.module("myApp", ['ngRoute', 'oc.lazyLoad', 'mockUtils', 'onosNav', 'ngMaterial'])
             .config(function ($routeProvider) {
                 $routeProvider
+                    .when("/dashboard", {
+                        templateUrl: "app/view/dashboard/dashboard.html",
+                        controller: 'OvDashboardCtrl',
+                        resolve: {
+                            files: ['$ocLazyLoad', function ($ocLazyLoad) {
+                                return $ocLazyLoad.load([
+                                    {
+                                        files:[
+                                            'node_modules/jquery/dist/jquery.min.js',
+                                            'node_modules/chart.js/dist/Chart.min.js',
+                                            'elasticsearch.angular.js',
+                                            'app/services/essearch.js',
+                                            'app/view/dashboard/controller-chart.js',
+                                            'app/view/dashboard/dashboard.js'
+                                        ],
+                                        serie: true
+                                    },
+                                    {
+                                        files: [
+                                            'node_modules/bootstrap/dist/css/bootstrap.min.css',
+                                            'app/view/dashboard/dashboard.css'
+                                        ],
+                                        serie: true
+                                    }
+                                ]);
+                            }]
+                        }
+                    })
                     .when("/accountCfg", {
                         templateUrl: "app/view/accountCfg/accountCfg.html",
                         controller: 'OvAccountCfgCtrl',
@@ -66,7 +95,7 @@
                                 return $ocLazyLoad.load([
                                     {
                                         files:[
-                                            'node_modules/jquery/dist/jquery.min.js',
+                                            // 'node_modules/jquery/dist/jquery.min.js',
                                             'node_modules/moment/min/moment.min.js',
                                             'app/view/accountCfg/accountCfg.js'
                                         ],
@@ -74,7 +103,7 @@
                                     },
                                     {
                                         files: [
-                                            'node_modules/bootstrap/dist/js/bootstrap.min.js',
+                                            'node_modules/bootstrap/dist/css/bootstrap.min.css',
                                             'app/view/accountCfg/accountCfg.css'
                                         ],
                                         serie: true
@@ -180,11 +209,61 @@
             }])
             .run(['$location', 'WebSocketService', function ($location, wss) {
                 wss.setResponseHomeDir('event-resp');
-//                $location.path('/configDetial')
-//                    .search('from', 'somewhere')
-//                    .search('id', '20170501011000000')
-//                    .search('other', '20170501011009999');
-                $location.path('/configHistoryDetail').search('from', 'somewhere');
+                wss.bindResponseData({
+                        dashboardTopRanksDataResponse: function (req) {
+                            var deviceCfgs = [
+                                {"id": "rest:1.1.1.1:443", "name": "Spine-1", "ip": "1.1.1.1", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"},
+                                {"id": "rest:1.1.1.2:443", "name": "Spine-2", "ip": "1.1.1.2", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"}
+                            ];
+
+                            var getRandomInt = function(min, max) {
+                                return Math.floor(Math.random() * (max - min + 1)) + min;
+                            };
+
+                            var randomTop5Traffic = function() {
+                                var i, traffic = [];
+
+                                for (i = 0; i < 5; ++i) {
+                                    traffic.push({
+                                        device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
+                                        port: getRandomInt(1, 52),
+                                        transmitUtilization: getRandomInt(1, 100),
+                                        receiveUtilization: getRandomInt(1, 100)
+                                    });
+                                }
+
+                                return traffic;
+                            };
+
+                            var randomTop5DropCount = function() {
+                                var i, dropCount = [];
+
+                                for (i = 0; i < 5; ++i) {
+                                    dropCount.push({
+                                        device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
+                                        port: getRandomInt(1, 52),
+                                        transmitDropCount: getRandomInt(1, 10000),
+                                        receiveDropCount: getRandomInt(1, 10000)
+                                    });
+                                }
+
+                                return dropCount;
+                            };
+
+                            return {
+                                coreLink: {
+                                    traffic: randomTop5Traffic(),
+                                    dropCount: randomTop5DropCount()
+                                },
+                                accessLink: {
+                                    traffic: randomTop5Traffic(),
+                                    dropCount: randomTop5DropCount()
+
+                                }
+                            };
+                        }
+                    });
+                $location.path('/dashboard');
             }]);
     </script>
 

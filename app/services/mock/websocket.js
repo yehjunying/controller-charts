@@ -38,6 +38,8 @@
                             this[key].fn = fn;
                         }, _handlers);
                     },
+                    unbindHandlers: function (handlers) {
+                    },
                     setResponseHomeDir: function (dir) {
                         _respHome = dir;
                     },
@@ -49,6 +51,7 @@
                             this[key] = this[key] || createHandler();
                             this[key].data = data;
                         }, _handlers);
+                        console.log(_handlers);
                     },
                     sendEvent: function (key, data) {
                         console.log(_name + ': sendEvent: ' + key + ' data: ' + JSON.stringify(data));

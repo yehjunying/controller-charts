@@ -1,0 +1,21 @@
+{
+    "controller": {
+        "totalCount": 1
+    },
+    "spine": {
+        "totalCount": 6
+    },
+    "leaf": {
+        "totalCount": 32
+    },
+    "rack": {
+        "totalCount": 16
+    },
+    "server": {
+        "totalCount": 640
+    },
+    "link": {
+        "totalCount": 192,
+        "issuedCount": 4
+    }
+}

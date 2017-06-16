@@ -1,0 +1,49 @@
+[{
+        "name": "controller1",
+        "cpu": {
+            "utilization": 15,
+            "frequencyInGhz": 2.20
+        },
+        "memory": {
+            "utilization": 51,
+            "totalInGb": 4,
+            "usedInGb": 1.5
+        },
+        "ethernet": {
+            "transmitInKbps": 50,
+            "receiveInKbps": 55
+        }
+    },
+    {
+        "name": "controller2",
+        "cpu": {
+            "utilization": 25,
+            "frequencyInGhz": 2.20
+        },
+        "memory": {
+            "utilization": 51,
+            "totalInGb": 4,
+            "usedInGb": 1.5
+        },
+        "ethernet": {
+            "transmitInKbps": 50,
+            "receiveInKbps": 55
+        }
+    },
+    {
+        "name": "controller3",
+        "cpu": {
+            "utilization": 50,
+            "frequencyInGhz": 2.20
+        },
+        "memory": {
+            "utilization": 51,
+            "totalInGb": 4,
+            "usedInGb": 1.5
+        },
+        "ethernet": {
+            "transmitInKbps": 50,
+            "receiveInKbps": 55
+        }
+    }
+]

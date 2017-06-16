@@ -1,0 +1,867 @@
+#ov-dashboard {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+}
+
+#ov-dashboard h3,
+#ov-dashboard h4 {
+    font-weight: 300;
+}
+
+#ov-dashboard .large {
+    font-size: 2em;
+}
+
+#ov-dashboard .medium {
+    font-size: 1.5em;
+}
+
+#ov-dashboard .text-muted {
+    color: #9fadbb;
+}
+
+#ov-dashboard .container {
+    overflow-y: auto;
+    position: absolute;
+    padding-left: 22px;
+    padding-right: 22px;
+    padding-top: 18px;
+    min-width: 1200px;
+    width: calc(100% - 10px);
+    height: 95%;
+}
+
+#ov-dashboard .controller > .panel-body {
+    height: 380px;
+}
+
+#ov-dashboard .canvasjs-chart-credit {
+    display: none;
+}
+
+#ov-dashboard .color-gray { color: #5f6468; }
+#ov-dashboard .color-blue { color: #30a5ff; }
+#ov-dashboard .color-teal { color: #1ebfae; }
+#ov-dashboard .color-orange { color: #ffb53e; }
+#ov-dashboard .color-red { color: #f9243f; }
+
+#ov-dashboard .bg-primary .glyphicon-remove { color: #5f6468;}
+#ov-dashboard .bg-primary .glyphicon-remove:hover { color: #ef4040;}
+
+#ov-dashboard .no-padding {
+    padding: 0; margin: 0;
+}
+
+#ov-dashboard .glyphicon-xl {
+    font-size: 6em;
+}
+
+#ov-dashboard .glyphicon-l {
+    font-size: 3em;
+}
+
+#ov-dashboard .glyphicon-m {
+    font-size: 2em;
+}
+
+#ov-dashboard .glyphicon-s {
+    font-size: 0.75em;
+}
+
+#ov-dashboard .form-control {
+    border: 1px solid #eee;
+    box-shadow: none;
+}
+
+#ov-dashboard .form-control:focus {
+    border: 1px solid #30a5ff;
+    outline: 0;
+    box-shadow: inset 0px 0px 0px 1px #30a5ff;
+}
+
+#ov-dashboard a.btn:hover,
+#ov-dashboard button:hover {
+    opacity: 0.8;
+}
+
+#ov-dashboard a.btn:active,
+#ov-dashboard button:active {
+    box-shadow: inset 0px 0px 500px rgba(0,0,0,.1);
+    opacity: 1;
+}
+
+#ov-dashboard .btn-default,
+#ov-dashboard .btn-default:hover,
+#ov-dashboard .btn-default:focus,
+#ov-dashboard .btn-default:active,
+#ov-dashboard .btn-default.active,
+#ov-dashboard .open > .dropdown-toggle.btn-default,
+#ov-dashboard .btn-default.disabled,
+#ov-dashboard .btn-default[disabled],
+#ov-dashboard fieldset[disabled] .btn-default,
+#ov-dashboard .btn-default.disabled:hover,
+#ov-dashboard .btn-default[disabled]:hover,
+#ov-dashboard fieldset[disabled] .btn-default:hover,
+#ov-dashboard .btn-default.disabled:focus,
+#ov-dashboard .btn-default[disabled]:focus,
+#ov-dashboard fieldset[disabled] .btn-default:focus,
+#ov-dashboard .btn-default.disabled:active,
+#ov-dashboard .btn-default[disabled]:active,
+#ov-dashboard fieldset[disabled] .btn-default:active,
+#ov-dashboard .btn-default.disabled.active,
+#ov-dashboard .btn-default[disabled].active,
+#ov-dashboard fieldset[disabled] .btn-default.active {
+    background-color: #e9ecf2;
+    border-color: #e9ecf2;
+    color: #1b3548;
+}
+
+#ov-dashboard .btn-primary,
+#ov-dashboard .btn-primary:hover,
+#ov-dashboard .btn-primary:focus,
+#ov-dashboard .btn-primary:active,
+#ov-dashboard .btn-primary.active,
+#ov-dashboard .open > .dropdown-toggle.btn-primary,
+#ov-dashboard .btn-primary.disabled,
+#ov-dashboard .btn-primary[disabled],
+#ov-dashboard fieldset[disabled] .btn-primary,
+#ov-dashboard .btn-primary.disabled:hover,
+#ov-dashboard .btn-primary[disabled]:hover,
+#ov-dashboard fieldset[disabled] .btn-primary:hover,
+#ov-dashboard .btn-primary.disabled:focus,
+#ov-dashboard .btn-primary[disabled]:focus,
+#ov-dashboard fieldset[disabled] .btn-primary:focus,
+#ov-dashboard .btn-primary.disabled:active,
+#ov-dashboard .btn-primary[disabled]:active,
+#ov-dashboard fieldset[disabled] .btn-primary:active,
+#ov-dashboard .btn-primary.disabled.active,
+#ov-dashboard .btn-primary[disabled].active,
+#ov-dashboard fieldset[disabled] .btn-primary.active {
+    background-color: #30a5ff;
+    border-color: #30a5ff;
+}
+
+#ov-dashboard .btn-success,
+#ov-dashboard .btn-success:hover,
+#ov-dashboard .btn-success:focus,
+#ov-dashboard .btn-success:active,
+#ov-dashboard .btn-success.active,
+#ov-dashboard .open > .dropdown-toggle.btn-success,
+#ov-dashboard .btn-success.disabled,
+#ov-dashboard .btn-success[disabled],
+#ov-dashboard fieldset[disabled] .btn-success,
+#ov-dashboard .btn-success.disabled:hover,
+#ov-dashboard .btn-success[disabled]:hover,
+#ov-dashboard fieldset[disabled] .btn-success:hover,
+#ov-dashboard .btn-success.disabled:focus,
+#ov-dashboard .btn-success[disabled]:focus,
+#ov-dashboard fieldset[disabled] .btn-success:focus,
+#ov-dashboard .btn-success.disabled:active,
+#ov-dashboard .btn-success[disabled]:active,
+#ov-dashboard fieldset[disabled] .btn-success:active,
+#ov-dashboard .btn-success.disabled.active,
+#ov-dashboard .btn-success[disabled].active,
+#ov-dashboard fieldset[disabled] .btn-success.active {
+    background-color: #8ad919;
+    border-color: #8ad919;
+}
+
+#ov-dashboard .btn-danger,
+#ov-dashboard .btn-danger:hover,
+#ov-dashboard .btn-danger:focus,
+#ov-dashboard .btn-danger:active,
+#ov-dashboard .btn-danger.active,
+#ov-dashboard .open > .dropdown-toggle.btn-danger,
+#ov-dashboard .btn-danger.disabled,
+#ov-dashboard .btn-danger[disabled],
+#ov-dashboard fieldset[disabled] .btn-danger,
+#ov-dashboard .btn-danger.disabled:hover,
+#ov-dashboard .btn-danger[disabled]:hover,
+#ov-dashboard fieldset[disabled] .btn-danger:hover,
+#ov-dashboard .btn-danger.disabled:focus,
+#ov-dashboard .btn-danger[disabled]:focus,
+#ov-dashboard fieldset[disabled] .btn-danger:focus,
+#ov-dashboard .btn-danger.disabled:active,
+#ov-dashboard .btn-danger[disabled]:active,
+#ov-dashboard fieldset[disabled] .btn-danger:active,
+#ov-dashboard .btn-danger.disabled.active,
+#ov-dashboard .btn-danger[disabled].active,
+#ov-dashboard fieldset[disabled] .btn-danger.active {
+    background-color: #f9243f;
+    border-color: #f9243f;
+}
+
+#ov-dashboard .btn-warning,
+#ov-dashboard .btn-warning:hover,
+#ov-dashboard .btn-warning:focus,
+#ov-dashboard .btn-warning:active,
+#ov-dashboard .btn-warning.active,
+#ov-dashboard .open > .dropdown-toggle.btn-warning,
+#ov-dashboard .btn-warning.disabled,
+#ov-dashboard .btn-warning[disabled],
+#ov-dashboard fieldset[disabled] .btn-warning,
+#ov-dashboard .btn-warning.disabled:hover,
+#ov-dashboard .btn-warning[disabled]:hover,
+#ov-dashboard fieldset[disabled] .btn-warning:hover,
+#ov-dashboard .btn-warning.disabled:focus,
+#ov-dashboard .btn-warning[disabled]:focus,
+#ov-dashboard fieldset[disabled] .btn-warning:focus,
+#ov-dashboard .btn-warning.disabled:active,
+#ov-dashboard .btn-warning[disabled]:active,
+#ov-dashboard fieldset[disabled] .btn-warning:active,
+#ov-dashboard .btn-warning.disabled.active,
+#ov-dashboard .btn-warning[disabled].active,
+#ov-dashboard fieldset[disabled] .btn-warning.active {
+    background-color: #ffb53e;
+    border-color: #ffb53e;
+}
+
+/*Backgrounds*/
+
+#ov-dashboard .bg-primary {
+    color: #1b3548;
+    background-color: #e9ecf2;
+}
+#ov-dashboard a.bg-primary:hover {
+    background-color: #e9ecf2;
+}
+#ov-dashboard .bg-success {
+    color: #fff;
+    background-color: #8ad919;
+}
+#ov-dashboard a.bg-success:hover {
+    background-color: #8ad919;
+}
+#ov-dashboard .bg-success a {
+    color: rgba(255, 255, 255, .75);
+}
+#ov-dashboard .bg-info {
+    color: #fff;
+    background-color: #30a5ff;
+}
+#ov-dashboard a.bg-info:hover {
+    background-color: #30a5ff;
+}
+#ov-dashboard .bg-info a {
+    color: rgba(255, 255, 255, .75);
+}
+#ov-dashboard .bg-warning {
+    color: #fff;
+    background-color: #ffb53e;
+}
+#ov-dashboard a.bg-warning:hover {
+    background-color: #ffb53e;
+}
+#ov-dashboard .bg-warning a {
+    color: rgba(255, 255, 255, .75);
+}
+#ov-dashboard .bg-danger {
+    color: #fff;
+    background-color: #f9243f;
+}
+#ov-dashboard a.bg-danger:hover {
+    background-color: #f9243f;
+}
+#ov-dashboard .bg-danger a {
+    color: rgba(255, 255, 255, .75);
+}
+
+/*Panels*/
+
+#ov-dashboard .panel {
+    background: #fff;
+    border-radius: 0;
+    border: 1px solid rgba(0,0,0,0.26);
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+}
+
+#ov-dashboard .panel-heading {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.025em;
+    height: 66px;
+    line-height: 45px;
+}
+
+#ov-dashboard .panel-default .panel-heading {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    color: #5f6468;
+}
+
+#ov-dashboard .panel-footer {
+    background: #f6f6f6;
+    border-top: 1px solid rgba(0,0,0,0.26);
+}
+
+#ov-dashboard .panel-widget {
+    padding: 0;
+    position: relative;
+}
+
+#ov-dashboard .panel-widget .panel-footer {
+    border: 0;
+    text-align: center;
+}
+
+#ov-dashboard .panel-footer .input-group {
+    padding: 0px;
+    margin: 0 -5px;
+}
+
+#ov-dashboard .panel-footer .input-group-btn:last-child>.btn,
+#ov-dashboard .panel-footer .input-group-btn:last-child>.btn-group {
+    margin: 0;
+}
+
+#ov-dashboard .panel-widget .panel-footer a {
+    color: #999;
+}
+
+#ov-dashboard .panel-widget .panel-footer a:hover {
+    color: #666;
+    text-decoration: none;
+}
+
+#ov-dashboard .panel-blue { background: #30a5ff; color: #fff; }
+#ov-dashboard .panel-teal { background: #1ebfae; color: #fff; }
+#ov-dashboard .panel-orange { background: #ffb53e; color: #fff; }
+#ov-dashboard .panel-red { background: #f9243f; color: #fff; }
+#ov-dashboard .panel-green { background: #47D147; color: #fff; }
+#ov-dashboard .panel-gray { background: #34314c; color: #fff; }
+
+#ov-dashboard .panel-blue .panel-body p,
+#ov-dashboard .panel-teal .panel-body p,
+#ov-dashboard .panel-orange .panel-body p,
+#ov-dashboard .panel-red .panel-body p,
+#ov-dashboard .panel-green .panel-body p {
+    color: #fff;
+    color: rgba(255, 255, 255, .8);
+}
+
+#ov-dashboard .panel-blue .panel-heading,
+#ov-dashboard .panel-teal .panel-heading,
+#ov-dashboard .panel-orange .panel-heading,
+#ov-dashboard .panel-red .panel-heading,
+#ov-dashboard .panel-green .panel-heading {
+    border-bottom: 1px solid rgba(255, 255, 255, .2);
+}
+
+#ov-dashboard .panel-blue .text-muted,
+#ov-dashboard .panel-teal .text-muted,
+#ov-dashboard .panel-orange .text-muted,
+#ov-dashboard .panel-red .text-muted,
+#ov-dashboard .panel-green .text-muted {
+    color: rgba(255, 255, 255, .5);
+}
+
+#ov-dashboard .dark-overlay {
+    background: rgba(0, 0, 0, .05);
+    text-align: center;
+}
+
+#ov-dashboard .widget-left {
+    height: 120px;
+    padding-top: 40px;
+    padding-left: 20px;
+    text-align: center;
+}
+
+#ov-dashboard .widget-right {
+    text-align: left;
+    line-height: 1.6em;
+    margin: 0px;
+    padding: 20px;
+    height: 120px;
+    color: #999;
+    font-weight: 300;
+    background: #fff;
+}
+
+#ov-dashboard .widget-right-controller {
+    text-align: left;
+    line-height: 1.6em;
+    margin: 0px;
+    padding-top: 40px;
+    padding-left: 20px;
+    height: 120px;
+    color: rgb(51, 51, 51);
+    /*color: #fff;*/
+    font-weight: 300;
+    /*background: rgba(48,165,255,0.8);*/
+}
+
+#ov-dashboard .widget-right-spine {
+    text-align: left;
+    line-height: 1.6em;
+    margin: 0px;
+    padding-top: 40px;
+    padding-left: 20px;
+    height: 120px;
+    color: rgb(51, 51, 51);
+    /*color: #fff;*/
+    font-weight: 300;
+    /*background: rgba(255, 181, 62, 0.8);*/
+}
+
+#ov-dashboard .widget-right-leaf {
+    text-align: left;
+    line-height: 1.6em;
+    margin: 0px;
+    padding-top: 40px;
+    padding-left: 20px;
+    height: 120px;
+    color: rgb(51, 51, 51);
+    /*color: #fff;*/
+    font-weight: 300;
+    /*background: rgba(71, 209, 71, 0.8);*/
+}
+
+#ov-dashboard .widget-right-rsl {
+    text-align: left;
+    line-height: 1.6em;
+    margin: 0px;
+    padding-top: 8px;
+    height: 40px;
+    color: rgb(51, 51, 51);
+    /*color: #fff;*/
+    font-weight: 300;
+    /*background: rgba(30, 191, 174, 0.9);*/
+}
+
+#ov-dashboard .widget-left-rsl {
+    height: 40px;
+    padding-top: 8px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    #ov-dashboard .widget-right {
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        /*border-top-left-radius: 0px;*/
+        /*border-top-right-radius: 0px;*/
+        /*border-bottom-left-radius: 4px;*/
+        /*border-bottom-right-radius: 4px;*/
+    }
+}
+
+@media (max-width: 768px) {
+    #ov-dashboard .widget-left {
+        /*border-top-left-radius: 4px;*/
+        /*border-top-right-radius: 4px;*/
+        /*border-bottom-left-radius: 0px;*/
+        /*border-bottom-right-radius: 0px;*/
+    }
+}
+
+#ov-dashboard .widget-right .text-muted {
+    color: #9fadbb;
+}
+#ov-dashboard .widget-right .large {
+    color: #5f6468;
+}
+
+#ov-dashboard .text-muted-xx {
+    color: #fefefe;
+}
+
+#ov-dashboard .panel-blue-bg-white .widget-left { background: #fff; color: #30a5ff; border-right: 1px solid #ccc; }
+#ov-dashboard .panel-teal-bg-white  .widget-left { background: #fff; color: #1ebfae; border-right: 1px solid #ccc; }
+#ov-dashboard .panel-orange-bg-white  .widget-left { background: #fff; color: #ffb53e; border-right: 1px solid #ccc; }
+#ov-dashboard .panel-red-bg-white  .widget-left { background: #fff; color: #f9243f; border-right: 1px solid #ccc; }
+#ov-dashboard .panel-green-bg-white  .widget-left { background: #fff; color: #47D147; border-right: 1px solid #ccc; }
+#ov-dashboard .panel-gray-bg-white  .widget-left { background: #fff; color: #34314c; border-right: 1px solid #ccc; }
+
+
+#ov-dashboard .panel-blue .widget-left { background: #30a5ff; color: #fff; }
+#ov-dashboard .panel-teal .widget-left { background: #1ebfae; color: #fff; }
+#ov-dashboard .panel-orange .widget-left { background: #ffb53e; color: #fff; }
+#ov-dashboard .panel-red .widget-left { background: #f9243f; color: #fff; }
+#ov-dashboard .panel-green .widget-left { background: #47D147; color: #fff; }
+#ov-dashboard .panel-gray .widget-left { background: #34314c; color: #fff; }
+
+#ov-dashboard .panel-widget {
+    background: #fff;
+}
+
+/*Jumbotron*/
+
+#ov-dashboard .jumbotron {
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    color: #5f6468;
+}
+
+/*Tabs*/
+
+#ov-dashboard .panel .tabs {
+    margin: 0;
+    padding: 0;
+}
+
+#ov-dashboard .tab-content {
+    padding: 15px;
+}
+
+/*Breadcrumbs*/
+
+#ov-dashboard .breadcrumb {
+    border-radius: 0;
+    padding: 10px 15px;
+    background: #e9ecf2;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    margin: 0 ;
+}
+
+#ov-dashboard h1.page-header {
+    margin-top: 30px;
+    border-bottom: 0;
+}
+
+/*Charts*/
+
+#ov-dashboard .main-chart {
+    background: #fff;
+}
+
+#ov-dashboard .easypiechart-panel {
+    text-align: center;
+    padding: 1px 0;
+    margin-bottom: 20px;
+}
+
+#ov-dashboard .placeholder h2 {
+    margin-bottom: 0px;
+}
+
+#ov-dashboard .donut {
+    width: 100%;
+}
+
+#ov-dashboard .easypiechart {
+    position: relative;
+    text-align: center;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto 10px auto;
+}
+
+#ov-dashboard .easypiechart .percent {
+    display: block;
+    position: absolute;
+    font-size: 26px;
+    top: 38px;
+    width: 120px;
+}
+
+#easypiechart-blue .percent { color: #30a5ff;}
+#easypiechart-teal .percent { color: #1ebfae;}
+#easypiechart-orange .percent { color: #ffb53e;}
+#easypiechart-red .percent { color: #ef4040;}
+
+/*Calendar Widget*/
+
+#calendar, .datepicker-inline {
+    width: 100%;
+}
+
+#calendar table {
+    width: 100%;
+}
+
+#ov-dashboard .datepicker table tr td.old,
+#ov-dashboard .datepicker table tr td.new {
+    color: rgba(255, 255, 255, .50);
+}
+
+#ov-dashboard .datepicker table tr td.active,
+#ov-dashboard .datepicker table tr td.active:hover,
+#ov-dashboard .datepicker table tr td.active.disabled,
+#ov-dashboard .datepicker table tr td.active.disabled:hover,
+#ov-dashboard .datepicker table tr td.active:hover,
+#ov-dashboard .datepicker table tr td.active:hover:hover,
+#ov-dashboard .datepicker table tr td.active.disabled:hover,
+#ov-dashboard .datepicker table tr td.active.disabled:hover:hover,
+#ov-dashboard .datepicker table tr td.active:focus,
+#ov-dashboard .datepicker table tr td.active:hover:focus,
+#ov-dashboard .datepicker table tr td.active.disabled:focus,
+#ov-dashboard .datepicker table tr td.active.disabled:hover:focus,
+#ov-dashboard .datepicker table tr td.active:active,
+#ov-dashboard .datepicker table tr td.active:hover:active,
+#ov-dashboard .datepicker table tr td.active.disabled:active,
+#ov-dashboard .datepicker table tr td.active.disabled:hover:active,
+#ov-dashboard .datepicker table tr td.active.active,
+#ov-dashboard .datepicker table tr td.active:hover.active,
+#ov-dashboard .datepicker table tr td.active.disabled.active,
+#ov-dashboard .datepicker table tr td.active.disabled:hover.active,
+#ov-dashboard .open .dropdown-toggle.datepicker table tr td.active,
+#ov-dashboard .open .dropdown-toggle.datepicker table tr td.active:hover,
+#ov-dashboard .open .dropdown-toggle.datepicker table tr td.active.disabled,
+#ov-dashboard .open .dropdown-toggle.datepicker table tr td.active.disabled:hover {
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, .5);
+    border-color: #285e8e;
+}
+
+#ov-dashboard .datepicker table tr td span:hover,
+#ov-dashboard .datepicker thead tr:first-child th:hover,
+#ov-dashboard .datepicker tfoot tr th:hover,
+#ov-dashboard .datepicker table tr td.day:hover,
+#ov-dashboard .datepicker table tr td.day.focused {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+#ov-dashboard .panel-heading .glyphicon {
+    margin-right: 10px;
+}
+
+/*Todo List Widget*/
+
+#ov-dashboard .todo-list-item .glyphicon {
+    margin-right:5px;
+    color: #9fadbb;
+}
+
+#ov-dashboard .todo-list-item .glyphicon:hover {
+    margin-right:5px;
+    color: #1b3548;
+}
+
+#ov-dashboard .todo-list {
+    padding: 0;
+    margin: -15px;
+    background: #fff;
+    color: #5f6468;
+}
+
+#checkbox {
+    margin: 0;
+}
+
+#ov-dashboard .todo-list .checkbox {
+    display:inline-block;
+    margin: 0px;
+}
+
+#ov-dashboard .panel-body input[type=checkbox]:checked + label {
+    text-decoration: line-through;
+    color: #777;
+}
+
+#ov-dashboard .todo-list-item {
+    list-style: none;
+    line-height: 0.9;
+    padding: 14px 15px 8px 15px;
+}
+
+#ov-dashboard .todo-list-item:hover, a.todo-list-item:focus {
+    text-decoration: none;
+    background-color: #f6f6f6;
+}
+
+#ov-dashboard .todo-list-item .trash .glyph:hover {
+    color: #ef4040;
+}
+
+
+/*Chat Widget*/
+
+#ov-dashboard .chat ul {
+    list-style: none;
+    margin-top: -15px;
+    /*margin: -15px;*/
+    /*padding: 15px;*/
+}
+
+#ov-dashboard .chat ul li {
+    /*margin-bottom: 5px;*/
+    /*padding: 7px 5px;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+#ov-dashboard .chat ul li.left .chat-body { margin-left: 10px;}
+#ov-dashboard .chat ul li.right .chat-body { margin-right: 10px;}
+
+#ov-dashboard .chat ul li .chat-body p {
+    margin: 0;
+}
+
+#ov-dashboard .chat ul .glyphicon {
+    margin-right: 5px;
+}
+
+#ov-dashboard .chat .panel-body {
+    overflow-y: scroll;
+    height: 380px;
+}
+
+#ov-dashboard .chat .panel-body ul {
+    padding-left: 0px;
+    margin-left: -15px;
+}
+
+#ov-dashboard .chat-body small {
+    margin-left: 5px;
+}
+
+#ov-dashboard .chat-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 20px;
+    color: #fff;
+    line-height: 20px;
+    text-align: center;
+    background: rgba(226,8,12,0.9)
+}
+
+#ov-dashboard .chat ul li.danger {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: #ed1c24
+}
+
+#ov-dashboard .chat ul li.warning {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: rgb(250, 187, 61)
+}
+
+#ov-dashboard .chat ul li.info {
+    border-left: solid;
+    border-left-width: 0.5em;
+    border-left-color: white;
+}
+
+/*Tables*/
+#ov-dashboard .table {
+    background: #fff;
+}
+
+#ov-dashboard .fixed-table-container {
+    border: 1px solid #eee;
+}
+
+#ov-dashboard .fixed-table-container thead th {
+    background: #f7f7f8;
+    border-color: #ddd;
+    color: #5f6468;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+#ov-dashboard .fixed-table-container tbody td {
+    border: 1px solid #eee;
+}
+
+#ov-dashboard .fixed-table-container tbody td:last-child {
+    border-right: none;
+}
+
+#ov-dashboard .table>thead>tr>th {
+    border-bottom: 1px solid #e6e7e8;
+    vertical-align: middle;
+    height: 50px;
+}
+
+#ov-dashboard .fixed-table-pagination .pagination {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+#ov-dashboard .fixed-table-pagination .pagination-detail {
+    margin-top: 20px;
+}
+
+/*Icons*/
+
+#ov-dashboard .sidebar .glyph,
+#ov-dashboard .user-menu .glyph {
+    height: 16px;
+    width: 16px;
+    margin: 0 10px 0 0;
+    stroke-width: 3px;
+}
+
+#ov-dashboard .user-menu .glyph {
+    stroke-width: 4px;
+}
+
+#ov-dashboard .breadcrumb .glyph {
+    height: 14px;
+    width: 14px;
+    margin: -2px 0 0 0;
+    stroke-width: 4px;
+}
+
+#ov-dashboard .alert .glyph,
+#ov-dashboard .panel-heading .glyph {
+    width: 26px;
+    height: 26px;
+    margin: 0 10px 0 0;
+    stroke-width: 2px;
+}
+
+#ov-dashboard .panel-widget .glyph {
+    stroke-width: 2px;
+}
+
+#ov-dashboard .todo-list .glyph {
+    width: 14px;
+    height: 14px;
+    stroke-width: 4px;
+    color: #999;
+}
+
+#ov-dashboard .glyph.table {
+    background: none;
+    border: none;
+}
+
+/*Icon Grid*/
+
+#ov-dashboard .icon-grid div {
+    border: 1px solid #ddd;
+    margin: 0 0 -1px -1px;
+    text-align: center;
+    padding: 10px 0 20px 0;
+}
+
+#ov-dashboard .icon-grid svg {
+    width: 35%;
+    display: block;
+    margin: 0 auto;
+}
+
+#ov-dashboard .icon-grid h4 {
+    display: none;
+}
+
+#ov-dashboard .icon-grid pre {
+    margin: 10px 10px -10px 10px;
+    border-radius: 0;
+    font-size: 10px;
+    border-color: #ddd;
+    height: 65px;
+    overflow: scroll;
+}
+
+#ov-dashboard .issuedLinkCount {
+    background-color: rgba(226,8,12,0.9);
+    font-size: 80%;
+    font-weight: 400;
+    vertical-align: text-top;
+    margin-top: -8px;
+}
+
+#ov-dashboard .top5-panel-body {
+    padding-bottom: 6px;
+}
+
+
