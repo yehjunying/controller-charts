@@ -4,13 +4,15 @@
 
 <div id="ov-configHistoryDetail">
     <md-toolbar layout="row" class="toolbar">
-        <h2>
-            <span>{{configuration.raw.current.modifiedBy}} modified {{friendlyDateString(configuration.raw.current.modified)}}</span>
-        </h2>
-        <span flex></span>
-        <md-button class="md-raised" aria-attr-label="Learn More">
-            Restore
-        </md-button>
+        <div class="md-toolbar-tools">
+            <h2>
+                <span>{{configuration.raw.current.modifiedBy}} modified {{friendlyDateString(configuration.raw.current.modified)}}</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-raised" aria-attr-label="Learn More">
+                Restore
+            </md-button>
+        </div>
     </md-toolbar>
     <md-card>
         <md-card-actions layout="row">

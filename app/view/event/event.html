@@ -264,8 +264,10 @@
                     <!--</div>-->
                 <!--</div> &lt;!&ndash; result-stats &ndash;&gt;-->
                 <md-toolbar flex layout="row">
-                    <span flex="70" style="text-align: center; line-height: 2;">{{searchResult.items.length}} of {{searchResult.stats.total}} results</span>
-                    <div flex="30"></div>
+                    <div class="md-toolbar-tools">
+                        <span flex="70" style="text-align: center; line-height: 2;">{{searchResult.items.length}} of {{searchResult.stats.total}} results</span>
+                        <div flex="30"></div>
+                    </div>
                 </md-toolbar>
 
                 <div flex layout="row">
