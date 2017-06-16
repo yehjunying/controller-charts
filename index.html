@@ -11,6 +11,34 @@
     <link rel="stylesheet" href="css/onos/onos.css">
     <link rel="stylesheet" href="css/onos/onos-theme.css">
     <link rel="stylesheet" href="css/onos/common.css">
+    <link rel="stylesheet" href="app/fw/mast/mast.css">
+    <link rel="stylesheet" href="app/fw/mast/mast-theme.css">
+    <link rel="stylesheet" href="app/fw/svg/glyph.css">
+    <link rel="stylesheet" href="app/fw/svg/glyph-theme.css">
+    <link rel="stylesheet" href="app/fw/svg/icon.css">
+    <link rel="stylesheet" href="app/fw/svg/icon-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/panel.css">
+    <link rel="stylesheet" href="app/fw/layer/panel-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/dialog.css">
+    <link rel="stylesheet" href="app/fw/layer/dialog-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/flash.css">
+    <link rel="stylesheet" href="app/fw/layer/flash-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/quickhelp.css">
+    <link rel="stylesheet" href="app/fw/layer/quickhelp-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/veil.css">
+    <link rel="stylesheet" href="app/fw/layer/veil-theme.css">
+    <link rel="stylesheet" href="app/fw/layer/loading.css">
+    <link rel="stylesheet" href="app/fw/nav/nav.css">
+    <link rel="stylesheet" href="app/fw/nav/nav-theme.css">
+    <link rel="stylesheet" href="app/fw/widget/button.css">
+    <link rel="stylesheet" href="app/fw/widget/button-theme.css">
+    <link rel="stylesheet" href="app/fw/widget/toolbar.css">
+    <link rel="stylesheet" href="app/fw/widget/toolbar-theme.css">
+    <link rel="stylesheet" href="app/fw/widget/tooltip.css">
+    <link rel="stylesheet" href="app/fw/widget/tooltip-theme.css">
+    <link rel="stylesheet" href="app/fw/widget/table.css">
+    <link rel="stylesheet" href="app/fw/widget/table-theme.css">
+
     <style>
         a {
             cursor: pointer;
@@ -18,15 +46,18 @@
     </style>
 </head>
 
-<body ng-app="myApp" ng-cloak>
+<body class="light" ng-app="myApp" ng-cloak>
 
-    <div ng-controller="appCtrl">
-        <a ng-click="go('/dashboard')">dashboard</a> |
-        <a ng-click="go('/accountCfg')">accountCfg</a> |
-        <a ng-click="go('/configHistory?from=somewhere')">ConfigHistory</a> |
-        <a ng-click="go('/configHistoryDetail?from=somewhere&id=20170501011000000&other=20170501011009999')">configHistoryDetail</a> |
-        <a ng-click="go('/event')">Event</a>
-        <div ng-view></div>
+    <div id="frame" ng-controller="appCtrl">
+        <div id="mast">
+            <a ng-click="go('/dashboard')">dashboard</a> |
+            <a ng-click="go('/accountCfg')">accountCfg</a> |
+            <a ng-click="go('/configHistory?from=somewhere')">ConfigHistory</a> |
+            <a ng-click="go('/configHistoryDetail?from=somewhere&id=20170501011000000&other=20170501011009999')">configHistoryDetail</a> |
+            <a ng-click="go('/event')">Event</a>
+        </div>
+
+        <div id="view" ng-view></div>
     </div>
 
     <script src="node_modules/es5-shim/es5-shim.min.js"></script>
@@ -48,6 +79,10 @@
     <script src="node_modules/angular-material/angular-material.min.js"></script>
 
     <script src="node_modules/lodash/lodash.min.js"></script>
+
+    <script type="text/javascript">
+        var onosAuth = "onos";
+    </script>
 
     <!-- Services -->
     <script src="app/services/mock/websocket.js"></script>
@@ -210,60 +245,60 @@
             .run(['$location', 'WebSocketService', function ($location, wss) {
                 wss.setResponseHomeDir('event-resp');
                 wss.bindResponseData({
-                        dashboardTopRanksDataResponse: function (req) {
-                            var deviceCfgs = [
-                                {"id": "rest:1.1.1.1:443", "name": "Spine-1", "ip": "1.1.1.1", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"},
-                                {"id": "rest:1.1.1.2:443", "name": "Spine-2", "ip": "1.1.1.2", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"}
-                            ];
+                    dashboardTopRanksDataResponse: function (req) {
+                        var deviceCfgs = [
+                            {"id": "rest:1.1.1.1:443", "name": "Spine-1", "ip": "1.1.1.1", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"},
+                            {"id": "rest:1.1.1.2:443", "name": "Spine-2", "ip": "1.1.1.2", "role": "Spine", "desc": "Spine Switch", "protocol": "HTTPS", "port": 443, "username": "admin", "password": "admin"}
+                        ];
 
-                            var getRandomInt = function(min, max) {
-                                return Math.floor(Math.random() * (max - min + 1)) + min;
-                            };
+                        var getRandomInt = function(min, max) {
+                            return Math.floor(Math.random() * (max - min + 1)) + min;
+                        };
 
-                            var randomTop5Traffic = function() {
-                                var i, traffic = [];
+                        var randomTop5Traffic = function() {
+                            var i, traffic = [];
 
-                                for (i = 0; i < 5; ++i) {
-                                    traffic.push({
-                                        device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
-                                        port: getRandomInt(1, 52),
-                                        transmitUtilization: getRandomInt(1, 100),
-                                        receiveUtilization: getRandomInt(1, 100)
-                                    });
-                                }
+                            for (i = 0; i < 5; ++i) {
+                                traffic.push({
+                                    device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
+                                    port: getRandomInt(1, 52),
+                                    transmitUtilization: getRandomInt(1, 100),
+                                    receiveUtilization: getRandomInt(1, 100)
+                                });
+                            }
 
-                                return traffic;
-                            };
+                            return traffic;
+                        };
 
-                            var randomTop5DropCount = function() {
-                                var i, dropCount = [];
+                        var randomTop5DropCount = function() {
+                            var i, dropCount = [];
 
-                                for (i = 0; i < 5; ++i) {
-                                    dropCount.push({
-                                        device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
-                                        port: getRandomInt(1, 52),
-                                        transmitDropCount: getRandomInt(1, 10000),
-                                        receiveDropCount: getRandomInt(1, 10000)
-                                    });
-                                }
+                            for (i = 0; i < 5; ++i) {
+                                dropCount.push({
+                                    device: deviceCfgs[getRandomInt(0, (deviceCfgs.length - 1))].id,
+                                    port: getRandomInt(1, 52),
+                                    transmitDropCount: getRandomInt(1, 10000),
+                                    receiveDropCount: getRandomInt(1, 10000)
+                                });
+                            }
 
-                                return dropCount;
-                            };
+                            return dropCount;
+                        };
 
-                            return {
-                                coreLink: {
-                                    traffic: randomTop5Traffic(),
-                                    dropCount: randomTop5DropCount()
-                                },
-                                accessLink: {
-                                    traffic: randomTop5Traffic(),
-                                    dropCount: randomTop5DropCount()
+                        return {
+                            coreLink: {
+                                traffic: randomTop5Traffic(),
+                                dropCount: randomTop5DropCount()
+                            },
+                            accessLink: {
+                                traffic: randomTop5Traffic(),
+                                dropCount: randomTop5DropCount()
 
-                                }
-                            };
-                        }
-                    });
-                $location.path('/dashboard');
+                            }
+                        };
+                    }
+                });
+                $location.path('/accountCfg');
             }]);
     </script>
 
