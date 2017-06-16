@@ -1,0 +1,243 @@
+#ov-accountCfg h2 {
+    display: inline-block;
+}
+
+#ov-accountCfg button {
+    margin-bottom: 5px;
+    padding: 4px 16px;
+    background-color: #bfbfbf;
+    color: #fff;
+    height: 32px;
+    border: 3px;;
+    border-color: #bfbfbf;
+    border-style: solid;
+    font: normal 16px Helvetica, Arial, sans-serif !important;
+    cursor: pointer;
+}
+
+#ov-accountCfg button:hover,
+#ov-accountCfg button.tabular-btn:hover,
+#ov-accountCfg button.primary-btn:hover {
+    border: 3px;
+    border-color: #ff7473;
+    border-style: solid;
+    cursor: pointer;
+}
+
+#ov-accountCfg button.primary-btn {
+    margin-bottom: 5px;
+    padding: 4px 16px;
+    background-color: #3bb2de;
+    color: #fff;
+    height: 32px;
+    border: 3px;;
+    border-color: #3bb2de;
+    border-style: solid;
+    font: normal 16px Helvetica, Arial, sans-serif !important;
+    cursor: pointer;
+}
+
+#ov-accountCfg button.tabular-btn {
+    margin-left: 16px;
+    background-color: #999;
+    border-color: #999;
+}
+
+#ov-accountCfg button.config-btn {
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fafafb;
+    border: 0;
+    margin: 0;
+}
+
+#ov-accountCfg button.config-btn:hover {
+    color: #333;
+    background-color: #e3e3e8;
+}
+
+#ov-accountCfg td.center {
+    text-align: center;
+}
+
+#ov-accountCfg input, select {
+    font: normal 16px Helvetica, Arial, sans-serif !important;
+    padding: 3px;
+}
+
+#ov-accountCfg select {
+    width: 310px;
+}
+
+#ov-accountCfg .sticky {
+    position: fixed;
+    top: 48px;
+    left: 0;
+    width: 100%;
+}
+
+#ov-accountCfg div.config-card {
+    display: inline-block;
+    border-radius: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    min-width: 800px;
+}
+
+#ov-accountCfg div.main-card {
+    padding: 10px;
+    margin-top: 10px;
+}
+
+#ov-accountCfg div.config-card {
+    background-color: #fafafb;
+}
+
+#ov-accountCfg .inline-box {
+    display: inline-block;
+}
+
+#ov-accountCfg div.btn-left {
+    float: left;
+    margin-left: 18px;
+}
+
+#ov-accountCfg div.btn-right {
+    float: right;
+    margin-right: 18px;
+}
+
+#ov-accountCfg span.separate-span {
+    padding: 20px;
+}
+
+#ov-accountCfg div.error-msg {
+    font-weight: bold;
+    color: #e20000;
+    background-color: #ffe5e5;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#summary div.tabular-button {
+    margin-left: 10px;
+}
+
+#summary table {
+    width: 100%;
+}
+
+#summary td {
+    cursor: auto;
+}
+
+#summary td.table-header {
+    background-color: #e5e5e6;
+    color: #3c3a3a;
+    font-weight: bold;
+    font-variant: small-caps;
+    text-transform: uppercase;
+    font-size: 11pt;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    letter-spacing: 0.02em;
+}
+
+#summary button.table-btn {
+    margin-bottom: 5px;
+    padding: 4px 16px;
+    background-color: Transparent;
+    color: #3c3a3a;
+    border-color: Transparent;
+    font: normal 16px Helvetica, Arial, sans-serif !important;
+    cursor: pointer;
+    text-decoration:underline;
+}
+
+#summary button.table-btn:hover {
+    text-decoration:underline;
+    color: #3bb2de;
+}
+
+#ov-accountCfg-config button.back-btn {
+    margin-left: 10px;
+}
+
+#ov-accountCfg-config div.config-body {
+    overflow-y: auto;
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
+#ov-accountCfg-config div.config-body {
+    margin-left: 16px;
+}
+
+#ov-accountCfg-config div.config-device-name {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#ov-accountCfg-config div.config-subtitle {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#ov-accountCfg-config td.label {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 30px;
+    padding-left: 10px;
+}
+
+#ov-accountCfg-config input[type=text],
+#ov-accountCfg-config input[type=password] {
+    width: 300px;
+}
+
+#ov-accountCfg-config div.summary-list {
+    margin: 0px;
+}
+
+#ov-accountCfg-config div.mlag-subtitle {
+    display: inline-block;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#ov-accountCfg-config td.mlag-groups-label {
+    font-weight: bold;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 20px;
+    vertical-align: top;
+}
+
+#ov-accountCfg-config div.summary-list td {
+    text-align: center;
+}
+
+#ov-accountCfg-config input.mlag-groups-input {
+    width: 110px;
+}
+
+#ov-accountCfg-config button.mlag-groups-btn {
+    background: none;
+    border: 0px;
+    color: #3c3a3a;
+    height: 20px;
+}
+
+#ov-accountCfg-config div.config-btn {
+    text-align: left;
+    margin-top: 10px;
+}

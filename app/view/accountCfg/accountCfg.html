@@ -1,0 +1,151 @@
+<!--<link rel="stylesheet" href="tp/angular-material.min.css">-->
+<!--<link rel="stylesheet" href="tp/material-icons.css">-->
+
+<!--<md-content class="md-padding" layout-xs="column" layout="row">-->
+    <!--<div flex-xs flex-gt-xs="50" layout="column">-->
+        <!--<md-card>-->
+            <!--<md-toolbar>-->
+                <!--<div class="md-toolbar-tools">-->
+                    <!--<span flex></span>-->
+                    <!--<md-button aria-label="Add User">-->
+                        <!--Add User-->
+                    <!--</md-button>-->
+                <!--</div>-->
+            <!--</md-toolbar>-->
+
+            <!--<md-list flex>-->
+                <!--<md-subheader class="md-no-sticky">Your account</md-subheader>-->
+                <!--<md-list-item class="md-3-line"-->
+                              <!--ng-click="navigateTo(item.extraScreen, $event)"-->
+                              <!--ng-repeat="item in current">-->
+                    <!--<div class="md-list-item-text" layout="column">-->
+                        <!--<strong>{{ item.username }}</strong>-->
+                        <!--<h4>{{ item.group }}</h4>-->
+                        <!--<small ng-show="item.statistics.online">-->
+                            <!--online at <strong>{{ item.statistics.loginTime }}</strong> from <strong>{{ item.statistics.remoteAddress }}</strong>-->
+                        <!--</small>-->
+                    <!--</div>-->
+
+                    <!--<md-button ng-show="item.extraScreen.isSelected" ng-click="doSecondaryAction($event)">Modify</md-button>-->
+                <!--</md-list-item>-->
+
+                <!--<md-subheader class="md-no-sticky">Others</md-subheader>-->
+                <!--<md-list-item class="md-3-line"-->
+                              <!--ng-click="navigateTo(item.extraScreen, $event)"-->
+                              <!--ng-repeat="item in others">-->
+                    <!--<div class="md-list-item-text" layout="column">-->
+                        <!--<strong>{{ item.username }}</strong>-->
+                        <!--<h4>{{ item.group }}</h4>-->
+                        <!--<small ng-show="item.statistics.online">-->
+                            <!--online at <strong>{{ item.statistics.loginTime }}</strong> from <strong>{{ item.statistics.remoteAddress }}</strong>-->
+                        <!--</small>-->
+                    <!--</div>-->
+
+                    <!--<md-button ng-show="item.extraScreen.isSelected" ng-click="doSecondaryAction($event)">Delete</md-button>-->
+                <!--</md-list-item>-->
+
+            <!--</md-list>-->
+        <!--</md-card>-->
+    <!--</div>-->
+<!--</md-content>-->
+
+<div id="ov-accountCfg">
+    <div class="config-card sticky">
+        <div class="inline-box btn-left">
+            <button class="config-btn">Save</button>
+            <span class="separate-span"></span>
+            <button class="config-btn">Import</button>
+            <button class="config-btn">Export</button>
+            <span class="separate-span"></span>
+            <button class="config-btn" ng-click="navToConfigHistory()">History</button>
+        </div>
+        <div class="inline-box btn-right">
+            <button class="config-btn">Config</button>
+        </div>
+    </div>
+
+    <div class="main-card">
+        <div id="summary" ng-show="displayPanel === 'summary'">
+        <div class="tabular-header">
+            <h2>Accounting ({{tableData.length}} total)</h2>
+            <!--<div class="tabular-button">-->
+                <button class="tabular-btn" ng-click="newAccount()">New</button>
+            <!--</div>-->
+        </div>
+
+        <div class="summary-list" onos-table-resize>
+            <div class="error-msg" ng-show="(summaryErrorMsg !== '')">{{summaryErrorMsg}}</div>
+            <div class="table-header">
+                <table>
+                    <tr>
+                        <td class="table-header">Username </td>
+                        <td class="table-header">
+                            <!--<button class="table-header-btn" ng-click="newDevice()">New</button>-->
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="table-body">
+                <table>
+                    <tr ng-if="!tableData.length" class="no-data">
+                        <td colspan="5">
+                            No account found
+                        </td>
+                    </tr>
+                    <tr ng-repeat="account in tableData track by $index"
+                        ng-repeat-complete row-id="{{account.username}}">
+                        <td>{{account.username}}</td>
+                        <td>
+                            <button class="table-btn" ng-click="chgPwd(account)">Change Password</button>
+                            <button class="table-btn" ng-click="deleteAccount(account)">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+        <div id="ov-accounting-config" ng-show="displayPanel === 'config'">
+        <div class="tabular-header">
+            <h2>Accounting > {{configMode}}</h2>
+            <!--<div><button class="back-btn" ng-click="showSummary()">Back</button></div>-->
+        </div>
+
+        <div class="config-body">
+            <div class="config-content">
+                <table>
+                    <tr>
+                        <td class="label">Username</td>
+                        <td ng-show="configMode === 'New'" class="input-value">
+                            <input type="text" ng-model="configAccount.username" placeholder="Text input (required)">
+                        </td>
+                        <td ng-show="configMode !== 'New'">{{configAccount.username}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Password</td>
+                        <td ng-show="displayPwd === true"><input type="text" ng-model="configAccount.password" placeholder="Text input (required)"></td>
+                        <td ng-show="displayPwd === false"><input type="password" ng-model="configAccount.password" placeholder="Text input (required)"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <input type="checkbox" ng-model="displayPwd"> Show Password
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div class="config-btn">
+                                <button class="primary-btn" ng-show="configMode !== 'New'" ng-click="modifyAccount(configAccount)">Modify</button>
+                                <button class="primary-btn" ng-show="configMode === 'New'" ng-click="createAccount(configAccount)">Create</button>
+                                <button ng-click="showSummary()">Cancel</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="error-msg" ng-show="(configErrorMsg !== '')">{{configErrorMsg}}</div>
+        </div>
+    </div>
+    </div>
+</div>
