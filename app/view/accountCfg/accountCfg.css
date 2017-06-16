@@ -1,3 +1,22 @@
+#view {
+    padding: unset;
+}
+
+#ov-accountCfg2 .md-subheader,
+#ov-accountCfg2 .user-item {
+    border-bottom-width: 1px;
+    border-bottom-color: #ccc;
+    border-bottom-style: solid;
+}
+
+#ov-accountCfg2 .user-item:last-child {
+    border-bottom-style: none;
+}
+
+#ov-accountCfg2 .user-item:nth-child(even) {
+    background-color: #FFFFFF;
+}
+
 #ov-accountCfg h2 {
     display: inline-block;
 }

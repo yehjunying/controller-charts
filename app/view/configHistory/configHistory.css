@@ -1,3 +1,7 @@
+#view {
+    padding: unset;
+}
+
 #ov-configHistory {
     position: absolute;
     overflow-y: auto;

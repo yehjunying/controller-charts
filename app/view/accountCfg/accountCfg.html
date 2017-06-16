@@ -1,6 +1,80 @@
 <!--<link rel="stylesheet" href="tp/angular-material.min.css">-->
 <!--<link rel="stylesheet" href="tp/material-icons.css">-->
 
+<div id="ov-accountCfg2">
+    <md-toolbar layout="row" class="toolbar">
+        <div class="md-toolbar-tools">
+            <h4>Accounting</h4>
+            <span flex></span>
+            <md-button ng-click="navToConfigHistory()">History</md-button>
+        </div>
+    </md-toolbar>
+
+    <div ng-show="displayPanel == 'summary'">
+        <md-content>
+            <md-card>
+                <md-card-content style="padding: unset;">
+                    <md-list style="padding: unset;">
+                        <md-subheader class="md-no-sticky">
+                            <span>{{tableData.length}} total</span>
+                        </md-subheader>
+                        <md-list-item class="user-item" ng-repeat="account in tableData track by $index">
+                            <div>
+                                <span>{{account.username}}</span>
+                            </div>
+                            <md-button class="md-secondary"
+                                       ng-click="chgPwd(account)">Change Password
+                            </md-button>
+                            <md-button class="md-secondary"
+                                       ng-click="deleteAccount(account)">Delete
+                            </md-button>
+                        </md-list-item>
+                    </md-list>
+                </md-card-content>
+            </md-card>
+        </md-content>
+
+
+        <md-button class="md-fab md-fab-bottom-right" aria-label="Add Account" ng-click="newAccount()">
+            <md-icon md-svg-src="data/img/icons/ic_add_black_24px.svg"></md-icon>
+        </md-button>
+    </div>
+
+    <div ng-show="displayPanel == 'config'">
+        <md-card>
+            <md-card-content layout="column">
+                <md-input-container flex>
+                    <label>Username</label>
+                    <input ng-model="configAccount.username">
+                </md-input-container>
+
+                <md-input-container flex>
+                    <label>Password</label>
+                    <input ng-model="configAccount.password">
+                </md-input-container>
+                <md-checkbox ng-model="displayPwd" aria-label="Checkbox 1">
+                    Show Password
+                </md-checkbox>
+
+                <div flex layout="row">
+                    <md-button ng-show="configMode != 'New'"
+                               ng-click="modifyAccount(configAccount)"
+                               class="md-raised md-primary">Modify</md-button>
+                    <md-button ng-show="configMode == 'New'"
+                               ng-click="createAccount(configAccount)"
+                               class="md-raised md-primary">Create</md-button>
+                    <md-button ng-click="showSummary()">Cancel</md-button>
+                </div>
+                <!--<div class="config-btn">-->
+                    <!--<button class="primary-btn" ng-show="configMode !== 'New'" ng-click="modifyAccount(configAccount)">Modify</button>-->
+                    <!--<button class="primary-btn" ng-show="configMode === 'New'" ng-click="createAccount(configAccount)">Create</button>-->
+                    <!--<button ng-click="showSummary()">Cancel</button>-->
+                <!--</div>-->
+
+            </md-card-content>
+        </md-card>
+    </div>
+
 <!--<md-content class="md-padding" layout-xs="column" layout="row">-->
     <!--<div flex-xs flex-gt-xs="50" layout="column">-->
         <!--<md-card>-->
@@ -50,60 +124,60 @@
 <!--</md-content>-->
 
 <div id="ov-accountCfg">
-    <div class="config-card sticky">
-        <div class="inline-box btn-left">
-            <button class="config-btn">Save</button>
-            <span class="separate-span"></span>
-            <button class="config-btn">Import</button>
-            <button class="config-btn">Export</button>
-            <span class="separate-span"></span>
-            <button class="config-btn" ng-click="navToConfigHistory()">History</button>
-        </div>
-        <div class="inline-box btn-right">
-            <button class="config-btn">Config</button>
-        </div>
-    </div>
+    <!--<div class="config-card sticky">-->
+        <!--<div class="inline-box btn-left">-->
+            <!--<button class="config-btn">Save</button>-->
+            <!--<span class="separate-span"></span>-->
+            <!--<button class="config-btn">Import</button>-->
+            <!--<button class="config-btn">Export</button>-->
+            <!--<span class="separate-span"></span>-->
+            <!--<button class="config-btn" ng-click="navToConfigHistory()">History</button>-->
+        <!--</div>-->
+        <!--<div class="inline-box btn-right">-->
+            <!--<button class="config-btn">Config</button>-->
+        <!--</div>-->
+    <!--</div>-->
 
     <div class="main-card">
-        <div id="summary" ng-show="displayPanel === 'summary'">
-        <div class="tabular-header">
-            <h2>Accounting ({{tableData.length}} total)</h2>
-            <!--<div class="tabular-button">-->
-                <button class="tabular-btn" ng-click="newAccount()">New</button>
-            <!--</div>-->
-        </div>
+        <!--<div id="summary" ng-show="displayPanel === 'summary'">-->
+        <!--<div class="tabular-header">-->
+            <!--<h2>Accounting ({{tableData.length}} total)</h2>-->
+            <!--&lt;!&ndash;<div class="tabular-button">&ndash;&gt;-->
+                <!--<button class="tabular-btn" ng-click="newAccount()">New</button>-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--</div>-->
 
-        <div class="summary-list" onos-table-resize>
-            <div class="error-msg" ng-show="(summaryErrorMsg !== '')">{{summaryErrorMsg}}</div>
-            <div class="table-header">
-                <table>
-                    <tr>
-                        <td class="table-header">Username </td>
-                        <td class="table-header">
-                            <!--<button class="table-header-btn" ng-click="newDevice()">New</button>-->
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="table-body">
-                <table>
-                    <tr ng-if="!tableData.length" class="no-data">
-                        <td colspan="5">
-                            No account found
-                        </td>
-                    </tr>
-                    <tr ng-repeat="account in tableData track by $index"
-                        ng-repeat-complete row-id="{{account.username}}">
-                        <td>{{account.username}}</td>
-                        <td>
-                            <button class="table-btn" ng-click="chgPwd(account)">Change Password</button>
-                            <button class="table-btn" ng-click="deleteAccount(account)">Delete</button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+        <!--<div class="summary-list" onos-table-resize>-->
+            <!--<div class="error-msg" ng-show="(summaryErrorMsg !== '')">{{summaryErrorMsg}}</div>-->
+            <!--<div class="table-header">-->
+                <!--<table>-->
+                    <!--<tr>-->
+                        <!--<td class="table-header">Username </td>-->
+                        <!--<td class="table-header">-->
+                            <!--&lt;!&ndash;<button class="table-header-btn" ng-click="newDevice()">New</button>&ndash;&gt;-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</div>-->
+            <!--<div class="table-body">-->
+                <!--<table>-->
+                    <!--<tr ng-if="!tableData.length" class="no-data">-->
+                        <!--<td colspan="5">-->
+                            <!--No account found-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr ng-repeat="account in tableData track by $index"-->
+                        <!--ng-repeat-complete row-id="{{account.username}}">-->
+                        <!--<td>{{account.username}}</td>-->
+                        <!--<td>-->
+                            <!--<button class="table-btn" ng-click="chgPwd(account)">Change Password</button>-->
+                            <!--<button class="table-btn" ng-click="deleteAccount(account)">Delete</button>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
         <div id="ov-accounting-config" ng-show="displayPanel === 'config'">
         <div class="tabular-header">
@@ -148,4 +222,5 @@
         </div>
     </div>
     </div>
+</div>
 </div>

@@ -2,18 +2,18 @@
 <link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">
 <link rel="stylesheet" href="app/view/configHistory/configHistory.css">-->
 
+<md-toolbar>
+    <div class="md-toolbar-tools">
+        <md-button ng-click="backToPreviousPage()">
+            Back
+        </md-button>
+
+        <h4 flex md-truncate>History</h4>
+    </div>
+</md-toolbar>
+
 <div id="ov-configHistory" layout="column" layout-fill>
     <!--<div class="panel panel-default">-->
-
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <md-button ng-click="backToPreviousPage()">
-                    Back
-                </md-button>
-
-                <h2 flex md-truncate>History</h2>
-            </div>
-        </md-toolbar>
 
     <md-card>
         <md-card-content style="padding: unset;">
