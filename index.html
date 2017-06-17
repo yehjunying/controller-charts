@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <link rel="stylesheet" href="app/onos/opensans.css">
+    <link rel="stylesheet" href="app/font-face.css">
     <link rel="stylesheet" href="app/onos.css">
     <link rel="stylesheet" href="app/onos-theme.css">
     <link rel="stylesheet" href="app/common.css">
@@ -46,10 +46,11 @@
     </style>
 </head>
 
-<body class="light" ng-app="myApp" ng-cloak>
+<body class="light" ng-app="myApp" ng-cloak layout="column">
 
-    <div id="frame" ng-controller="appCtrl">
-        <div id="mast">
+    <div id="frame" ng-controller="appCtrl" flex layout="column">
+        <!--<div id="mast" style="display: flex">-->
+        <div id="mast" flex-none>
             <a ng-click="go('/dashboard')">dashboard</a> |
             <a ng-click="go('/accountCfg')">accountCfg</a> |
             <a ng-click="go('/configHistory?from=somewhere')">ConfigHistory</a> |
@@ -57,7 +58,7 @@
             <a ng-click="go('/event')">Event</a>
         </div>
 
-        <div id="view" ng-view></div>
+        <div id="view" ng-view flex layout="column" flex-noshrink></div>
     </div>
 
     <script src="node_modules/es5-shim/es5-shim.min.js"></script>
@@ -305,7 +306,7 @@
                         };
                     }
                 });
-                $location.path('/accountCfg');
+                $location.path('/dashboard');
             }]);
     </script>
 

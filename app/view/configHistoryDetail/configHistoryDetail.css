@@ -2,25 +2,31 @@
     padding: unset;
 }
 
-#ov-configHistoryDetail {
-    position: absolute;
-    overflow-y: auto;
-    margin-left: 22px;
-    margin-top: 18px;
-    height: 90%;
-    width: calc(100% - 30px);
-}
+/*#ov-configHistoryDetail {*/
+    /*position: absolute;*/
+    /*overflow-y: auto;*/
+    /*margin-left: 22px;*/
+    /*margin-top: 18px;*/
+    /*height: 90%;*/
+    /*width: calc(100% - 30px);*/
+/*}*/
 
-#ov-configHistoryDetail .toolbar {
-    align-items: center;
-}
-#ov-configHistoryDetail h2 {
-    margin: unset;
-}
+/*@media (min-width: 960px) {*/
+    /*#ov-configHistoryDetail {*/
+        /*max-width: 80%;*/
+    /*}*/
+/*}*/
 
-#ov-configHistoryDetail .inline-box {
-    display: inline-block;
-}
+/*#ov-configHistoryDetail .toolbar {*/
+    /*align-items: center;*/
+/*}*/
+/*#ov-configHistoryDetail h2 {*/
+    /*margin: unset;*/
+/*}*/
+
+/*#ov-configHistoryDetail .inline-box {*/
+    /*display: inline-block;*/
+/*}*/
 
 #ov-configHistoryDetail .attr-row {
     padding-top: 10px;

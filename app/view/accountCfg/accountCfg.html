@@ -1,60 +1,74 @@
-<!--<link rel="stylesheet" href="tp/angular-material.min.css">-->
+<!--<link rel="stylesheet" href="tp/angular-material..min.css">-->
 <!--<link rel="stylesheet" href="tp/material-icons.css">-->
 
-<div id="ov-accountCfg2">
-    <md-toolbar layout="row" class="toolbar">
-        <div class="md-toolbar-tools">
-            <h4>Accounting</h4>
-            <span flex></span>
-            <md-button ng-click="navToConfigHistory()">History</md-button>
-        </div>
-    </md-toolbar>
-
-    <div ng-show="displayPanel == 'summary'">
-        <md-content>
-            <md-card>
-                <md-card-content style="padding: unset;">
-                    <md-list style="padding: unset;">
-                        <md-subheader class="md-no-sticky">
-                            <span>{{tableData.length}} total</span>
-                        </md-subheader>
-                        <md-list-item class="user-item" ng-repeat="account in tableData track by $index">
-                            <div>
-                                <span>{{account.username}}</span>
-                            </div>
-                            <md-button class="md-secondary"
-                                       ng-click="chgPwd(account)">Change Password
-                            </md-button>
-                            <md-button class="md-secondary"
-                                       ng-click="deleteAccount(account)">Delete
-                            </md-button>
-                        </md-list-item>
-                    </md-list>
-                </md-card-content>
-            </md-card>
-        </md-content>
-
-
-        <md-button class="md-fab md-fab-bottom-right" aria-label="Add Account" ng-click="newAccount()">
-            <md-icon md-svg-src="data/img/icons/ic_add_black_24px.svg"></md-icon>
-        </md-button>
+<md-toolbar flex-none layout="row" class="toolbar">
+    <div class="md-toolbar-tools">
+        <h4>Accounting</h4>
+        <span flex></span>
+        <md-button ng-if="displayPanel == 'summary'"
+                   ng-click="navToConfigHistory()">History</md-button>
     </div>
+</md-toolbar>
 
-    <div ng-show="displayPanel == 'config'">
+<!--<div id="ov-accountCfg2">-->
+
+    <!--<div ng-show="displayPanel == 'summary'">-->
+<md-content id="ov-accountCfg2" ng-if="displayPanel == 'summary'"
+            flex layout="row" layout-align="center start">
+    <div flex-xs flex-sm="80" flex-md="70" flex-lg="60" flex-gt-lg="50">
+        <md-card>
+            <md-card-content style="padding: unset;">
+                <md-list style="padding: unset;">
+                    <md-subheader class="md-no-sticky">
+                        <span>{{tableData.length}} total</span>
+                    </md-subheader>
+                    <md-list-item class="user-item" ng-repeat="account in tableData track by $index">
+                        <div>
+                            <span>{{account.username}}</span>
+                        </div>
+                        <md-button class="md-secondary"
+                                   ng-click="chgPwd(account)">Change Password
+                        </md-button>
+                        <md-button class="md-secondary"
+                                   ng-click="deleteAccount(account)">Delete
+                        </md-button>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+    </div>
+</md-content>
+
+<md-button ng-if="displayPanel == 'summary'"
+           style="position: absolute;"
+           class="md-fab md-fab-bottom-right"
+           ng-click="newAccount()"
+           aria-label="Add Account">
+    <md-icon md-svg-src="data/img/icons/ic_add_black_24px.svg"></md-icon>
+</md-button>
+    <!--</div>-->
+
+<md-content ng-if="displayPanel == 'config'"
+            flex layout="row" layout-align="center start">
+    <div flex-xs flex-sm="80" flex-md="70" flex-lg="60" flex-gt-lg="50">
         <md-card>
             <md-card-content layout="column">
-                <md-input-container flex>
-                    <label>Username</label>
-                    <input ng-model="configAccount.username">
-                </md-input-container>
+                <div flex layout="row">
+                    <md-input-container flex="70">
+                        <label>Username</label>
+                        <input ng-model="configAccount.username">
+                    </md-input-container>
+                </div>
 
-                <md-input-container flex>
-                    <label>Password</label>
-                    <input ng-model="configAccount.password">
-                </md-input-container>
-                <md-checkbox ng-model="displayPwd" aria-label="Checkbox 1">
-                    Show Password
-                </md-checkbox>
+                <div flex layout="row">
+                    <md-input-container flex="70">
+                        <label>Password</label>
+                        <input ng-model="configAccount.password">
+                    </md-input-container>
+                    <md-switch flex ng-model="displayPwd">
+                        Show Password
+                    </md-switch>
+                </div>
 
                 <div flex layout="row">
                     <md-button ng-show="configMode != 'New'"
@@ -65,15 +79,10 @@
                                class="md-raised md-primary">Create</md-button>
                     <md-button ng-click="showSummary()">Cancel</md-button>
                 </div>
-                <!--<div class="config-btn">-->
-                    <!--<button class="primary-btn" ng-show="configMode !== 'New'" ng-click="modifyAccount(configAccount)">Modify</button>-->
-                    <!--<button class="primary-btn" ng-show="configMode === 'New'" ng-click="createAccount(configAccount)">Create</button>-->
-                    <!--<button ng-click="showSummary()">Cancel</button>-->
-                <!--</div>-->
-
             </md-card-content>
         </md-card>
     </div>
+</md-content>
 
 <!--<md-content class="md-padding" layout-xs="column" layout="row">-->
     <!--<div flex-xs flex-gt-xs="50" layout="column">-->
@@ -223,4 +232,4 @@
     </div>
     </div>
 </div>
-</div>
+<!--</div>-->

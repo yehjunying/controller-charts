@@ -167,6 +167,7 @@
             $scope.showSummary = function() {
                 $scope.summaryErrorMsg = '';
                 $scope.displayPanel = 'summary';
+                $scope.displayPwd = false;
             };
 
             $scope.$on('$destroy', function () {

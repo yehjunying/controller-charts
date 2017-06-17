@@ -2,14 +2,14 @@
     padding: unset;
 }
 
-#ov-configHistory {
-    position: absolute;
-    overflow-y: auto;
-    margin-left: 22px;
-    margin-top: 18px;
-    height: 90%;
-    width: calc(100% - 30px);
-}
+/*#ov-configHistory {*/
+    /*position: absolute;*/
+    /*overflow-y: auto;*/
+    /*margin-left: 22px;*/
+    /*margin-top: 18px;*/
+    /*height: 90%;*/
+    /*width: calc(100% - 30px);*/
+/*}*/
 
 /*#ov-configHistory h4 {
     margin: unset;
@@ -68,8 +68,12 @@
     border-bottom-style: solid;
 }
 
+#ov-configHistory .config-item:last-child {
+    border-bottom-style: none;
+}
+
 #ov-configHistory .config-item:nth-child(even) {
-    background-color: #FFFFFF;
+    background-color: #fbfbfb;
     /*border-bottom-width: 1px;*/
     /*border-bottom-color: #ccc;*/
     /*border-bottom-style: solid;*/

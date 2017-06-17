@@ -2,17 +2,18 @@
 <link rel="stylesheet" href="data/bootstrap/css/bootstrap-theme.min.css.map">
 <link rel="stylesheet" href="app/view/configHistory/configHistory.css">-->
 
-<md-toolbar>
+<md-toolbar flex-none>
     <div class="md-toolbar-tools">
         <md-button ng-click="backToPreviousPage()">
             Back
         </md-button>
-
         <h4 flex md-truncate>History</h4>
     </div>
 </md-toolbar>
 
-<div id="ov-configHistory" layout="column" layout-fill>
+<!--<div id="ov-configHistory" flex>-->
+<md-content id="ov-configHistory" flex layout="row" layout-align="center start">
+    <div flex-xs flex-sm="80" flex-md="70" flex-lg="60" flex-gt-lg="50">
     <!--<div class="panel panel-default">-->
 
     <md-card>
@@ -32,48 +33,48 @@
                     <!--<div id="search-result-detail" class="panel panel-default chat">-->
                         <!--<div id="event-view" class="panel-body">-->
                             <!--<ul>-->
-                                <md-list style="padding: unset;">
+            <md-list style="padding: unset;">
                                 <!--<div ng-repeat="item in configHistory">-->
-                                    <md-list-item class="config-item"
-                                                  ng-repeat="item in configHistory"
-                                                  ng-class="{ 'active': item.active }">
+                <md-list-item class="md-2-line config-item"
+                              ng-repeat="item in configHistory"
+                              ng-class="{ 'active': item.active }">
 
                                     <!--<li ng-class="{ 'active': item.active }" >-->
                                         <!--<div class="row">-->
                                             <!--<div class="col-xs-8 col-md-9">-->
-                                                <div>
-                                                <div>
-                                                    <strong class="primary-font">{{friendlyDateString(item.modified)}}</strong>
-                                                    {{$index}}
+                    <div class="md-list-item-text" layout="column">
+                        <div>
+                            <strong class="primary-font">{{friendlyDateString(item.modified)}}</strong>
+                            {{$index}}
                                                     <!--<strong class="primary-font">{{item.description}}</strong>-->
                                                     <!--<small class="text-muted">test</small>-->
-                                                </div>
-                                                <small>
-                                                    description
-                                                    <!--by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}-->
-                                                </small>
-                                                </div>
+                        </div>
+                        <small>
+                            description
+                            <!--by <strong class="primary-font">{{item.modifiedBy}}</strong>, {{friendlyDateString(item.modified)}}-->
+                        </small>
+                    </div>
                                             <!--</div>-->
 
                                             <!--<div class="col-xs-4 col-md-3">-->
                                                 <!--<div class="btn-group pull-right">-->
-                                                    <md-button class="md-secondary"
-                                                            ng-click="setSearchOptionsAndSearch({id: item.id, other: configHistory[$index+1].id})">View
-                                                    </md-button>
-                                                    <md-button class="md-secondary"
-                                                            ng-click="restore(item.id)"
-                                                            ng-disabled="item.active">Restore
-                                                    </md-button>
+                    <md-button class="md-secondary"
+                               ng-click="setSearchOptionsAndSearch({id: item.id, other: configHistory[$index+1].id})">View
+                    </md-button>
+                    <md-button class="md-secondary"
+                               ng-click="restore(item.id)"
+                               ng-disabled="item.active">Restore
+                    </md-button>
                                                 <!--</div>-->
                                             <!--</div>-->
 
                                         <!--</div>-->
                                     <!--</li>-->
 
-                                        </div>
-                                    </md-list-item>
+                                        <!--</div>-->
+                </md-list-item>
                                 <!--</div>-->
-                                </md-list>
+            </md-list>
                             <!--</ul>-->
                         <!--</div>-->
 
@@ -85,4 +86,6 @@
         <!--</div>-->
     </md-card>
     <!--</div>-->
-</div>
+    </div>
+</md-content>
+<!--</div>-->
