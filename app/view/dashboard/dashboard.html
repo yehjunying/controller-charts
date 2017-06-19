@@ -2,91 +2,96 @@
 <link rel="stylesheet" href="app/view/dashboard/bootstrap.min.css">
 <link rel="stylesheet" href="app/view/dashboard/dashboard.css">
 
-<div id="ov-dashboard">
-    <div class="container">
-        <div class="row">
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-blue-bg-white panel-widget ">
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left">
+<!--<div id="ov-dashboard">-->
+<md-content id="ov-dashboard" flex layout="row" layout-align="center start">
+    <div flex layout="column">
+    <!--<div class="container">-->
+        <div layout="row">
+            <div flex>
+                <md-card class="panel-blue-bg-white panel-widget">
+                    <div layout="row">
+                        <div flex="40" class="widget-left">
                             <span class="glyphicon glyphicon-cloud glyphicon-l" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-controller xx">
+                        <div flex="60" class="widget-right-controller xx">
                             <div class="large">{{overview.controller.totalCount}}</div>
                             <div class="medium">Controller</div>
                         </div>
                     </div>
-                </div>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-orange-bg-white panel-widget">
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left">
+            <div flex>
+                <md-card class="panel-orange-bg-white panel-widget">
+                    <div layout="row">
+                        <div flex="40" class="widget-left">
                             <span class="glyphicon glyphicon-random glyphicon-l" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-spine">
+                        <div flex="60" class="widget-right-spine">
                             <div class="large">{{overview.spine.totalCount}}</div>
                             <div class="medium">Spine</div>
                         </div>
                     </div>
-                </div>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-green-bg-white panel-widget">
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left">
+            <div flex>
+                <md-card class="panel-green-bg-white panel-widget">
+                    <div layout="row">
+                        <div flex="40" class="widget-left">
                             <span class="glyphicon glyphicon-sort glyphicon-l" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-leaf">
+                        <div flex="60" class="widget-right-leaf">
                             <div class="large">{{overview.leaf.totalCount}}</div>
                             <div class="medium">Leaf</div>
                         </div>
                     </div>
-                </div>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-teal-bg-white panel-widget">
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left widget-left-rsl">
+            <div flex>
+                <md-card class="panel-teal-bg-white panel-widget">
+                    <div layout="column">
+                    <div flex layout="row">
+                        <div flex="40" class="widget-left widget-left-rsl">
                             <span class="glyphicon glyphicon-tasks glyphicon-m" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-rsl">
+                        <div flex="60" class="widget-right-rsl">
                             <div class="medium">{{overview.rack.totalCount}} Rack</div>
                         </div>
                     </div>
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left widget-left-rsl">
+                    <div flex layout="row">
+                        <div flex="40" class="widget-left widget-left-rsl">
                             <span class="glyphicon glyphicon-hdd glyphicon-m" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-rsl">
+                        <div flex="60" class="widget-right-rsl">
                             <div class="medium">{{overview.server.totalCount}} Server</div>
                         </div>
                     </div>
-                    <div class="row no-padding">
-                        <div ng-class="makeColClass(5)" class="widget-left widget-left-rsl">
+                    <div flex layout="row">
+                        <div flex="40" class="widget-left widget-left-rsl">
                             <span class="glyphicon glyphicon-resize-horizontal glyphicon-m" aria-hidden="true"></span>
                         </div>
-                        <div ng-class="makeColClass(7)" class="widget-right-rsl">
+                        <div flex="60" class="widget-right-rsl">
                             <div class="medium">{{overview.link.totalCount}} <span class="badge issuedLinkCount" ng-show="overview.link.issuedCount">{{overview.link.issuedCount}}</span> Link</div>
                         </div>
                     </div>
-                </div>
+                    </div>
+                </md-card>
             </div>
         </div> <!--row-->
 
-        <div class="row">
-            <div ng-class="makeColClass(9)">
-                <div class="panel panel-default controller">
-                    <div class="panel-body">
-                        <div ng-show="c.charts[0].isShow()" ng-class="makeClass()">
+        <div layout="row">
+            <div flex="66">
+                <md-card class="controller">
+                    <div layout="row" class="panel-body">
+                        <div flex layout="column" ng-show="c.charts[0].isShow()">
                             <h4>{{c.charts[0].name}}</h4>
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-1-cpu-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>CPU</span>
                                     <br />
                                     <span>
@@ -96,13 +101,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-1-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Memory</span>
                                     <br />
                                     <span>
@@ -112,13 +117,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-1-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Ethernet</span>
                                     <br />
                                     <span>
@@ -130,15 +135,15 @@
                             </div>
                         </div>
 
-                        <div ng-show="c.charts[1].isShow()" ng-class="makeClass()">
+                        <div flex ng-show="c.charts[1].isShow()">
                             <h4>{{c.charts[1].name}}</h4>
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-2-cpu-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>CPU</span>
                                     <br />
                                     <span>
@@ -148,13 +153,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-2-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Memory</span>
                                     <br />
                                     <span>
@@ -164,13 +169,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-2-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Ethernet</span>
                                     <br />
                                     <span>
@@ -182,15 +187,15 @@
                             </div>
                         </div>
 
-                        <div ng-show="c.charts[2].isShow()" ng-class="makeClass()">
+                        <div flex ng-show="c.charts[2].isShow()">
                             <h4>{{c.charts[2].name}}</h4>
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-3-cpu-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>CPU</span>
                                     <br />
                                     <span>
@@ -200,13 +205,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-3-memory-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Memory</span>
                                     <br />
                                     <span>
@@ -216,13 +221,13 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div ng-class="makeColClass(9)">
+                            <div layout="row">
+                                <div flex="66">
                                     <div style="width: 100%; height: 100px">
                                         <canvas class="main-chart" id="controller-3-ethernet-chart" width="600" height="150"></canvas>
                                     </div>
                                 </div>
-                                <div ng-class="makeColClass(3)" class="controller-text">
+                                <div flex="33" class="controller-text">
                                     <span>Ethernet</span>
                                     <br />
                                     <span>
@@ -234,12 +239,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer">CONTROLLER</div>
-                </div>
+                    <md-card-footer>CONTROLLER</md-card-footer>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-default chat">
-                    <div class="panel-body">
+            <div flex="33">
+                <md-card class="chat">
+                    <!--<div class="panel-body">-->
+                    <md-card-content class="panel-body">
                         <ul>
                             <li ng-repeat="log in logs" class="left clearfix" ng-class="makeLogClass(log._source)">
                                 <div class="chat-body clearfix">
@@ -251,45 +257,63 @@
                                 </div>
                             </li>
                         </ul>
-                    </div>
-                    <div class="panel-footer">EVENT</div>
-                </div>
+                    </md-card-content>
+                    <!--</div>-->
+                    <md-card-footer>EVENT</md-card-footer>
+                </md-card>
             </div>
         </div> <!--row-->
 
-        <div class="row">
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-default">
-                    <div class="panel-body top5-panel-body">
-                        <canvas class="main-chart" id="top5-traffic-core" width="200" height="180"></canvas>
-                    </div>
-                    <div class="panel-footer"><span>Top 5 Traffic of Spine-Leaf (%)</span></div>
-                </div>
+        <div layout="row">
+            <div flex>
+                <md-card>
+                    <md-card-content>
+                        <!--<div class="panel-body top5-panel-body">-->
+                            <canvas class="main-chart" id="top5-traffic-core" width="200" height="180"></canvas>
+                        <!--</div>-->
+                    </md-card-content>
+                    <md-card-footer>
+                        Top 5 Traffic of Spine-Leaf (%)
+                    </md-card-footer>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-default">
-                    <div class="panel-body top5-panel-body">
-                        <canvas class="main-chart" id="top5-drop-count-core" width="200" height="180"></canvas>
-                    </div>
-                    <div class="panel-footer"><span>Top 5 Drop Count of Spine-Leaf</span></div>
-                </div>
+            <div flex>
+                <md-card>
+                    <md-card-content>
+                        <!--<div class="panel-body top5-panel-body">-->
+                            <canvas class="main-chart" id="top5-drop-count-core" width="200" height="180"></canvas>
+                        <!--</div>-->
+                    </md-card-content>
+                    <md-card-footer>
+                        Top 5 Drop Count of Spine-Leaf
+                    </md-card-footer>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-default">
-                    <div class="panel-body top5-panel-body">
-                        <canvas class="main-chart" id="top5-traffic-access" width="200" height="180"></canvas>
-                    </div>
-                    <div class="panel-footer"><span>Top 5 Traffic of Leaf-Server (%)</span></div>
-                </div>
+            <div flex>
+                <md-card>
+                    <md-card-content>
+                        <!--<div class="panel-body top5-panel-body">-->
+                            <canvas class="main-chart" id="top5-traffic-access" width="200" height="180"></canvas>
+                        <!--</div>-->
+                    </md-card-content>
+                    <md-card-footer>
+                        Top 5 Traffic of Leaf-Server (%)
+                    </md-card-footer>
+                </md-card>
             </div>
-            <div ng-class="makeColClass(3)">
-                <div class="panel panel-default">
-                    <div class="panel-body top5-panel-body">
-                        <canvas class="main-chart" id="top5-drop-count-access" width="200" height="180"></canvas>
-                    </div>
-                    <div class="panel-footer"><span>Top 5 Drop Count of Leaf-Server</span></div>
-                </div>
+            <div flex>
+                <md-card>
+                    <md-card-content>
+                        <!--<div class="panel-body top5-panel-body">-->
+                            <canvas class="main-chart" id="top5-drop-count-access" width="200" height="180"></canvas>
+                        <!--</div>-->
+                    </md-card-content>
+                    <md-card-footer>
+                        Top 5 Drop Count of Leaf-Server
+                    </md-card-footer>
+                </md-card>
             </div>
         </div> <!--row-->
+    <!--</div>-->
     </div>
-</div>
+</md-content>
