@@ -366,18 +366,20 @@
                 return _.isEqual(o1, o2);
             };
 
-            $scope.restore = function(id) {
-                wss.sendEvent('configRestoreRequest', {id: id});
+            $scope.restore = function() {
+                wss.sendEvent('configRestoreRequest', {id: $scope.searchOptions.historyId});
             };
 
             function configRestoreResponse(resp) {
                 if (resp.status === 200) {
                     wss.sendEvent('configHistoryDataRequest');
                 }
+
+                // FIXME: error handle
             }
 
             $scope.$on('$destroy', function () {
-                console.log('destroy');
+                wss.unbindHandlers(handlers);
             });
 
             $log.log('OvConfigHistoryDetailCtrl has been created');

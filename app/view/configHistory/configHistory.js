@@ -153,7 +153,7 @@
             }
 
             $scope.$on('$destroy', function () {
-                console.log('destroy');
+                wss.unbindHandlers(handlers);
             });
 
             $log.log('OvConfigHistoryCtrl has been created');
