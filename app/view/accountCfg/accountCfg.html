@@ -63,7 +63,7 @@
                 <div flex layout="row">
                     <md-input-container flex="70">
                         <label>Password</label>
-                        <input ng-model="configAccount.password">
+                        <input type="{{displayPwd?'input':'password'}}" ng-model="configAccount.password">
                     </md-input-container>
                     <md-switch flex ng-model="displayPwd">
                         Show Password
