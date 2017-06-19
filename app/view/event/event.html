@@ -198,7 +198,8 @@
                 <div layout="row" style="padding-top: 15px">
                     <md-input-container>
                         <label>Source</label>
-                        <md-select ng-model="searchOptions.type">
+                        <md-select ng-model="searchOptions.type"
+                                   ng-change="search()">
                             <md-option value="All">All</md-option>
                             <md-option value="System">System</md-option>
                             <md-option value="Fabric">Fabric</md-option>
@@ -207,7 +208,8 @@
 
                     <md-input-container>
                         <label>Severity</label>
-                        <md-select ng-model="searchOptions.severity">
+                        <md-select ng-model="searchOptions.severity"
+                                   ng-change="search()">
                             <md-option value="All">All</md-option>
                             <md-option value="Emerg">Emergency (0)</md-option>
                             <md-option value="Alert">Alert (1)</md-option>

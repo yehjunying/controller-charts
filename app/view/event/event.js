@@ -772,24 +772,32 @@
                         locals: {searchOptions: $scope.searchOptions}
                     })
                         .then(function(answer) {
-                            $scope.status = 'You said the information was "' + answer + '".';
+                            if ($scope.searchOptions.timePeriod !== answer.period ||
+                                $scope.searchOptions.timePeriodUnit !== answer.period) {
 
-                            $scope.searchOptions.timePeriod = answer.period;
-                            $scope.searchOptions.timePeriodUnit = answer.unit;
+                                $scope.searchOptions.timePeriod = answer.period;
+                                $scope.searchOptions.timePeriodUnit = answer.unit;
+
+                                $scope.search();
+                            }
 
                             $('#time-period-select md-select-value span').first().text(selectedText());
                             $('#time-period-select').focus();
                         }, function() {
-                            $scope.status = 'You cancelled the dialog.';
-
                             $('#time-period-select md-select-value span').first().text(selectedText());
                             $('#time-period-select').focus();
 
                             // TODO: should change to previous setting
                         });
                 } else {
-                    $scope.searchOptions.timePeriod = $scope.searchOptions.selectedPeriod.period;
-                    $scope.searchOptions.timePeriodUnit = $scope.searchOptions.selectedPeriod.unit;
+                    if ($scope.searchOptions.timePeriod !== $scope.searchOptions.selectedPeriod.period ||
+                        $scope.searchOptions.timePeriodUnit !== $scope.searchOptions.selectedPeriod.unit) {
+
+                        $scope.searchOptions.timePeriod = $scope.searchOptions.selectedPeriod.period;
+                        $scope.searchOptions.timePeriodUnit = $scope.searchOptions.selectedPeriod.unit;
+
+                        $scope.search();
+                    }
 
                     $('#time-period-select md-select-value span').first().text(selectedText());
                 }
