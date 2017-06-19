@@ -56,14 +56,18 @@
                 <div flex layout="row">
                     <md-input-container flex="70">
                         <label>Username</label>
-                        <input ng-model="configAccount.username">
+                        <input ng-model="configAccount.username"
+                               ng-readonly="configMode != 'New'"
+                               required>
                     </md-input-container>
                 </div>
 
                 <div flex layout="row">
                     <md-input-container flex="70">
                         <label>Password</label>
-                        <input type="{{displayPwd?'input':'password'}}" ng-model="configAccount.password">
+                        <input type="{{displayPwd?'input':'password'}}"
+                               ng-model="configAccount.password"
+                               required>
                     </md-input-container>
                     <md-switch flex ng-model="displayPwd">
                         Show Password
@@ -71,10 +75,10 @@
                 </div>
 
                 <div flex layout="row">
-                    <md-button ng-show="configMode != 'New'"
+                    <md-button ng-if="configMode != 'New'"
                                ng-click="modifyAccount(configAccount)"
                                class="md-raised md-primary">Modify</md-button>
-                    <md-button ng-show="configMode == 'New'"
+                    <md-button ng-if="configMode == 'New'"
                                ng-click="createAccount(configAccount)"
                                class="md-raised md-primary">Create</md-button>
                     <md-button ng-click="showSummary()">Cancel</md-button>
